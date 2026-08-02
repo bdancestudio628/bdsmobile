@@ -140,10 +140,18 @@ function readToken(token) {
 // The landing page needs the studio's own marketing content and nothing else. Everything about
 // people — students, accounts, payments, attendance — is left out entirely, and even the teacher
 // records are rebuilt field by field so a phone number, email or salary can't ride along.
+function stripEmbeddedImage(v) {
+  // A normal hosted URL (http/https, a few dozen bytes) passes through untouched.
+  // A base64 data: URI can be megabytes on its own — that's what was bloating the
+  // public payload and stalling the fetch/parse on mobile. Drop those here; the
+  // mobile intro page falls back to its own placeholder art when a field is empty.
+  if (typeof v !== 'string') return v;
+  return v.startsWith('data:') ? '' : v;
+}
 function publicSlice(db) {
   const d = db && typeof db === 'object' ? db : {};
   const teachers = Array.isArray(d.teachers) ? d.teachers.map(t => ({
-    id: t.id, name: t.name, photo: t.photo, specs: t.specs,
+    id: t.id, name: t.name, photo: stripEmbeddedImage(t.photo), specs: t.specs,
     quote: t.quote, instagram: t.instagram, xiaohongshu: t.xiaohongshu,
     video: t.video, status: t.status, color: t.color,
   })) : [];
@@ -153,8 +161,16 @@ function publicSlice(db) {
     id: c.id, name: c.name, style: c.style, day: c.day, start: c.start, end: c.end,
     placeId: c.placeId, teacherId: c.teacherId, room: c.room, max: c.max, level: c.level,
   })) : [];
+  const introSrc = d.intro || {};
+  const intro = { ...introSrc, heroImage: stripEmbeddedImage(introSrc.heroImage) };
+  if (Array.isArray(introSrc.events)) {
+    intro.events = introSrc.events.map(e => ({ ...e, poster: stripEmbeddedImage(e && e.poster) }));
+  }
+  if (Array.isArray(introSrc.shops)) {
+    intro.shops = introSrc.shops.map(s => ({ ...s, photo: stripEmbeddedImage(s && s.photo) }));
+  }
   return {
-    intro: d.intro || {},        // headings, event slider, collaborated shops, video, footer
+    intro,        // headings, event slider, collaborated shops, video, footer
     places: Array.isArray(d.places) ? d.places : [],  // branch names/addresses — public by design
     teachers,
     classes,
