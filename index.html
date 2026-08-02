@@ -1,43 +1,1561 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>(function(){if(window.innerWidth>480)location.replace('https://bdsgo.netlify.app/'+location.search+location.hash);})();</script>
-  <meta name="description" content="B Dance Studio - Student Portal">
-  <meta name="theme-color" content="#000000">
-  <title>B Dance Studio</title>
-
-  <!-- iOS "Add to Home Screen" behavior -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="B Dance Studio">
-  <link rel="apple-touch-icon" href="/icon-192.png">
-
-  <!-- logo.png is a 3042px white-on-transparent mark: invisible against a light tab bar, and a
-       huge download for a 16px icon. This is the same mark on the brand orange, inlined. -->
-  <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAJG0lEQVR42u2af3BU1RXHP/fet1mSIEmImAhJUIEgP0R++AMJJLHUKSL1Ry22M7VTanU6jnXqjDIqVTtanZFRZ2zHtjO2RTqdlhYroGXwV9UEm2r8AQEDgUQtkJCw0iQk5Pfuu7d/vH2PTbKQ3U2WP8remTeTbLLv3fs933PO95zzhFk3y3AOL8k5vlIApABIAZACIAVACoAUACkAUgCkADhHl5UYbMpG2wqACXnHmHVtPdNL/OQXX8j43Fwsvx8QCdzZoG0bqSxeunMvX1YvYNri3dz+62KkVAgZYTAh0KEQypfGFx/W8Ke756G1wmiZXADcw2fltbDsR/XMWzmXzImlY2IObdtYaX52/r6SL6vLyMhu4+bHc0lLz8QYgxBiyF4s+rtO8o9fnI8d8iGkTi4D3MMvuLGKlQ/NIiO7zLGb1p5Vhm4ynsNLpTj06V7e/uVSAG5+vJ6JhYu9v3k8MQajHaZseXQ/rUcWD2JlUgCQKoS2Lb52TwXL7ykPbzqEGErNRIivNUIIejtP8PeHc9C24prv7WTOdaVoO4RU1pD/dw5fvWkn+94q9faWtCDooGux7IeVLL+nHG2HMFojlZWwxQdZ02iElGx77ADtTYVMmVPHirVXo20bIVUUpli0HKxnx/qrkcrGaJXcIKhtReG8faxYW3bK6kMObrTGGA2IuBjhWvPDv+yk9q1S/JldrF7vx0rze8yIBAsg2NfL5gcUoQE/QmqMSdgIsW1USM3Kh9zW2XA/dywlkcpCKgecWC+pLI7W1vHGs1cAcMO6GiZdckkYaBkFLMX2pz7hqy+mIVUo3qifGANmLNlF0fwrwrRXwywvlaIzcIzdrx3g8K5Mek6kQwxWMQaEgLamPIJ9GSy4sYpFtyyN6vfuZ3u2V/HJK8tG4/fxAzD/xoGwr5pB2d1ox3f3v1PN1sdm0NNenvBOcqce4puPXh6+ZzSQLVqPHObVxy93aJ+438cPQNGCIof2EZR0Dx9o+JxN9y1C2xbKCmJMfJQU0gYjuO2ZHvyZ450gF/mcMPDGDrF5bRf93VOdoKzHRMXGdpPzJk0Kp/nIgOTk/uq/NnuHt0M+tK1ivsBgB9P4xv3/pmDu7DDNVVS/f+O5Kpo+mxOm/phYP3YGKF9aNNsBcPK430lFcUZiN7VeWv4xJT8oww4FkVJ5kT4yQxyo+JiqjWVj5ffxM2Cguyuqbge4aFEf2lZIZSOEiTmraFuRPfkoq9fPdEC2fAgph2WIzq8CvPKzaeF0N+bFW2w3bD1yNCw/dcQhFEZrrrztCqbMrSM04McYgVQ2UoVGvCx/Hzc83IS0FL2dJ+jvOuldfSc76TvZQW9HO1seaaL3RA7KCiKEDn8/drBHskVMo7HrflpB+Y/Lo2pyV8LuWF/LZ68vItiXHvPT3biRsPnCrjcKLRAbALlFh7l32wVYaf5hBU9kldbe1Ejz/qN0nwhitImi+gZ7kB0yCHnayhgEKEtgjPP7QJ+hMwCBhgm01F1Mb2f2KSC0TEQRipiHo6vWVXLN7U6wUpZvuJ6PIpKSubpaj1P//kE++ls2jXvmerElTjbEBoCQGn9mFz95pYOcgsKoSm1wPZDcJYQcJJN3bf0Xrz87m572ifGWxbEDYLQkf2Y9d26cRHpWTlQmnM3l9gTcwqytsZFN93XTXHdpPCDERhejJVLZHDtYzIY7ArQ1NqIsH8Y4LazI3H22lpsmhRDYoSATCwu5Y0Me+TPr0baKtTsk4npBwkU2c2IrKx6oY+HNS88y/cMaIUq57bple1MjL9yaRX/3+FjigYj7DZHIQFM0v5arvtNB8bKZZE48/6xZ3y2/h5blrlt+8OedbH+qdOwZcIp+xlNzAOlZ7UyedYi8GZ1MyIe0cQKhBBiDts/YBAYBUo34QASQkeNj8uwCcqYUDEvBXsPEGOzgAL+6KUDrkanJASCSDUKYsSxORly+cT3Mu34X1z84l/QJ2cNAcMVaxYsVvP38iOX56AoLo6VjxDAjwHg/C6lZ87sG8qYXOpuM9FtjMNqgtc3Gu9oINEyLMYcLgn0ZfLp1Kcca6rhzow/fuPTwHoQXHI0xFC/L5+3nSS4Ap84jMGEWSBXCHvCzal0lFy0qO+P33nimkpYDZUhlYwfTYnY/5RvgaO0sPt5cScmacJ8yrEtcoHOLCsYuDcZb4s5eXu2pRic7GO+yQ0EA9v+zmvdfKou7n2+M8KrPQ5+OG1SaR660jMyzC4BL4az8Zr71ZLEjjcMzA7e8xRiksugItLDl0eKEO7pu3Bl/fv+g0nxQpggDfVYAEMIghKMBVq8/TnpWzjC/d/v/AC8/GKC3IwepQh5zYr3cClIqm6u/m+9J46Gt85PHj49dRyiWvp62Lb5+bwUXX1l+xmnOOy9U8J+PnOjs+n18eUiRntXOLU8cJH/mYq83GSnIkJIjNYeBKckHwPX7aYt3c+3d5d7gZKhwkcriy+rdvPubcoTUjDuvg9yiZoyRiJEgEAYhICO7h6KF3Sy4aSZZecMP72YBIQQ1r/mSzwDXhzNy2vj205PDOXmwQnOnOz3tbbz80IUIYZAqxJoXmym4bM6o1ODQ8tv9rHHvPhqqFiY/BgjhBL5bn/ycCRfkRbWIO/fb8sjndAbyMUaw4oEPKLhsjjNjjMgQI13atiPmkmpYdeg6046nYxZn1iio73RoS9ZUcum1ZWec5lT9sZK69xxNMHt5NUu+f/oZ4xkBP03DxS3EpLJ487lKjtTEnF6tUfl9wWX7WHF/yRmnuE21+3nzuSUIYZiQ1+KlyKGuMpqegFQWAsl7v61g5x/K42mfWwmlPKMlaend3PbMeKSyok5xhRAM9HazeW2G1/hc/fRXpGfNj+q/8RyacKoTUiKURW9HOzvW72PXtnLPOGM6GInW07/liT3kFi2JfpiwBtj28xpaD5d4neWLryo/bTstnkYIYbB72tvYu6OW9zdM50TL0kTeEknsFZnLV1Ux74YSQv19SMtC2/agfC+koubVKvZsL0FIzdSFn1F2Vyl2cMCbJyRi+dBAH13/bSPQ0ExDVT8H3p1BR6B00N6S1hX+P12pFyVTAKQASAGQAiAFQAqAFAApAFIApAA4N9f/AEac9kN0DXAMAAAAAElFTkSuQmCC">
-  <link rel="manifest" href="/manifest.json">
-
-  <!-- The same three faces the desktop site uses. Without these the app fell back to the system
-       font, which is why it never looked like the same studio. -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #000000;
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>B Dance Studio</title>
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<style>
+:root{--acc:#ff7a29;--acc2:#ffa057;--bd:#3a2010;--bd2:rgba(58,32,16,.45);--card:#171412;--card2:#0c0c0c;--ink:#1a1006;--g5:#8a857d;--g4:#b9b5ad;--g2:#e8e4dc;--ember:#ff4d2e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#0a0a0a;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+a{color:var(--acc);text-decoration:none}
+a:hover{color:var(--acc2)}
+i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
+.dsp{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:-.5px}
+.mn{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.bd-scroll{-ms-overflow-style:none;scrollbar-width:none}
+.bd-scroll::-webkit-scrollbar{display:none}
+button{font-family:inherit}
+input{font-family:inherit}
+@keyframes rake{0%{transform:translateX(-14%) skewX(-12deg)}50%{transform:translateX(10%) skewX(-12deg)}100%{transform:translateX(-14%) skewX(-12deg)}}
+@keyframes ctick{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes glowpulse{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes bounce3{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+@keyframes sheenmove{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
+@keyframes ringpop{0%{transform:scale(.6);opacity:.8}100%{transform:scale(2.1);opacity:0}}
+@keyframes barpulse{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes blob{0%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-6%) scale(1.18)}66%{transform:translate(-7%,7%) scale(.92)}100%{transform:translate(0,0) scale(1)}}
+@keyframes tape{from{background-position:0 0}to{background-position:64px 0}}
+@keyframes gridpan{from{transform:translateY(0)}to{transform:translateY(-46px)}}
+@keyframes crawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes flick{0%,94%,100%{opacity:.22}96%{opacity:.06}98%{opacity:.3}}
+.ct{opacity:0;animation:ctick .2s ease-out forwards}
+.sheen{position:relative;overflow:hidden}
+.sheen::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.28) 50%,transparent 80%);animation:sheenmove 2.6s ease-in-out infinite}
+.page{position:absolute;inset:0;display:none}
+.page.active{display:block}
+.btn-fill{cursor:pointer;transition:transform .15s}
+.btn-fill:active{transform:scale(.96)}
+.row-hit{position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.row-hit:active{border-color:var(--acc)}
+#toast{position:fixed;left:16px;right:16px;bottom:24px;z-index:9999;background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--acc);padding:12px 16px;font-size:12.5px;color:#fff;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#toast.show{opacity:1;transform:translateY(0)}
+.field-label{display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.field-input{width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px;outline:none;font-family:'JetBrains Mono',monospace}
+.field-input:focus{border-color:var(--acc)}
+.role-btn{position:relative;overflow:hidden;padding:16px 10px;cursor:pointer;text-align:left;transition:all .2s;border-radius:2px}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
+<div id="toast"></div>
+
+<div id="loading-screen" class="page active" style="background:#000;z-index:300;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center">
+    <img src="assets/logo.png" alt="" style="width:64px;height:64px;object-fit:contain;margin:0 auto 16px;display:block;animation:glowpulse 1.1s ease-in-out infinite"/>
+    <div style="display:flex;justify-content:center;gap:6px">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:bounce3 1.1s infinite"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:bounce3 1.1s .15s infinite"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:bounce3 1.1s .3s infinite"></span>
+    </div>
+  </div>
+</div>
+
+<div id="intro-screen" class="page">
+  <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;background:radial-gradient(120% 80% at 80% 0%,#100d0b,#0a0a0a 55%)">
+    <div style="position:absolute;top:-10%;left:-25%;width:70%;height:45%;border-radius:50%;filter:blur(46px);background:radial-gradient(circle,rgba(255,122,41,.15),transparent 66%);animation:blob 17s ease-in-out infinite"></div>
+    <div style="position:absolute;bottom:6%;right:-22%;width:66%;height:40%;border-radius:50%;filter:blur(52px);background:radial-gradient(circle,rgba(255,77,46,.11),transparent 70%);animation:blob 23s ease-in-out -6s infinite"></div>
+    <div style="position:absolute;inset:-46px 0;opacity:.45;background-image:linear-gradient(rgba(255,122,41,.035) 1px,transparent 1px);background-size:100% 46px;animation:gridpan 5.5s linear infinite"></div>
+    <div style="position:absolute;top:34%;left:-8%;right:-8%;height:26px;transform:rotate(-7deg);opacity:.055;background-image:repeating-linear-gradient(115deg,var(--acc) 0 22px,transparent 22px 44px);animation:tape 1.9s linear infinite"></div>
+    <div style="position:absolute;top:12%;left:0;right:0;overflow:hidden;opacity:.03">
+      <div class="dsp" style="display:flex;gap:26px;width:max-content;font-size:92px;line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--acc);white-space:nowrap;animation:crawl 26s linear infinite">
+        <span>BRAVE &middot; DREAM &middot; SHINE &middot;</span><span>BRAVE &middot; DREAM &middot; SHINE &middot;</span><span>BRAVE &middot; DREAM &middot; SHINE &middot;</span>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;opacity:.16;background-image:repeating-linear-gradient(180deg,rgba(0,0,0,.5) 0 1px,transparent 1px 3px);animation:flick 7s steps(1,end) infinite"></div>
+  </div>
+
+  <div class="bd-scroll" style="position:absolute;inset:0;overflow-y:auto;padding-top:52px;z-index:1">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 18px 0;gap:8px">
+      <button onclick="goAuth()" class="mn btn-fill" style="display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px -8px rgba(255,122,41,.85)"><i class="ph ph-sign-in" style="font-size:15px"></i><span id="m-signin-label">Sign In</span></button>
+      <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card);font-size:10.5px;font-weight:700">
+        <button onclick="setLang('en')" id="m-lang-en" style="padding:7px 13px;border:0;cursor:pointer">EN</button>
+        <button onclick="setLang('zh')" id="m-lang-zh" style="padding:7px 13px;border:0;cursor:pointer">中文</button>
+      </div>
+    </div>
+
+    <div style="position:relative;overflow:hidden;padding:22px 18px 26px">
+      <div aria-hidden="true" style="pointer-events:none;position:absolute;top:-25%;right:-60px;height:150%;width:70%;background:linear-gradient(to bottom left,rgba(255,122,41,.17),rgba(255,77,46,.07),transparent);animation:rake 9s ease-in-out infinite"></div>
+      <div style="position:relative">
+        <img src="assets/logo.png" alt="B Dance Studio" style="width:46px;height:46px;object-fit:contain;margin-bottom:16px"/>
+        <p class="mn" id="m-hero-eyebrow" style="color:var(--acc);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.2em;margin:0 0 10px"></p>
+        <h1 class="dsp" id="m-hero-title" style="font-size:48px;line-height:.9;text-transform:uppercase;margin:0 0 14px"></h1>
+        <p id="m-hero-lead" style="color:var(--g4);font-size:13px;line-height:1.65;margin:0 0 18px"></p>
+        <div style="display:flex;gap:8px;margin-bottom:22px">
+          <button onclick="scrollToSection('m-locations')" class="mn btn-fill" style="display:inline-flex;align-items:center;gap:7px;padding:11px 15px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap"><i class="ph ph-map-pin" style="font-size:15px"></i><span id="m-find-btn"></span></button>
+          <button onclick="scrollToSection('m-instructors')" class="mn btn-fill" style="display:inline-flex;align-items:center;gap:7px;padding:11px 15px;border-radius:999px;border:1px solid rgba(255,160,87,.4);background:rgba(255,122,41,.07);color:var(--acc2);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;cursor:pointer"><i class="ph ph-users-three" style="font-size:15px"></i><span id="m-meet-btn"></span></button>
+        </div>
+        <div id="m-stats" style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)"></div>
+      </div>
+    </div>
+
+    <div style="padding:26px 18px;border-top:1px solid var(--bd2)">
+      <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 12px" id="m-events-title"></p>
+      <div id="m-events-wrap" style="overflow:hidden;border:1px solid var(--bd);background:var(--card)">
+        <div id="m-events-track" style="display:flex"></div>
+      </div>
+      <div id="m-event-dots" style="display:flex;justify-content:center;gap:7px;margin-top:14px"></div>
+    </div>
+
+    <div id="m-shops-section" style="padding:26px 0;border-top:1px solid var(--bd2);display:none">
+      <div style="padding:0 18px">
+        <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px" id="m-shops-eyebrow"></p>
+        <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0 0 8px" id="m-shops-title"></h2>
+        <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 16px" id="m-shops-lead"></p>
+      </div>
+      <div style="overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)">
+        <div id="m-shops-row" style="display:flex;gap:14px;width:max-content;animation:drift 26s linear infinite;padding:0 18px"></div>
+      </div>
+    </div>
+
+    <div style="padding:26px 18px;border-top:1px solid var(--bd2)">
+      <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px" id="m-about-eyebrow"></p>
+      <h2 class="dsp" style="font-size:30px;text-transform:uppercase;line-height:.95;margin:0 0 10px" id="m-about-title"></h2>
+      <p style="color:var(--g4);font-size:12.5px;line-height:1.7;margin:0" id="m-about-lead"></p>
+    </div>
+
+    <div id="m-instructors" style="padding:26px 18px;border-top:1px solid var(--bd2)">
+      <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px" id="m-instr-eyebrow"></p>
+      <h2 class="dsp" style="font-size:30px;text-transform:uppercase;line-height:.95;margin:0 0 10px" id="m-instr-title"></h2>
+      <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 16px" id="m-instr-lead"></p>
+      <div id="m-teacher-list" style="display:flex;flex-direction:column;gap:10px"></div>
+      <button onclick="toggleAllTeachers()" id="m-teacher-toggle" class="mn btn-fill" style="width:100%;margin-top:14px;background:transparent;border:1px solid #a84715;color:var(--acc2);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:12px;cursor:pointer;display:none"></button>
+    </div>
+
+    <div id="m-locations" style="padding:26px 18px;border-top:1px solid var(--bd2)">
+      <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px" id="m-loc-eyebrow"></p>
+      <h2 class="dsp" style="font-size:30px;text-transform:uppercase;line-height:.95;margin:0 0 10px" id="m-loc-title"></h2>
+      <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 16px" id="m-loc-lead"></p>
+      <div id="m-locations-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <div style="padding:34px 18px;border-top:1px solid var(--bd2);text-align:center">
+      <h2 class="dsp" style="font-size:34px;text-transform:uppercase;margin:0 0 8px" id="m-cta-title"></h2>
+      <p style="color:var(--g4);font-size:12.5px;margin:0 0 18px" id="m-cta-lead"></p>
+      <button onclick="openContact()" class="mn sheen btn-fill" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember)" id="m-cta-btn"></button>
+    </div>
+
+    <div id="m-footer" style="padding:26px 18px 40px;border-top:1px solid var(--bd2);background:rgba(5,5,5,.82)">
+      <h5 class="dsp" style="color:#fff;font-size:22px;text-transform:uppercase;margin:0 0 8px">B Dance Studio</h5>
+      <p style="color:var(--g5);font-size:11px;line-height:1.7;margin:0 0 14px" id="m-foot-tag"></p>
+      <div id="m-foot-social" class="mn" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px"></div>
+      <div id="m-foot-contact" style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:var(--g4)"></div>
+      <p class="mn" id="m-foot-copy" style="color:#4a4640;font-size:9px;text-align:center;margin:26px 0 0"></p>
+    </div>
+  </div>
+</div>
+
+<div id="auth-screen" class="page">
+  <div class="bd-scroll" style="position:absolute;inset:0;overflow-y:auto;padding:60px 22px 40px">
+    <div aria-hidden="true" style="pointer-events:none;position:absolute;top:0;right:-80px;height:70%;width:80%;background:linear-gradient(to bottom left,rgba(255,122,41,.14),transparent 65%);animation:rake 11s ease-in-out infinite"></div>
+    <div style="position:relative">
+      <button onclick="goIntro()" class="mn btn-fill" style="background:none;border:0;color:var(--g5);font-size:10px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;padding:0;margin-bottom:26px" id="m-auth-back"></button>
+      <div style="text-align:center;margin-bottom:26px">
+        <img src="assets/logo.png" alt="B Dance Studio" style="width:78px;height:78px;object-fit:contain;margin:0 auto 14px;display:block"/>
+        <h1 class="dsp" style="font-size:38px;text-transform:uppercase;margin:0">B Dance Studio</h1>
+        <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;margin:6px 0 0" id="m-auth-portal"></p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+        <button onclick="pickRole('student')" id="m-role-student" class="role-btn">
+          <div style="font-size:22px;line-height:1;margin-bottom:8px"><i class="ph ph-graduation-cap"></i></div>
+          <p class="mn" style="margin:0;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase" id="m-role-student-label"></p>
+          <p style="margin:4px 0 0;font-size:10px;color:var(--g5);line-height:1.4" id="m-role-student-sub"></p>
+        </button>
+        <button onclick="pickRole('teacher')" id="m-role-teacher" class="role-btn">
+          <div style="font-size:22px;line-height:1;margin-bottom:8px"><i class="ph ph-person-simple-run"></i></div>
+          <p class="mn" style="margin:0;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase" id="m-role-teacher-label"></p>
+          <p style="margin:4px 0 0;font-size:10px;color:var(--g5);line-height:1.4" id="m-role-teacher-sub"></p>
+        </button>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:20px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 14px" id="m-cred-heading"></p>
+        <div id="m-cred-error" style="display:none;color:var(--ember);font-size:11.5px;margin:0 0 12px"></div>
+        <label class="field-label" id="m-username-label"></label>
+        <input id="login-user" class="field-input" style="margin-bottom:12px" autocomplete="username"/>
+        <label class="field-label" id="m-password-label"></label>
+        <div style="position:relative;margin-bottom:18px">
+          <input id="login-pass" type="password" class="field-input" style="padding-right:42px" autocomplete="current-password"/>
+          <button onclick="togglePw()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer"><i class="ph ph-eye" id="m-pw-eye" style="color:var(--g5);font-size:16px"></i></button>
+        </div>
+        <button onclick="doLogin()" id="m-login-btn" class="mn sheen btn-fill" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember)"></button>
+      </div>
+
+      <div style="display:flex;border:1px solid var(--bd);background:var(--card);font-size:11px;font-weight:700;overflow:hidden;width:max-content;margin:22px auto 0">
+        <button onclick="setLang('en')" style="padding:7px 14px;border:0;cursor:pointer" id="m-lang2-en">EN</button>
+        <button onclick="setLang('zh')" style="padding:7px 14px;border:0;cursor:pointer" id="m-lang2-zh">中文</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen" class="page" style="background:#0a0a0a">
+  <header style="border-bottom:2px solid var(--acc);background:#000;position:absolute;top:0;left:0;right:0;z-index:2">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px">
+      <div style="display:flex;align-items:center;gap:9px;min-width:0">
+        <img src="assets/logo.png" alt="" style="width:26px;height:26px;object-fit:contain"/>
+        <div style="min-width:0">
+          <p class="dsp" style="font-size:17px;text-transform:uppercase;margin:0;line-height:1">B Dance Studio</p>
+          <p class="mn" id="m-app-role" style="font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;margin:2px 0 0;color:var(--acc)"></p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;border:1px solid var(--bd);background:var(--card);font-size:10px;font-weight:700;overflow:hidden">
+          <button onclick="setLang('en')" id="m-lang3-en" style="padding:5px 8px;border:0;cursor:pointer">EN</button>
+          <button onclick="setLang('zh')" id="m-lang3-zh" style="padding:5px 8px;border:0;cursor:pointer">中</button>
+        </div>
+        <button onclick="toggleMenu()" style="background:none;border:1px solid var(--bd);color:var(--acc);width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center"><i class="ph ph-list"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="bd-scroll" style="position:absolute;top:50px;bottom:66px;left:0;right:0;overflow-y:auto;padding:16px 14px 22px">
+    <div id="pg-fees"></div>
+    <div id="pg-myclasses" style="display:none"></div>
+    <div id="pg-allclasses" style="display:none"></div>
+    <div id="pg-attendance" style="display:none"></div>
+    <div id="pg-rewards" style="display:none"></div>
+    <div id="pg-profile" style="display:none"></div>
+    <div id="pg-today" style="display:none"></div>
+    <div id="pg-roster" style="display:none"></div>
+    <div id="pg-hours" style="display:none"></div>
+    <div id="pg-mark" style="display:none"></div>
+    <div id="pg-tprofile" style="display:none"></div>
+    <div id="pg-staff" style="display:none"></div>
+  </main>
+
+  <nav id="m-bottomnav" style="position:absolute;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--acc);display:flex;padding-bottom:14px"></nav>
+</div>
+
+<div id="menu-drawer" style="position:absolute;inset:0;background:rgba(0,0,0,.8);z-index:190;padding-top:100px;display:none" onclick="toggleMenu()">
+  <div style="background:var(--card);border-top:1px solid var(--bd);border-bottom:2px solid var(--acc);padding:14px" onclick="event.stopPropagation()">
+    <button onclick="goProfilePage()" id="m-menu-profile" style="width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd2);padding:13px 8px;cursor:pointer;font-size:12.5px;color:#fff"><i class="ph ph-user-circle" style="margin-right:8px"></i><span id="m-menu-profile-label"></span></button>
+    <button onclick="doLogout()" style="width:100%;text-align:left;background:none;border:0;padding:13px 8px;cursor:pointer;font-size:12.5px;color:#ff8a78"><i class="ph ph-sign-out" style="margin-right:8px"></i><span id="m-menu-signout-label"></span></button>
+  </div>
+</div>
+
+<div id="reward-code-modal" style="position:absolute;inset:0;background:rgba(0,0,0,.88);z-index:230;display:none;align-items:center;justify-content:center;padding:24px" onclick="closeRewardCode()">
+  <div style="background:var(--card);border:1px solid var(--acc);padding:24px;text-align:center;width:100%;max-width:280px" onclick="event.stopPropagation()">
+    <div style="font-size:34px;margin-bottom:8px;color:var(--acc)"><i class="ph ph-gift"></i></div>
+    <p class="mn" id="m-rc-title" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 6px"></p>
+    <p id="m-rc-name" style="color:#fff;font-size:13px;margin:0 0 14px"></p>
+    <p class="mn sheen" id="m-rc-code" style="color:var(--acc);font-size:28px;font-weight:600;letter-spacing:.22em;margin:0 0 14px;padding:10px;border:1px dashed var(--bd);background:#000"></p>
+    <p id="m-rc-note" style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 16px"></p>
+    <button onclick="closeRewardCode()" id="m-rc-close" class="mn btn-fill" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:12px;border:0;cursor:pointer"></button>
+  </div>
+</div>
+
+<script>
+const CLOUD_URL='/api/db';
+let sessionToken='';
+let session=null;
+let currentLang='en';
+let loginRole='student';
+let dbIsPublicOnly=false;
+
+const DB={
+  places:[
+    {id:1,name:'Adda Height',address:'Adda Height, Kajang, Selangor'},
+    {id:2,name:'Horizon Square',address:'Horizon Square, Johor Bahru, Johor'},
+    {id:3,name:'Tasek',address:'Tasek, Ipoh, Perak'},
+    {id:4,name:'Kulai',address:'Kulai, Johor'},
+  ],
+  teachers:[],
+  classes:[],
+  intro:{footer:{}},
+};
+
+const TEACHER_PALETTE=['#ff7a29','#4ade80','#60a5fa','#f472b6','#facc15','#a78bfa','#2dd4bf','#fb7185'];
+const DEFAULT_PLACE_ADDRESS={1:'Adda Height, Kajang, Selangor',2:'Horizon Square, Johor Bahru, Johor',3:'Tasek, Ipoh, Perak',4:'Kulai, Johor'};
+const Pl=id=>DB.places.find(p=>p.id===id)||{name:'—'};
+const TCOLOR=id=>{const t=DB.teachers.find(x=>x.id===id);const idx=t?DB.teachers.indexOf(t):0;return TEACHER_PALETTE[idx%TEACHER_PALETTE.length];};
+const ini=n=>(n||'').trim().split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+const placeAddress=pl=>(pl&&pl.address&&String(pl.address).trim())?String(pl.address).trim():(DEFAULT_PLACE_ADDRESS[pl&&pl.id]||(pl&&pl.name+', Malaysia')||'');
+function H(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function multiline(v){ return H(v).replace(/\r?\n/g,'<br/>'); }
+function digitsOnly(v){ return String(v||'').replace(/[^\d+]/g,'').replace(/(?!^)\+/g,''); }
+function waLink(v){ const d=digitsOnly(v).replace(/^\+/,''); return d?('https://wa.me/'+d):''; }
+
+function ensureIntro(){
+  if(!DB.intro||typeof DB.intro!=='object') DB.intro={};
+  if(!DB.intro.footer||typeof DB.intro.footer!=='object') DB.intro.footer={};
+}
+function IV(key){ ensureIntro(); const v=DB.intro[key]; return (v!=null&&String(v).trim()!=='')?String(v).trim():''; }
+function FV(key){ ensureIntro(); const v=DB.intro.footer[key]; return (v!=null&&String(v).trim()!=='')?String(v).trim():''; }
+function blankEvent(){ return { badge:'', title:'', lead:'', date:'', time:'', venue:'', cats:'', regUrl:'', poster:'' }; }
+function getIntroEvents(){
+  ensureIntro();
+  const I=DB.intro;
+  if(Array.isArray(I.events)&&I.events.length) return I.events.map(e=>Object.assign(blankEvent(),e));
+  const legacy={ badge:I.eventBadge||'', title:I.eventTitle||'', lead:I.eventLead||'', date:I.eventDate||'',
+    time:I.eventTime||'', venue:I.eventVenue||'', cats:I.eventCats||'', regUrl:I.eventRegUrl||'', poster:I.eventPoster||'' };
+  const touched=Object.values(legacy).some(x=>x!=null&&String(x).trim()!=='');
+  return touched?[legacy]:[blankEvent()];
+}
+
+const T18N={
+  en:{signIn:'Sign In',findStudio:'Find a Studio',meetInstructors:'Meet Instructors',eventsTitle:'Upcoming Events',
+    eventBtn:'Sign in to register →',shopsEyebrow:'Collaborated Shops',shopsTitle:'Perks For Our Students',
+    shopsLead:'Show your student ID at any partner shop for 10% off.',shopOff:'10% OFF',
+    aboutEyebrow:'About Us',aboutTitle:'Built By Dancers,\nNot A Branch Playbook',
+    aboutLead:'B Dance Studio started as one room teaching hip-hop fundamentals. Today our branches teach everything from beginner hip-hop to competition choreography — taught by instructors who still perform.',
+    instrEyebrow:'Our Instructors',instrTitle:'Learn From People\nWho Still Train',
+    instrLead:'Resident instructors across our branches, each with real specialities rather than a little of everything.',
+    tapToView:'Tap to view',showAllTeachers:'Show all instructors',showLess:'Show fewer',
+    locEyebrow:'Locations',locTitle:'Our Branches,\nOne Studio',locLead:'Same styles, same teaching standard, different neighbourhoods.',
+    getDirections:'📍 Get Directions →',ctaTitle:'Ready To Start?',ctaLead:'Enrolled students and teachers sign in above.',contactBtn:'Contact Us →',registerNow:'Register Now →',
+    statFranchises:'Branches',statStyles:'Styles',statInstructors:'Instructors',statFounded:'Founded',
+    portal:'Teacher & Student Portal',student:'Student',studentSub:'Fees, classes, attendance & rewards',
+    teacher:'Teacher',teacherSub:'Roster, attendance & your hours',username:'Username',password:'Password',
+    signIn2:'Sign In',back:'← Back',loggingIn:'Signing in…',signOut:'Sign out',
+    fillBoth:'Please enter your username and password',noConnection:'No internet connection — please check and try again',
+    cantReach:'Could not reach the server — please try again',invalidCred:'Invalid username or password',
+    loadFail:'Signed in, but could not load your data — please try again',
+    appSoonTitle:'The rest is on its way',appSoonBody:'Fees, classes, attendance and rewards for students — roster, hours and attendance for teachers. Coming in the next update.',
+    footTagline:'A dance studio run by people who still train.',
+    tabFees:'Fees',tabMyClasses:'Classes',tabAllClasses:'All',tabAttendance:'Attendance',tabRewards:'Rewards',
+    tabToday:'Today',tabRoster:'Roster',tabHours:'Hours',tabMark:'Mark',menuProfile:'My Profile',
+    howToPay:'How To Pay',bankTransfer:'Bank Transfer',tngEwallet:'eWallet / DuitNow',scanToPay:'Scan to pay',payHint:'Send a screenshot of your payment to the front desk to confirm.',
+    monthlyFee:'Monthly Fee',classCredits:'Class Credits',creditsLeft:'credits left',unpaid:'Unpaid',outstanding:'Outstanding Payments',payHistory:'Payment History',noPayments:'No payment records yet',
+    myClasses:'My Classes',myProfile:'My Profile',classmates:'Classmates',noClassmates:'No other students yet',enrollHint:'To join or drop a class, ask the front desk.',
+    allClasses:'All Classes',joinHint:'To join a class, ask the front desk.',allStyles:'All',
+    myAttendance:'My Attendance',attHint:'This is view-only — ask the front desk about any change.',cycleProgress:'Cycle progress',notEnrolled:'Not enrolled in any classes yet',
+    points:'Points',redeemRewards:'Redeem Rewards',redeem:'Redeem',redemptionHistory:'Redemption History',noRedemptions:'No redemptions yet',collected:'Collected',pendingCollect:'Show code to counter',
+    gradesByStyle:'Grades By Style',noGradesYet:'No grades yet',birthday:'Birthday',claimBirthday:'Claim Birthday Bonus',birthdayToday:"It's your birthday!",birthdayClaimed:'Claimed for this year',birthdayNone:'No birthday on file',notBirthday:'Not your birthday yet',
+    profileDetails:'Profile Details',lockedHint:'These details are managed by the front desk.',dob:'Date of Birth',saveBirthday:'Save Birthday',birthdaySaved:'Birthday saved',
+    changePassword:'Change Password',comingSoon:'Coming soon on mobile — change your password on the desktop site for now.',
+    notEnoughPoints:'Not enough points for this reward',
+    yourCode:'Your Redemption Code',showCounter:'Show this code to the counter to collect your reward.',close:'Close',
+    nextClass:'Next Class',minsToGo:'mins to go',weekAhead:'Week Ahead',takeAttendance:'Take Attendance',noUpcoming:'No upcoming classes this week',
+    rosterLead:'Your classes and who is in them.',markAttendance:'Mark Attendance',students:'students',
+    mySalary:'My Salary',estPay:'Estimated Pay',payBreakdown:'Pay Breakdown',allMonths:'All Months',
+    markDateLine:'Pick a class to mark',marked:'Marked',allPresent:'All Present',present:'Present',absent:'Absent',cancelled:'Cancelled',saveRoster:'Save Attendance',addRemark:'Add a remark…',saveRemark:'Save Remark',
+    markSaved:'Attendance saved',markFailed:'Could not save — check your connection and try again',creditOnlyLocked:'This student attends by credit — mark from the desktop site',
+    myPublicProfile:'My Public Profile',shownOnIntro:'Shown on the public intro page',quote:'Portfolio / Bio',instagramHandle:'Instagram',showreelLink:'Showreel Link',saveProfile:'Save Profile',profileSaved:'Profile updated',
+    selectClass:'Select a class',pickAClass:'Pick a class above to mark attendance'},
+  zh:{signIn:'登录',findStudio:'寻找分店',meetInstructors:'认识导师',eventsTitle:'近期活动',
+    eventBtn:'登录报名 →',shopsEyebrow:'合作商店',shopsTitle:'学员专属优惠',
+    shopsLead:'在合作商店出示学生证即可享 9 折优惠。',shopOff:'9 折',
+    aboutEyebrow:'关于我们',aboutTitle:'由舞者创立\n不是分店模板',
+    aboutLead:'B Dance Studio 从一间教授Hip-hop基础的教室开始。如今我们的分店教授从初学Hip-hop到竞技编舞的一切课程——由仍在表演的导师授课。',
+    instrEyebrow:'我们的导师',instrTitle:'向仍在训练的\n专业导师学习',
+    instrLead:'各分店的常驻导师，各有真正的专长，而非样样略懂。',
+    tapToView:'点击查看',showAllTeachers:'查看全部导师',showLess:'收起',
+    locEyebrow:'分店地点',locTitle:'我们的分店\n同一标准',locLead:'相同的风格，相同的教学标准，不同的社区。',
+    getDirections:'📍 获取路线 →',ctaTitle:'准备好开始了吗？',ctaLead:'在读学生与导师请在上方登录。',contactBtn:'联系我们 →',registerNow:'立即报名 →',
+    statFranchises:'分店',statStyles:'舞蹈风格',statInstructors:'导师',statFounded:'成立于',
+    portal:'导师与学生入口',student:'学生',studentSub:'学费、课程、出席与积分奖励',
+    teacher:'导师',teacherSub:'学生名单、出席与工时',username:'用户名',password:'密码',
+    signIn2:'登录',back:'← 返回',loggingIn:'登录中…',signOut:'登出',
+    fillBoth:'请输入用户名与密码',noConnection:'没有网络连接 —— 请检查后重试',
+    cantReach:'无法连接服务器 —— 请重试',invalidCred:'用户名或密码错误',
+    loadFail:'已登录，但无法载入数据 —— 请重试',
+    appSoonTitle:'其余功能即将上线',appSoonBody:'学生端的学费、课程、出席与积分奖励，以及导师端的名单、工时与出席——下个版本推出。',
+    footTagline:'一间由仍在训练的舞者经营的舞室。',
+    tabFees:'学费',tabMyClasses:'课程',tabAllClasses:'全部',tabAttendance:'出席',tabRewards:'奖励',
+    tabToday:'今日',tabRoster:'名单',tabHours:'工时',tabMark:'点名',menuProfile:'我的资料',
+    howToPay:'缴费方式',bankTransfer:'银行转账',tngEwallet:'电子钱包 / DuitNow',scanToPay:'扫码付款',payHint:'付款后请将截图发送至前台确认。',
+    monthlyFee:'每月学费',classCredits:'课时',creditsLeft:'剩余课时',unpaid:'未缴',outstanding:'待缴款项',payHistory:'缴费记录',noPayments:'暂无缴费记录',
+    myClasses:'我的课程',myProfile:'我的资料',classmates:'同学',noClassmates:'暂无其他同学',enrollHint:'如需报读或退出课程，请联系前台。',
+    allClasses:'全部课程',joinHint:'如需报读课程，请联系前台。',allStyles:'全部',
+    myAttendance:'我的出席记录',attHint:'仅供查看 —— 如需更改请联系前台。',cycleProgress:'周期进度',notEnrolled:'尚未报读任何课程',
+    points:'积分',redeemRewards:'兑换奖励',redeem:'兑换',redemptionHistory:'兑换记录',noRedemptions:'暂无兑换记录',collected:'已领取',pendingCollect:'请向前台出示代码',
+    gradesByStyle:'各风格等级',noGradesYet:'暂无等级',birthday:'生日',claimBirthday:'领取生日奖励',birthdayToday:'生日快乐！',birthdayClaimed:'今年已领取',birthdayNone:'尚未登记生日',notBirthday:'还没到你的生日',
+    profileDetails:'资料详情',lockedHint:'这些信息由前台管理。',dob:'出生日期',saveBirthday:'保存生日',birthdaySaved:'生日已保存',
+    changePassword:'修改密码',comingSoon:'手机版暂未支持 —— 请先在电脑版网站修改密码。',
+    notEnoughPoints:'积分不足，无法兑换此奖励',
+    yourCode:'您的兑换代码',showCounter:'请向前台出示此代码以领取奖励。',close:'关闭',
+    nextClass:'下一堂课',minsToGo:'分钟后开始',weekAhead:'本周课程',takeAttendance:'开始点名',noUpcoming:'本周暂无课程',
+    rosterLead:'您的课程与学生名单。',markAttendance:'点名',students:'名学生',
+    mySalary:'我的薪资',estPay:'预估薪资',payBreakdown:'薪资明细',allMonths:'全部月份',
+    markDateLine:'选择要点名的课程',marked:'已点名',allPresent:'全部出席',present:'出席',absent:'缺席',cancelled:'取消',saveRoster:'保存出席记录',addRemark:'添加备注…',saveRemark:'保存备注',
+    markSaved:'出席记录已保存',markFailed:'保存失败 —— 请检查网络后重试',creditOnlyLocked:'该学生使用课时出席 —— 请在电脑版网站操作',
+    myPublicProfile:'我的公开资料',shownOnIntro:'显示在官网首页',quote:'作品集 / 简介',instagramHandle:'Instagram',showreelLink:'作品视频链接',saveProfile:'保存资料',profileSaved:'资料已更新',
+    selectClass:'选择课程',pickAClass:'请先在上方选择要点名的课程'}
+};
+function tr(k){ return (T18N[currentLang]&&T18N[currentLang][k])||T18N.en[k]||k; }
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+async function fetchWithTimeout(url,opts,ms){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),ms||8000);
+  try{ return await fetch(url,{...opts,signal:ctrl.signal}); }
+  finally{ clearTimeout(timer); }
+}
+
+async function cloudLoadPublic(){
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'GET'},8000);
+    if(!r||!r.ok) return false;
+    const j=await r.json();
+    if(!j||!j.data) return false;
+    const parsed=JSON.parse(j.data);
+    if(parsed&&parsed.db){ Object.keys(parsed.db).forEach(k=>{ DB[k]=parsed.db[k]; }); ensureIntro(); return true; }
+    return false;
+  }catch(e){ return false; }
+}
+let nid={};
+async function cloudLoadFull(){
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'GET',headers:sessionToken?{'Authorization':'Bearer '+sessionToken}:{}},8000);
+    if(!r||!r.ok) return false;
+    const j=await r.json();
+    if(!j||!j.data) return false;
+    const parsed=JSON.parse(j.data);
+    if(parsed&&parsed.db&&parsed.scope!=='public'){
+      Object.keys(parsed.db).forEach(k=>{ DB[k]=parsed.db[k]; }); ensureIntro(); dbIsPublicOnly=false;
+      if(parsed.nid&&typeof parsed.nid==='object') nid=parsed.nid;
+      return true;
+    }
+    return false;
+  }catch(e){ return false; }
+}
+async function serverLogin(u,p,role){
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'login',user:u,pass:p,role})},8000);
+    if(!r||!r.ok) return null;
+    const j=await r.json().catch(()=>null);
+    if(!j||typeof j.ok!=='boolean') return null;
+    return j;
+  }catch(e){ return null; }
+}
+
+function contentDefaults(){
+  return {
+    heroEyebrow:[...new Set(DB.classes.map(c=>c.style))].slice(0,4).join(' · '),
+    heroTitle:'Move Like\nYou Mean It',
+    heroLead:'Beginners through competition crews across our street styles — from your first count of 8 to your first time on stage.',
+  };
+}
+function cv(key,fallback){ return IV(key)||fallback; }
+
+let eventSlide=0;
+let eventAutoTimer=null;
+
+function renderIntro(){
+  ensureIntro();
+  const C=contentDefaults();
+  document.getElementById('m-signin-label').textContent=tr('signIn');
+  document.getElementById('m-hero-eyebrow').textContent=cv('heroEyebrow',C.heroEyebrow);
+  document.getElementById('m-hero-title').innerHTML=multiline(cv('heroTitle',C.heroTitle));
+  document.getElementById('m-hero-lead').textContent=cv('heroLead',C.heroLead);
+  document.getElementById('m-find-btn').textContent=tr('findStudio');
+  document.getElementById('m-meet-btn').textContent=tr('meetInstructors');
+  document.getElementById('m-events-title').textContent=tr('eventsTitle');
+  document.getElementById('m-about-eyebrow').textContent=tr('aboutEyebrow');
+  document.getElementById('m-about-title').innerHTML=multiline(tr('aboutTitle'));
+  document.getElementById('m-about-lead').textContent=tr('aboutLead');
+  document.getElementById('m-instr-eyebrow').textContent=tr('instrEyebrow');
+  document.getElementById('m-instr-title').innerHTML=multiline(tr('instrTitle'));
+  document.getElementById('m-instr-lead').textContent=tr('instrLead');
+  document.getElementById('m-loc-eyebrow').textContent=tr('locEyebrow');
+  document.getElementById('m-loc-title').innerHTML=multiline(tr('locTitle'));
+  document.getElementById('m-loc-lead').textContent=tr('locLead');
+  document.getElementById('m-cta-title').textContent=tr('ctaTitle');
+  document.getElementById('m-cta-lead').textContent=tr('ctaLead');
+  document.getElementById('m-cta-btn').textContent=tr('contactBtn');
+
+  const styleCount=new Set(DB.classes.map(c=>c.style)).size;
+  document.getElementById('m-stats').innerHTML=`
+    <div style="padding:12px 2px;text-align:center;border-right:1px solid var(--bd)"><p class="dsp" style="color:var(--acc);font-size:30px;line-height:1;margin:0">${DB.places.length}</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin:6px 0 0">${tr('statFranchises')}</p></div>
+    <div style="padding:12px 2px;text-align:center;border-right:1px solid var(--bd)"><p class="dsp" style="color:var(--acc);font-size:30px;line-height:1;margin:0">${styleCount}</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin:6px 0 0">${tr('statStyles')}</p></div>
+    <div style="padding:12px 2px;text-align:center;border-right:1px solid var(--bd)"><p class="dsp" style="color:var(--acc);font-size:30px;line-height:1;margin:0">${DB.teachers.length}</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin:6px 0 0">${tr('statInstructors')}</p></div>
+    <div style="padding:12px 2px;text-align:center"><p class="dsp" style="color:var(--acc);font-size:30px;line-height:1;margin:0">2026</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin:6px 0 0">${tr('statFounded')}</p></div>`;
+
+  renderEvents();
+  renderTeachers(false);
+  renderLocations();
+  renderFooter();
+}
+
+function renderEvents(){
+  const events=getIntroEvents().filter(e=>e.title||e.lead||e.date);
+  const track=document.getElementById('m-events-track');
+  const dots=document.getElementById('m-event-dots');
+  if(!events.length){ track.innerHTML=''; dots.innerHTML=''; document.getElementById('m-events-wrap').style.display='none'; return; }
+  document.getElementById('m-events-wrap').style.display='';
+  track.style.transition='transform .4s cubic-bezier(.16,.84,.34,1)';
+  track.style.transform=`translateX(-${eventSlide*100}%)`;
+  track.innerHTML=events.map(ev=>{
+    const cats=(ev.cats||'').split(',').map(c=>c.trim()).filter(Boolean);
+    return `<div style="flex:0 0 100%;min-width:100%;padding:14px">
+      <div style="position:relative;margin-bottom:12px">
+        <img src="${ev.poster||'assets/default-event-poster.jpg'}" alt="" style="width:100%;display:block;border:1px solid var(--bd2);background:#000;aspect-ratio:4/3;object-fit:cover"/>
+        ${ev.badge?`<span class="mn" style="position:absolute;top:8px;left:8px;background:var(--acc);color:#000;font-size:9.5px;font-weight:700;padding:3px 8px;text-transform:uppercase;letter-spacing:.08em">${H(ev.badge)}</span>`:''}
+      </div>
+      <h2 class="dsp" style="font-size:26px;text-transform:uppercase;margin:0 0 8px">${H(ev.title)}</h2>
+      <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 10px">${H(ev.lead)}</p>
+      <div class="mn" style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--g2);margin-bottom:12px">
+        ${ev.date?`<p style="margin:0"><i class="ph ph-calendar-blank" style="color:var(--acc)"></i> ${H(ev.date)}</p>`:''}
+        ${ev.time?`<p style="margin:0"><i class="ph ph-clock" style="color:var(--acc)"></i> ${H(ev.time)}</p>`:''}
+        ${ev.venue?`<p style="margin:0"><i class="ph ph-map-pin" style="color:var(--acc)"></i> ${H(ev.venue)}</p>`:''}
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        ${cats.map(c=>`<span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9.5px;font-weight:600;padding:4px 8px">${H(c)}</span>`).join('')}
+      </div>
+      <button onclick="handleEventBtn(this)" data-url="${H(ev.regUrl||'')}" class="mn btn-fill" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px;border:0;cursor:pointer">${ev.regUrl?tr('registerNow'):tr('eventBtn')}</button>
+    </div>`;
+  }).join('');
+  dots.innerHTML=events.map((e,i)=>`<button onclick="goEventSlide(${i})" aria-label="event ${i+1}" style="height:6px;border:0;padding:0;cursor:pointer;transition:all .35s;width:${i===eventSlide?'22px':'6px'};background:${i===eventSlide?'var(--acc)':'var(--bd)'}"></button>`).join('');
+  clearInterval(eventAutoTimer);
+  if(events.length>1) eventAutoTimer=setInterval(()=>goEventSlide((eventSlide+1)%events.length),6000);
+}
+function goEventSlide(i){ eventSlide=i; renderEvents(); }
+function handleEventBtn(btn){
+  const url=btn.getAttribute('data-url');
+  if(url) window.open(url,'_blank','noopener');
+  else goAuth();
+}
+
+let showAllTeachers=false;
+function renderTeachers(){
+  const list=document.getElementById('m-teacher-list');
+  const teachers=DB.teachers;
+  const preview=8;
+  const shown=showAllTeachers?teachers:teachers.slice(0,preview);
+  list.innerHTML=shown.map(t=>{
+    const specs=t.specs||[];
+    return `<button class="row-hit" style="width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);padding:11px;display:flex;align-items:center;gap:12px" onclick="openTeacherModal(${t.id})">
+      ${t.photo?`<div style="width:54px;height:54px;border-radius:50%;flex-shrink:0;background-size:cover;background-position:center;background-image:url('${t.photo}')"></div>`
+        :`<div style="width:54px;height:54px;border-radius:50%;flex-shrink:0;background:linear-gradient(150deg,${TCOLOR(t.id)},#000);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:19px">${ini(t.name)}</div>`}
+      <div style="flex:1;min-width:0">
+        <p style="color:#fff;font-weight:700;font-size:13.5px;margin:0">${H(t.name)}</p>
+        <p style="color:var(--g5);font-size:11px;margin:3px 0 0">${specs.map(H).join(', ')}</p>
+        <p class="mn" style="color:var(--acc);font-size:9px;margin:5px 0 0;letter-spacing:.1em;text-transform:uppercase">${tr('tapToView')}</p>
+      </div>
+      <span style="color:var(--acc);font-size:16px"><i class="ph ph-arrow-right"></i></span>
+    </button>`;
+  }).join('');
+  const toggleBtn=document.getElementById('m-teacher-toggle');
+  if(teachers.length>preview){
+    toggleBtn.style.display='';
+    toggleBtn.textContent=showAllTeachers?tr('showLess'):tr('showAllTeachers');
+  }else toggleBtn.style.display='none';
+}
+function toggleAllTeachers(){ showAllTeachers=!showAllTeachers; renderTeachers(); }
+function openTeacherModal(id){
+  const t=DB.teachers.find(x=>x.id===id); if(!t) return;
+  const ig=(t.instagram||'').trim();
+  if(ig) window.open(/^https?:/.test(ig)?ig:('https://instagram.com/'+ig.replace(/^@/,'')),'_blank');
+  else toast(t.name);
+}
+
+function renderLocations(){
+  const list=document.getElementById('m-locations-list');
+  list.innerHTML=DB.places.map((pl,i)=>{
+    const addr=placeAddress(pl);
+    const mapQuery=encodeURIComponent(addr);
+    return `<a href="https://www.google.com/maps/search/?api=1&query=${mapQuery}" target="_blank" rel="noopener" class="row-hit" style="width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);padding:12px;display:flex;align-items:center;gap:10px;text-decoration:none">
+      <div class="dsp" style="width:38px;height:38px;background:#000;border:1px solid var(--bd);color:var(--acc);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <p style="color:#fff;font-weight:700;font-size:13px;margin:0">${H(pl.name)}</p>
+        <p style="color:var(--g5);font-size:11px;margin:3px 0 0">${H(addr)}</p>
+      </div>
+      <span style="color:var(--acc);font-size:16px"><i class="ph ph-arrow-right"></i></span>
+    </a>`;
+  }).join('');
+}
+
+function renderFooter(){
+  ensureIntro();
+  document.getElementById('m-foot-tag').textContent=FV('tagline')||tr('footTagline');
+  const social=[['instagram','INSTAGRAM','https://instagram.com/'],['tiktok','TIKTOK','https://tiktok.com/@'],['xiaohongshu','XIAOHONGSHU','']]
+    .map(([k,label,base])=>{ const v=FV(k); if(!v) return ''; const href=/^https?:/.test(v)?v:(base?base+v.replace(/^@/,''):v);
+      return `<a href="${H(href)}" target="_blank" rel="noopener" style="color:var(--acc);font-size:10px;font-weight:600;letter-spacing:.08em">${label}</a>`; }).join('');
+  document.getElementById('m-foot-social').innerHTML=social;
+  const wa=waLink(FV('whatsapp'));
+  const phone=FV('phone');
+  const hours=FV('hours');
+  let contact='';
+  if(wa) contact+=`<a href="${wa}" target="_blank" rel="noopener" style="color:var(--g4);display:flex;align-items:center;gap:7px"><i class="ph ph-whatsapp-logo" style="color:var(--acc);font-size:15px"></i> ${H(phone||FV('whatsapp'))} <span class="mn" style="font-size:9px;letter-spacing:.1em;color:var(--acc);text-transform:uppercase">WhatsApp</span></a>`;
+  else if(phone) contact+=`<span style="display:flex;align-items:center;gap:7px"><i class="ph ph-phone" style="color:var(--acc);font-size:15px"></i> ${H(phone)}</span>`;
+  if(hours) contact+=`<span><i class="ph ph-clock" style="color:var(--acc)"></i> ${H(hours)}</span>`;
+  document.getElementById('m-foot-contact').innerHTML=contact;
+  document.getElementById('m-foot-copy').textContent=FV('copyright')||'© 2026 B Dance Studio';
+}
+
+function openContact(){
+  ensureIntro();
+  const wa=waLink(FV('whatsapp'));
+  if(wa){ window.open(wa,'_blank'); return; }
+  scrollToSection('m-footer');
+}
+function scrollToSection(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function showScreen(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goIntro(){ showScreen('intro-screen'); }
+function goAuth(){ showScreen('auth-screen'); document.getElementById('m-cred-error').style.display='none'; }
+
+function setLang(lang){
+  if(currentLang===lang) return;
+  currentLang=lang;
+  ['m-lang-en','m-lang2-en'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.background=lang==='en'?'var(--acc)':'transparent'; if(el) el.style.color=lang==='en'?'#000':'var(--g4)'; });
+  ['m-lang-zh','m-lang2-zh'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.background=lang==='zh'?'var(--acc)':'transparent'; if(el) el.style.color=lang==='zh'?'#000':'var(--g4)'; });
+  renderIntro();
+  renderAuthLabels();
+  renderAppShellLabels();
+}
+
+function pickRole(role){
+  loginRole=role;
+  renderAuthLabels();
+}
+function renderAuthLabels(){
+  document.getElementById('m-auth-back').textContent=tr('back');
+  document.getElementById('m-auth-portal').textContent=tr('portal');
+  document.getElementById('m-role-student-label').textContent=tr('student');
+  document.getElementById('m-role-student-sub').textContent=tr('studentSub');
+  document.getElementById('m-role-teacher-label').textContent=tr('teacher');
+  document.getElementById('m-role-teacher-sub').textContent=tr('teacherSub');
+  document.getElementById('m-username-label').textContent=tr('username');
+  document.getElementById('m-password-label').textContent=tr('password');
+  document.getElementById('m-login-btn').textContent=tr('signIn2');
+  document.getElementById('m-cred-heading').textContent=tr(loginRole);
+  const stu=document.getElementById('m-role-student'), tch=document.getElementById('m-role-teacher');
+  stu.style.border=`1px solid ${loginRole==='student'?'var(--acc)':'var(--bd)'}`;
+  stu.style.background=loginRole==='student'?'rgba(255,122,41,.12)':'var(--card)';
+  tch.style.border=`1px solid ${loginRole==='teacher'?'var(--acc)':'var(--bd)'}`;
+  tch.style.background=loginRole==='teacher'?'rgba(255,122,41,.12)':'var(--card)';
+}
+function togglePw(){
+  const inp=document.getElementById('login-pass');
+  const eye=document.getElementById('m-pw-eye');
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  eye.className=show?'ph ph-eye-slash':'ph ph-eye';
+}
+
+function showCredError(msg){
+  const el=document.getElementById('m-cred-error');
+  el.textContent='⚠️ '+msg; el.style.display='block';
+}
+async function doLogin(){
+  const el=document.getElementById('m-cred-error'); el.style.display='none';
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  if(!u||!p){ showCredError(tr('fillBoth')); return; }
+  const btn=document.getElementById('m-login-btn');
+  btn.textContent=tr('loggingIn'); btn.disabled=true;
+  const res=await serverLogin(u,p,'');
+  if(!res){ showCredError(tr('cantReach')); btn.textContent=tr('signIn2'); btn.disabled=false; return; }
+  if(!res.ok){ showCredError(tr('invalidCred')); btn.textContent=tr('signIn2'); btn.disabled=false; return; }
+  sessionToken=res.token||'';
+  const full=await cloudLoadFull();
+  if(!full){ sessionToken=''; showCredError(tr('loadFail')); btn.textContent=tr('signIn2'); btn.disabled=false; return; }
+  session=res.account;
+  loginRole=session.role;
+  btn.textContent=tr('signIn2'); btn.disabled=false;
+  enterApp();
+}
+
+const STUDENT_TABS=[
+  {id:'fees',icon:'ph-wallet',label:'tabFees',fn:renderFeesPage},
+  {id:'myclasses',icon:'ph-graduation-cap',label:'tabMyClasses',fn:renderMyClassesPage},
+  {id:'allclasses',icon:'ph-chalkboard-teacher',label:'tabAllClasses',fn:renderAllClassesPage},
+  {id:'attendance',icon:'ph-check-square-offset',label:'tabAttendance',fn:renderStudentAttPage},
+  {id:'rewards',icon:'ph-medal',label:'tabRewards',fn:renderRewardsPage},
+];
+const TEACHER_TABS=[
+  {id:'today',icon:'ph-sun',label:'tabToday',fn:renderTodayPage},
+  {id:'roster',icon:'ph-users-three',label:'tabRoster',fn:renderRosterPage},
+  {id:'hours',icon:'ph-clock-countdown',label:'tabHours',fn:renderHoursPage},
+  {id:'mark',icon:'ph-clipboard-text',label:'tabMark',fn:renderMarkPage},
+];
+let currentTab='';
+function isStaffRole(){ return loginRole==='admin'||loginRole==='counter'; }
+function tabsFor(){ return loginRole==='teacher'?TEACHER_TABS:STUDENT_TABS; }
+
+function enterApp(){
+  document.getElementById('m-app-role').textContent=(session.name||session.user)+' · '+roleLabel(loginRole);
+  if(isStaffRole()){
+    document.getElementById('m-bottomnav').innerHTML='';
+    document.querySelectorAll('main > div[id^="pg-"]').forEach(d=>d.style.display='none');
+    document.getElementById('pg-staff').style.display='';
+    renderStaffLandingPage();
+    showScreen('app-screen');
+    return;
+  }
+  buildNav();
+  goTab(tabsFor()[0].id);
+  showScreen('app-screen');
+}
+function roleLabel(r){ return r==='admin'?'Admin':r==='counter'?'Counter':tr(r); }
+function buildNav(){
+  const nav=document.getElementById('m-bottomnav');
+  nav.innerHTML=tabsFor().map(t=>`<button onclick="goTab('${t.id}')" id="nav-${t.id}" style="flex:1;padding:9px 2px 6px;background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px">
+    <span style="font-size:18px;line-height:1"><i class="ph ${t.icon}"></i></span>
+    <span class="mn" style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.15">${tr(t.label)}</span>
+  </button>`).join('');
+  highlightNav();
+}
+function highlightNav(){
+  tabsFor().forEach(t=>{
+    const btn=document.getElementById('nav-'+t.id); if(!btn) return;
+    const on=t.id===currentTab;
+    btn.style.color=on?'var(--acc)':'var(--g5)';
+    btn.querySelector('span').style.transform=on?'scale(1.12)':'scale(1)';
+  });
+}
+function goTab(id){
+  currentTab=id;
+  document.querySelectorAll('main > div[id^="pg-"]').forEach(d=>d.style.display='none');
+  const pageId={fees:'pg-fees',myclasses:'pg-myclasses',allclasses:'pg-allclasses',attendance:'pg-attendance',rewards:'pg-rewards',
+    today:'pg-today',roster:'pg-roster',hours:'pg-hours',mark:'pg-mark'}[id];
+  const el=document.getElementById(pageId); if(el){ el.style.display=''; document.querySelector('main').scrollTop=0; }
+  const tab=tabsFor().find(t=>t.id===id); if(tab) tab.fn();
+  highlightNav();
+  document.getElementById('menu-drawer').style.display='none';
+}
+function goProfilePage(){
+  document.getElementById('menu-drawer').style.display='none';
+  document.querySelectorAll('main > div[id^="pg-"]').forEach(d=>d.style.display='none');
+  currentTab='';
+  if(loginRole==='teacher'){ document.getElementById('pg-tprofile').style.display=''; renderTeacherProfilePage(); }
+  else{ document.getElementById('pg-profile').style.display=''; renderProfilePage(); }
+  document.querySelector('main').scrollTop=0;
+  highlightNav();
+}
+function toggleMenu(){
+  const d=document.getElementById('menu-drawer');
+  d.style.display=d.style.display==='none'?'block':'none';
+  document.getElementById('m-menu-profile').style.display=isStaffRole()?'none':'';
+  document.getElementById('m-menu-profile-label').textContent=tr('menuProfile');
+  document.getElementById('m-menu-signout-label').textContent=tr('signOut');
+}
+function renderStaffLandingPage(){
+  const el=document.getElementById('pg-staff');
+  const roleName=roleLabel(loginRole);
+  el.innerHTML=`
+    <div style="text-align:center;padding:40px 10px">
+      <i class="ph ph-desktop" style="font-size:36px;color:var(--acc)"></i>
+      <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:16px 0 8px">${H(session.name||session.user)}</p>
+      <p class="mn" style="color:var(--acc2);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 18px">${H(roleName)} Account</p>
+      <p style="color:var(--g4);font-size:12.5px;line-height:1.7;max-width:320px;margin:0 auto 6px">You're signed in and connected to the studio database, but the ${H(roleName.toLowerCase())} dashboard isn't built for mobile yet.</p>
+      <p style="color:var(--g5);font-size:11.5px;line-height:1.7;max-width:320px;margin:0 auto">Please use the desktop site for ${loginRole==='admin'?'admin tools':'front-desk / counter tools'} for now.</p>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-top:8px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">Studio Snapshot</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11.5px">
+        <p style="margin:0"><span style="color:var(--g5)">Students</span><br/><span style="color:var(--g2);font-size:20px" class="dsp">${DB.students.length}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Teachers</span><br/><span style="color:var(--g2);font-size:20px" class="dsp">${DB.teachers.length}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Classes</span><br/><span style="color:var(--g2);font-size:20px" class="dsp">${DB.classes.length}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Branches</span><br/><span style="color:var(--g2);font-size:20px" class="dsp">${DB.places.length}</span></p>
+      </div>
+    </div>`;
+}
+function closeRewardCode(){ document.getElementById('reward-code-modal').style.display='none'; }
+
+function doLogout(){
+  sessionToken=''; session=null; dbIsPublicOnly=false; currentTab='';
+  document.getElementById('login-user').value=''; document.getElementById('login-pass').value='';
+  document.getElementById('menu-drawer').style.display='none';
+  loginRole='student'; renderAuthLabels();
+  goIntro();
+}
+
+async function boot(){
+  await cloudLoadPublic();
+  renderIntro();
+  renderAuthLabels();
+  setLang('en');
+  document.getElementById('loading-screen').classList.remove('active');
+  goIntro();
+}
+
+const fmt=n=>'RM '+Number(n||0).toLocaleString();
+const C=id=>DB.classes.find(c=>c.id===id)||{name:'—'};
+const S=id=>DB.students.find(s=>s.id===id)||{name:'—'};
+const T=id=>DB.teachers.find(t=>t.id===id)||{name:'—'};
+const SC=s=>(s.classIds||[]).map(id=>C(id)).filter(c=>c&&c.id);
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_ZH={Sunday:'周日',Monday:'周一',Tuesday:'周二',Wednesday:'周三',Thursday:'周四',Friday:'周五',Saturday:'周六'};
+function dayLabel(d){ return currentLang==='zh'?(DAY_ZH[d]||d):d; }
+function toLocalISODate(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
+function ageOf(s){
+  if(s&&s.birthday){
+    const bd=new Date(s.birthday+'T00:00:00');
+    if(!isNaN(bd)){ const t=new Date(); let a=t.getFullYear()-bd.getFullYear(); const m=t.getMonth()-bd.getMonth();
+      if(m<0||(m===0&&t.getDate()<bd.getDate())) a--; if(a>=0&&a<130) return a; }
+  }
+  return (s&&s.age!=null&&s.age!=='')?s.age:'—';
+}
+function creditExpiryOf(s){ return (s&&s.creditExpiry)||''; }
+function creditsExpired(s){ const e=creditExpiryOf(s); return !!e&&e<toLocalISODate(new Date()); }
+function creditsOf(s){ return creditsExpired(s)?0:((s&&s.credits)||0); }
+function attWeight(a){ return (a.extra&&a.dur==='half')?0.5:1; }
+function counted(a){
+  if(a.status==='cancelled') return false;
+  if(a.single) return false;
+  if(a.extra) return true;
+  if(a.paidByCredit) return false;
+  return true;
+}
+function presentCount(sid){ return DB.attendance.filter(a=>a.studentId===sid&&counted(a)).reduce((n,a)=>n+attWeight(a),0); }
+function styleGradesOf(s){ return (s&&s.styleGrades&&typeof s.styleGrades==='object')?s.styleGrades:{}; }
+function highestGrade(s){ const vals=Object.values(styleGradesOf(s)).filter(v=>v>0); if(vals.length) return Math.max(...vals); return (s&&s.grade)||1; }
+function hasAnyGrade(s){ return Object.values(styleGradesOf(s)).some(v=>v>0)||!!(s&&s.grade>0); }
+const GRADE_META={1:{tier:'Bronze',tierZh:'铜级',icon:'ph-medal',c:'#e39b5a'},2:{tier:'Silver',tierZh:'银级',icon:'ph-medal',c:'#eef1f4'},
+  3:{tier:'Gold',tierZh:'金级',icon:'ph-medal',c:'#ffdf6e'},4:{tier:'Diamond',tierZh:'钻石级',icon:'ph-diamond',c:'#8fe9ff'},5:{tier:'Crown',tierZh:'皇冠级',icon:'ph-crown',c:'#ffd75e'}};
+function gradeMeta(g){ return GRADE_META[g]||GRADE_META[1]; }
+function gradeTierLabel(g){ const m=gradeMeta(g); return currentLang==='zh'?m.tierZh:m.tier; }
+function ensureRewards(){ if(!Array.isArray(DB.rewards)) DB.rewards=[]; }
+function rewardsList(){ ensureRewards(); return DB.rewards; }
+function rewardName(r){ if(!r) return ''; if(r.name&&String(r.name).trim()) return currentLang==='zh'&&r.zh?r.zh:r.name; return r.id||''; }
+function studentPendingPoints(sid){ const s=DB.students.find(x=>x.id===sid); return ((s&&s.redemptions)||[]).filter(r=>!r.collected).reduce((n,r)=>n+(r.cost||0),0); }
+function studentRedeemedPoints(sid){ const s=DB.students.find(x=>x.id===sid); return ((s&&s.redemptions)||[]).filter(r=>r.collected).reduce((n,r)=>n+(r.cost||0),0); }
+function studentBonusPoints(sid){ const s=DB.students.find(x=>x.id===sid); return ((s&&s.bdayClaims)?s.bdayClaims.length:0)*100; }
+function studentAdjustPoints(sid){ const s=DB.students.find(x=>x.id===sid); return (s&&Number(s.pointsAdjust))||0; }
+function gradePoints(g){ return ({0:1,1:2,2:5,3:10,4:10,5:10})[g]||1; }
+function studentEarnedPoints(sid){
+  const s=DB.students.find(x=>x.id===sid); if(!s) return 0;
+  const g=hasAnyGrade(s)?highestGrade(s):0;
+  return DB.attendance.filter(a=>a.studentId===sid&&a.status==='present').length*gradePoints(g);
+}
+function pointsBalance(sid){ return studentEarnedPoints(sid)+studentBonusPoints(sid)+studentAdjustPoints(sid)-studentRedeemedPoints(sid); }
+function spendablePoints(sid){ return pointsBalance(sid)-studentPendingPoints(sid); }
+function birthdayInfo(s){
+  if(!s||!s.birthday) return null;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const bd=new Date(s.birthday+'T00:00:00');
+  const isToday=today.getMonth()===bd.getMonth()&&today.getDate()===bd.getDate();
+  let next=new Date(today.getFullYear(),bd.getMonth(),bd.getDate());
+  if(next<today) next=new Date(today.getFullYear()+1,bd.getMonth(),bd.getDate());
+  const days=Math.round((next-today)/86400000);
+  const claimedThisYear=(s.bdayClaims||[]).includes(today.getFullYear());
+  return {isToday,days,claimedThisYear};
+}
+function genRewardCode(){ const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<6;i++) s+=c[Math.floor(Math.random()*c.length)]; return s; }
+
+async function updateStudentRecord(id,patch){
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'POST',headers:authHeaders(),body:JSON.stringify({action:'update-student',id:String(id),patch})},8000);
+    if(!r||!r.ok) return false;
+    const j=await r.json().catch(()=>null);
+    return !!(j&&j.ok);
+  }catch(e){ return false; }
+}
+function authHeaders(){ const h={'Content-Type':'application/json'}; if(sessionToken) h['Authorization']='Bearer '+sessionToken; return h; }
+async function teacherFullSave(mutate){
+  const fresh=await cloudLoadFull();
+  if(!fresh) return false;
+  mutate();
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'POST',headers:authHeaders(),body:JSON.stringify({data:JSON.stringify({db:DB,nid})})},8000);
+    if(!r||!r.ok) return false;
+    const j=await r.json().catch(()=>null);
+    return !!(j&&j.ok);
+  }catch(e){ return false; }
+}
+function renderFeesPage(){
+  const sid=session.ref;
+  const me=DB.students.find(s=>s.id===sid);
+  const myPayments=DB.payments.filter(p=>p.studentId===sid);
+  const pending=myPayments.filter(p=>p.status!=='Paid');
+  const history=[...myPayments].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b.id-a.id);
+  const pi=DB.paymentInfo||{};
+  const el=document.getElementById('pg-fees');
+  el.innerHTML=`
+    <p class="mn" style="color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">${tr('howToPay')}</p>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
+      <p class="mn" style="color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-bank"></i> ${tr('bankTransfer')}</p>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+        <div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--bd2);padding-bottom:6px"><span style="color:var(--g5)">Bank</span><span class="mn" style="color:#fff;font-weight:600;text-align:right">${H(pi.bankName||'—')}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--bd2);padding-bottom:6px"><span style="color:var(--g5)">Account Name</span><span class="mn" style="color:#fff;font-weight:600;text-align:right">${H(pi.accountName||'—')}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--bd2);padding-bottom:6px"><span style="color:var(--g5)">Account No.</span><span class="mn" style="color:var(--acc2);font-weight:600;text-align:right">${H(pi.accountNumber||'—')}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:10px"><span style="color:var(--g5)">DuitNow</span><span class="mn" style="color:#fff;font-weight:600;text-align:right">${H(pi.duitnow||'—')}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd2)">
+        ${pi.qrImage?`<img src="${H(pi.qrImage)}" alt="" style="width:74px;height:74px;object-fit:contain;background:#f3efe6;padding:6px;flex-shrink:0"/>`:`<div style="width:74px;height:74px;background:#f3efe6;flex-shrink:0"></div>`}
+        <div>
+          <p class="mn" style="color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 5px"><i class="ph ph-device-mobile"></i> ${tr('tngEwallet')}</p>
+          <p style="color:#fff;font-size:12.5px;font-weight:600;margin:0">${H(pi.tngName||'—')}</p>
+          <p class="mn" style="color:var(--g5);font-size:11px;margin:3px 0 0">${H(pi.tngNumber||'')}</p>
+          <p class="mn" style="color:#4a4640;font-size:9px;margin:5px 0 0;letter-spacing:.1em;text-transform:uppercase">${tr('scanToPay')}</p>
+        </div>
+      </div>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--bd2)"><i class="ph ph-lightbulb"></i> ${tr('payHint')}</p>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(255,122,41,.16),transparent 70%),var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+      <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0">${H(me?me.name:'')}</p>
+      <p style="color:var(--g5);font-size:11px;margin:4px 0 0">${me?SC(me).map(c=>c.name).join(', ')||'—':'—'}</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+      <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center">
+        <p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;margin:0">${tr('monthlyFee')}</p>
+        <p class="dsp" style="font-size:22px;margin:6px 0 0;color:var(--acc)">${me?fmt(me.fee).replace('RM ','RM'):'—'}</p>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center">
+        <p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;margin:0">${tr('classCredits')}</p>
+        <p class="dsp" style="font-size:26px;margin:6px 0 0;color:#4ade80">${me?creditsOf(me):0}</p>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center">
+        <p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;margin:0">${tr('unpaid')}</p>
+        <p class="dsp" style="font-size:26px;margin:6px 0 0;color:${pending.length?'#ff6b5a':'#4ade80'}">${pending.length}</p>
+      </div>
+    </div>
+
+    ${pending.length?`<p class="mn" style="color:#ff6b5a;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-warning"></i> ${tr('outstanding')}</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+      ${pending.map(p=>{const cls=p.classId?C(p.classId):null;
+        return `<div style="background:var(--card);border:1px solid #7a2a22;border-left:3px solid #ff4d2e;padding:12px;display:flex;justify-content:space-between;align-items:center">
+          <div><p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">${H(p.month)}${cls?' · '+H(cls.name):''}</p>
+          <span class="mn" style="display:inline-block;background:rgba(255,77,46,.16);color:#ff8a78;font-size:9px;font-weight:700;padding:3px 7px;margin-top:6px;letter-spacing:.08em;text-transform:uppercase">${tr('unpaid')}</span></div>
+          <p class="dsp" style="color:#ff8a78;font-size:24px;margin:0">${fmt(p.amount).replace('RM ','RM')}</p>
+        </div>`;}).join('')}
+    </div>`:''}
+
+    <p class="mn" style="color:#fff;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">${tr('payHistory')}</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${history.length?history.map(p=>{const cls=p.classId?C(p.classId):null;const paid=p.status==='Paid';
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:12px;display:flex;justify-content:space-between;align-items:center">
+          <div><p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">${H(p.month)} · <span style="color:var(--acc2)">${cls?H(cls.name):'—'}</span></p>
+          <p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">${H(p.date||'—')}${p.method?' · '+H(p.method):''}</p></div>
+          <div style="text-align:right"><p class="mn" style="color:#fff;font-weight:600;font-size:12.5px;margin:0">${fmt(p.amount).replace('RM ','RM')}</p>
+          <span class="mn" style="display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;margin-top:4px;background:${paid?'rgba(74,222,128,.16)':'rgba(255,77,46,.16)'};color:${paid?'#4ade80':'#ff8a78'}">${paid?tr('present'):tr('unpaid')}</span></div>
+        </div>`;}).join(''):`<p style="color:var(--g5);font-size:12px">${tr('noPayments')}</p>`}
+    </div>`;
+}
+
+function renderMyClassesPage(){
+  const sid=session.ref;
+  const me=DB.students.find(s=>s.id===sid);
+  const myClasses=me?SC(me):[];
+  const el=document.getElementById('pg-myclasses');
+  el.innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid #ffdf6e;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:26px"><i class="ph ph-graduation-cap"></i></div>
+      <div style="flex:1"><p class="dsp" style="font-size:22px;text-transform:uppercase;margin:0">${tr('myClasses')}</p>
+      <p style="color:var(--g5);font-size:10.5px;margin:3px 0 0">${myClasses.length} ${myClasses.length===1?'class':'classes'}${me&&me.join?' · since '+H(me.join):''}</p></div>
+    </div>
+    ${me?`<div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:14px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">${tr('myProfile')}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;font-size:11.5px">
+        <p style="margin:0"><span style="color:var(--g5)">Age</span><br/><span style="color:var(--g2)">${ageOf(me)}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Parent</span><br/><span style="color:var(--g2)">${H(me.parent||'—')}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Phone</span><br/><span style="color:var(--g2)">${H(me.phone||'—')}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Email</span><br/><span style="color:var(--g2)">${H(me.email||'—')}</span></p>
+      </div>
+    </div>`:''}
+    <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 14px"><i class="ph ph-lightbulb"></i> ${tr('enrollHint')}</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      ${myClasses.length?myClasses.map(cls=>{
+        const teacher=T(cls.teacherId);
+        const mates=DB.students.filter(s=>s.id!==sid&&s.classIds&&s.classIds.includes(cls.id));
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <p class="dsp" style="color:var(--acc2);font-size:23px;text-transform:uppercase;margin:0;line-height:1">${H(cls.name)}</p>
+            <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;padding:4px 7px;white-space:nowrap">${H(cls.style)}</span>
+          </div>
+          <div class="mn" style="display:flex;flex-direction:column;gap:4px;margin:10px 0 12px;font-size:10.5px;color:var(--g5)">
+            <span><i class="ph ph-calendar-blank"></i> ${dayLabel(cls.day)} · ${H(cls.start)}–${H(cls.end)}</span>
+            <span><i class="ph ph-map-pin"></i> ${H(cls.room)} · ${H(Pl(cls.placeId).name)}</span>
+            <span><i class="ph ph-user"></i> <span style="color:var(--acc2)">${H(teacher.name)}</span></span>
+          </div>
+          <p class="mn" style="color:#fff;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px">${tr('classmates')} (${mates.length})</p>
+          <div>${mates.length?mates.map(m=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:7px 0;border-top:1px solid var(--bd2)">
+            <span style="display:flex;align-items:center;gap:8px;color:var(--g2)"><span style="width:22px;height:22px;background:linear-gradient(150deg,#5c2a10,#3a2010);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff">${ini(m.name)}</span>${H(m.name)}</span>
+            <span class="mn" style="color:var(--g5);font-size:10px">${ageOf(m)}</span></div>`).join(''):`<p style="color:var(--g5);font-size:11px;padding:6px 0">${tr('noClassmates')}</p>`}</div>
+        </div>`;}).join(''):`<p style="color:var(--g5);font-size:12px">${tr('notEnrolled')}</p>`}
+    </div>`;
+}
+
+let allClassStyleFilter='all';
+function renderAllClassesPage(){
+  const el=document.getElementById('pg-allclasses');
+  const styles=[...new Set(DB.classes.map(c=>c.style))];
+  const rows=DB.classes.filter(c=>allClassStyleFilter==='all'||c.style===allClassStyleFilter)
+    .sort((a,b)=>DAYS.indexOf(a.day)-DAYS.indexOf(b.day)||a.start.localeCompare(b.start));
+  el.innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:26px"><i class="ph ph-chalkboard-teacher"></i></div>
+      <div><p class="dsp" style="font-size:22px;text-transform:uppercase;margin:0">${tr('allClasses')}</p>
+      <p style="color:var(--g5);font-size:10.5px;margin:3px 0 0">${DB.classes.length} classes across ${DB.places.length} branches</p></div>
+    </div>
+    <div class="bd-scroll" style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto">
+      <button onclick="setAllClassFilter('all')" class="mn" style="flex-shrink:0;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:8px 11px;cursor:pointer;border:1px solid ${allClassStyleFilter==='all'?'var(--acc)':'var(--bd)'};background:${allClassStyleFilter==='all'?'var(--acc)':'transparent'};color:${allClassStyleFilter==='all'?'#000':'var(--g4)'}">${tr('allStyles')}</button>
+      ${styles.map(s=>`<button onclick="setAllClassFilter('${s.replace(/'/g,"\\'")}')" class="mn" style="flex-shrink:0;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:8px 11px;cursor:pointer;border:1px solid ${allClassStyleFilter===s?'var(--acc)':'var(--bd)'};background:${allClassStyleFilter===s?'var(--acc)':'transparent'};color:${allClassStyleFilter===s?'#000':'var(--g4)'}">${H(s)}</button>`).join('')}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${rows.map(c=>{
+        const enrolled=DB.students.filter(s=>s.classIds&&s.classIds.includes(c.id)).length;
+        const full=enrolled>=c.max;
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:13px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div><p class="dsp" style="color:var(--acc2);font-size:21px;text-transform:uppercase;margin:0;line-height:1">${H(c.name)}</p>
+            <span class="mn" style="display:inline-block;background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:8.5px;font-weight:600;padding:3px 6px;margin-top:6px">${H(c.style)}</span></div>
+            <span class="mn" style="font-size:9px;font-weight:700;padding:4px 7px;white-space:nowrap;background:${full?'rgba(255,77,46,.16)':'rgba(74,222,128,.16)'};color:${full?'#ff8a78':'#4ade80'}">${enrolled}/${c.max}</span>
+          </div>
+          <div class="mn" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:10px;color:var(--g5)">
+            <span><i class="ph ph-buildings"></i> ${H(Pl(c.placeId).name)}</span><span><i class="ph ph-user"></i> ${H(T(c.teacherId).name)}</span><span><i class="ph ph-calendar-blank"></i> ${dayLabel(c.day)} ${H(c.start)}</span><span><i class="ph ph-map-pin"></i> ${H(c.room)}</span>
+          </div>
+        </div>`;}).join('')}
+    </div>
+    <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:14px 0 0"><i class="ph ph-lightbulb"></i> ${tr('joinHint')}</p>`;
+}
+function setAllClassFilter(s){ allClassStyleFilter=s; renderAllClassesPage(); }
+
+function renderStudentAttPage(){
+  const sid=session.ref;
+  const me=DB.students.find(s=>s.id===sid);
+  const myClasses=me?SC(me):[];
+  const el=document.getElementById('pg-attendance');
+  el.innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+      <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0">${tr('myAttendance')}</p>
+      <p style="color:var(--g5);font-size:10.5px;margin:4px 0 0">${me?presentCount(sid):0} classes this cycle</p>
+    </div>
+    <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 14px"><i class="ph ph-lightbulb"></i> ${tr('attHint')}</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      ${myClasses.length?myClasses.map(cls=>{
+        const records=[...DB.attendance.filter(a=>a.classId===cls.id&&a.studentId===sid)].sort((a,b)=>b.date.localeCompare(a.date));
+        const presentN=records.filter(r=>r.status==='present').length;
+        const absentN=records.filter(r=>r.status==='absent').length;
+        const cycleTotal=presentCount(sid);
+        const cycleProgress=cycleTotal%4===0&&cycleTotal>0?4:cycleTotal%4;
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px">
+            <div><p class="dsp" style="color:var(--acc2);font-size:21px;text-transform:uppercase;margin:0;line-height:1">${H(cls.name)}</p>
+            <p class="mn" style="color:var(--g5);font-size:10px;margin:5px 0 0">${dayLabel(cls.day)} · ${H(cls.start)}–${H(cls.end)}</p></div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end">
+              <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 6px;white-space:nowrap;background:rgba(74,222,128,.16);color:#4ade80">${presentN} ${tr('present')}</span>
+              ${absentN?`<span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 6px;white-space:nowrap;background:rgba(255,77,46,.16);color:#ff8a78">${absentN} ${tr('absent')}</span>`:''}
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <div class="mn" style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--g5);margin-bottom:5px"><span>${tr('cycleProgress')}</span><span>${cycleProgress}/4</span></div>
+            <div style="width:100%;background:#000;height:6px;border:1px solid var(--bd)"><div style="height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:${cycleProgress/4*100}%"></div></div>
+          </div>
+          ${records.slice(0,8).map(r=>{
+            const badgeBg=r.status==='present'?'rgba(74,222,128,.16)':r.status==='absent'?'rgba(255,77,46,.16)':'rgba(255,223,110,.16)';
+            const badgeFg=r.status==='present'?'#4ade80':r.status==='absent'?'#ff8a78':'#ffdf6e';
+            const label=r.status==='present'?tr('present'):r.status==='absent'?tr('absent'):tr('cancelled');
+            return `<div style="padding:7px 0;border-top:1px solid var(--bd2)">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                <span class="mn" style="color:var(--g4);font-size:10.5px">${H(r.date)}</span>
+                <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 7px;background:${badgeBg};color:${badgeFg}">${label}</span>
+              </div>
+              ${r.remark?`<p style="color:#6fa8ff;font-size:10px;margin:5px 0 0"><i class="ph ph-note-pencil"></i> ${H(r.remark)}</p>`:''}
+            </div>`;}).join('')||`<p style="color:var(--g5);font-size:11px;padding:6px 0">No records yet</p>`}
+        </div>`;}).join(''):`<p style="color:var(--g5);font-size:12px">${tr('notEnrolled')}</p>`}
+    </div>`;
+}
+
+function renderRewardsPage(){
+  const sid=session.ref;
+  const s=DB.students.find(x=>x.id===sid);
+  const el=document.getElementById('pg-rewards');
+  if(!s){ el.innerHTML=''; return; }
+  const g=hasAnyGrade(s)?highestGrade(s):0;
+  const noGrade=!hasAnyGrade(s);
+  const bal=pointsBalance(sid), spend=spendablePoints(sid), held=studentPendingPoints(sid);
+  const info=birthdayInfo(s);
+  const sg=styleGradesOf(s);
+  const styleKeys=Object.keys(sg).sort((a,b)=>sg[b]-sg[a]);
+  el.innerHTML=`
+    <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--bd);border-left:3px solid #ffdf6e;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px">
+      <div style="font-size:34px"><i class="ph ${noGrade?'ph-baby':gradeMeta(g).icon}" style="color:${noGrade?'var(--g5)':gradeMeta(g).c}"></i></div>
+      <div style="flex:1"><p class="dsp" style="font-size:19px;text-transform:uppercase;margin:0">${noGrade?tr('noGradesYet'):'Grade '+g+' · '+gradeTierLabel(g)}</p>
+      <p style="color:var(--g5);font-size:10.5px;margin:3px 0 0">Keep dancing to level up</p></div>
+      <div style="text-align:right"><p class="dsp" style="color:var(--acc);font-size:34px;margin:0;line-height:1">${bal}</p><p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.1em;margin:3px 0 0">${tr('points')}</p></div>
+    </div>
+    ${held>0?`<p style="font-size:11px;margin:0 0 14px;padding:9px 12px;background:rgba(255,223,110,.1);border:1px solid rgba(255,223,110,.3);color:#ffdf6e"><i class="ph ph-lock-simple"></i> ${held} pts on hold — shown as code(s) below, only deducted once collected.</p>`:''}
+
+    <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-medal"></i> ${tr('gradesByStyle')}</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
+      ${styleKeys.length?styleKeys.map(st=>{ const gg=sg[st]; const m=gradeMeta(gg);
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:12px;text-align:center">
+          <div style="font-size:24px;color:${m.c}"><i class="ph ${m.icon}"></i></div>
+          <p style="color:#fff;font-weight:600;font-size:11.5px;margin:6px 0 0">${H(st)}</p>
+          <p class="mn" style="color:var(--g5);font-size:9.5px;margin:4px 0 0">Grade ${gg} · ${gradeTierLabel(gg)}</p>
+        </div>`;}).join(''):`<p style="color:var(--g5);font-size:12px;grid-column:1/-1">${tr('noGradesYet')}</p>`}
+    </div>
+
+    <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-cake"></i> ${tr('birthday')}</p>
+    <div style="margin-bottom:20px">${
+      !s.birthday?`<div style="background:var(--card);border:1px solid var(--bd);padding:16px;text-align:center"><p style="color:var(--g5);font-size:11px;margin:0">${tr('birthdayNone')}</p></div>`
+      :info.isToday?`<div style="background:var(--card);border:1px solid var(--acc);padding:16px;text-align:center">
+        <div style="font-size:28px"><i class="ph ph-cake"></i></div>
+        <p class="dsp" style="color:var(--acc);font-size:20px;margin:8px 0">${tr('birthdayToday')}</p>
+        <button onclick="claimBirthdayGift()" ${info.claimedThisYear?'disabled':''} class="mn btn-fill" style="width:100%;background:${info.claimedThisYear?'var(--bd)':'var(--acc)'};color:${info.claimedThisYear?'var(--g5)':'#000'};font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:11px;border:0;cursor:${info.claimedThisYear?'default':'pointer'}">${info.claimedThisYear?tr('birthdayClaimed'):tr('claimBirthday')}</button>
+      </div>`
+      :`<div style="background:var(--card);border:1px solid var(--bd);padding:16px;text-align:center"><p class="dsp" style="color:var(--acc2);font-size:26px;margin:0">${info.days}d</p><p style="color:var(--g5);font-size:10.5px;margin:6px 0 0">until your birthday bonus</p></div>`
+    }</div>
+
+    <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-gift"></i> ${tr('redeemRewards')}</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
+      ${rewardsList().map(r=>{ const can=spend>=r.cost;
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:12px;text-align:center">
+          <div style="font-size:23px;color:var(--acc2)"><i class="ph ${r.icon||'ph-gift'}"></i></div>
+          <p style="color:#fff;font-size:11px;font-weight:600;margin:6px 0 0;min-height:28px">${H(rewardName(r))}</p>
+          <p class="mn" style="color:var(--acc);font-weight:700;font-size:11.5px;margin:4px 0 8px">${r.cost} pts</p>
+          <button onclick="redeemRewardMobile('${r.id}')" ${can?'':'disabled'} class="mn" style="width:100%;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px;border:0;cursor:${can?'pointer':'default'};background:${can?'var(--acc)':'var(--bd)'};color:${can?'#000':'var(--g5)'}">${tr('redeem')}</button>
+        </div>`;}).join('')||`<p style="color:var(--g5);font-size:12px;grid-column:1/-1">—</p>`}
+    </div>
+
+    <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-receipt"></i> ${tr('redemptionHistory')}</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${(s.redemptions||[]).length?(s.redemptions||[]).map(r=>`<div style="background:var(--card);border:1px solid var(--bd);padding:12px;display:flex;justify-content:space-between;align-items:center">
+        <div><p style="color:#fff;font-size:12px;margin:0"><i class="ph ${r.icon||'ph-gift'}" style="color:var(--acc2)"></i> ${H(r.name)}</p>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">${H(r.date)} · ${H(r.code||'')}</p></div>
+        <span class="mn" style="font-size:9px;font-weight:700;padding:3px 7px;white-space:nowrap;background:${r.collected?'rgba(74,222,128,.16)':'rgba(255,223,110,.16)'};color:${r.collected?'#4ade80':'#ffdf6e'}">${r.collected?tr('collected'):tr('pendingCollect')}</span>
+      </div>`).join(''):`<p style="color:var(--g5);font-size:12px">${tr('noRedemptions')}</p>`}
+    </div>`;
+}
+async function redeemRewardMobile(id){
+  const sid=session.ref, s=DB.students.find(x=>x.id===sid), reward=rewardsList().find(r=>r.id===id);
+  if(!s||!reward) return;
+  if(spendablePoints(sid)<reward.cost){ toast(tr('notEnoughPoints')); return; }
+  if(!Array.isArray(s.redemptions)) s.redemptions=[];
+  const code=genRewardCode();
+  const entry={id:'rd'+Date.now(),rewardId:id,name:rewardName(reward),icon:reward.icon,cost:reward.cost,date:toLocalISODate(new Date()),code,collected:false};
+  s.redemptions.unshift(entry);
+  if(!await updateStudentRecord(sid,{redemptions:s.redemptions})){ s.redemptions=s.redemptions.filter(r=>r.id!==entry.id); toast(tr('markFailed')); return; }
+  renderRewardsPage();
+  document.getElementById('m-rc-title').textContent=tr('yourCode');
+  document.getElementById('m-rc-name').textContent=rewardName(reward);
+  document.getElementById('m-rc-code').textContent=code;
+  document.getElementById('m-rc-note').textContent=tr('showCounter');
+  document.getElementById('m-rc-close').textContent=tr('close');
+  document.getElementById('reward-code-modal').style.display='flex';
+}
+async function claimBirthdayGift(){
+  const sid=session.ref, s=DB.students.find(x=>x.id===sid);
+  const info=birthdayInfo(s); if(!info||!info.isToday) return;
+  const y=new Date().getFullYear();
+  if(!Array.isArray(s.bdayClaims)) s.bdayClaims=[];
+  if(s.bdayClaims.includes(y)) return;
+  s.bdayClaims.push(y);
+  if(!await updateStudentRecord(sid,{bdayClaims:s.bdayClaims})){ s.bdayClaims=s.bdayClaims.filter(yr=>yr!==y); toast(tr('markFailed')); return; }
+  toast(tr('birthdayClaimed'));
+  renderRewardsPage();
+}
+
+function renderProfilePage(){
+  const sid=session.ref;
+  const me=DB.students.find(s=>s.id===sid);
+  const el=document.getElementById('pg-profile');
+  if(!me){ el.innerHTML=''; return; }
+  const g=hasAnyGrade(me)?highestGrade(me):0;
+  el.innerHTML=`
+    <div style="position:relative;overflow:hidden;background:linear-gradient(135deg,#5c2a10,#1f110a);border:1px solid var(--bd);padding:22px;margin-bottom:14px;text-align:center">
+      <div style="position:relative;width:66px;height:66px;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid var(--acc);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+        <span class="dsp" style="font-size:30px;color:var(--acc)">${ini(me.name)}</span>
+      </div>
+      <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0">${H(me.name)}</h2>
+      <p class="mn" style="color:#ffcfa8;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin:6px 0 0">${hasAnyGrade(me)?'Grade '+g+' · '+gradeTierLabel(g):tr('noGradesYet')}</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">${tr('profileDetails')}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11.5px">
+        <p style="margin:0"><span style="color:var(--g5)">Age</span><br/><span style="color:var(--g2)">${ageOf(me)}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Parent</span><br/><span style="color:var(--g2)">${H(me.parent||'—')}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Phone</span><br/><span style="color:var(--g2)">${H(me.phone||'—')}</span></p>
+        <p style="margin:0"><span style="color:var(--g5)">Email</span><br/><span style="color:var(--g2)">${H(me.email||'—')}</span></p>
+      </div>
+      <p style="color:var(--g5);font-size:10px;line-height:1.6;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--bd2)"><i class="ph ph-lock-simple"></i> ${tr('lockedHint')}</p>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-cake"></i> ${tr('birthday')}</p>
+      <label class="field-label">${tr('dob')}</label>
+      <input type="date" id="prof-bday" class="field-input" style="margin-bottom:10px" value="${H(me.birthday||'')}"/>
+      <button onclick="saveBirthdayMobile()" class="mn btn-fill" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:11px;border:0;cursor:pointer">${tr('saveBirthday')}</button>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">${tr('changePassword')}</p>
+      <p style="color:var(--g5);font-size:11px;line-height:1.6;margin:0"><i class="ph ph-info"></i> ${tr('comingSoon')}</p>
+    </div>`;
+}
+async function saveBirthdayMobile(){
+  const sid=session.ref, s=DB.students.find(x=>x.id===sid); if(!s) return;
+  const val=document.getElementById('prof-bday').value;
+  const prev=s.birthday;
+  s.birthday=val;
+  if(!await updateStudentRecord(sid,{birthday:val})){ s.birthday=prev; toast(tr('markFailed')); return; }
+  toast(tr('birthdaySaved'));
+  renderProfilePage();
+}
+
+function parseTime12(str){
+  const m=/(\d{1,2}):(\d{2})\s*(AM|PM)/i.exec(str||''); if(!m) return {h:0,m:0};
+  let h=parseInt(m[1],10)%12; if(/PM/i.test(m[3])) h+=12;
+  return {h,m:parseInt(m[2],10)};
+}
+function nextOccurrence(dayName,timeStr){
+  const now=new Date();
+  const targetIdx=DAYS.indexOf(dayName);
+  const t=parseTime12(timeStr);
+  const diff=(targetIdx-now.getDay()+7)%7;
+  const cand=new Date(now); cand.setDate(now.getDate()+diff); cand.setHours(t.h,t.m,0,0);
+  if(cand<now) cand.setDate(cand.getDate()+7);
+  return cand;
+}
+function renderTodayPage(){
+  const tid=session.ref;
+  const myCls=DB.classes.filter(c=>c.teacherId===tid);
+  const el=document.getElementById('pg-today');
+  if(!myCls.length){ el.innerHTML=`<p style="color:var(--g5);font-size:12px">No classes assigned yet.</p>`; return; }
+  const withOcc=myCls.map(c=>({c,occ:nextOccurrence(c.day,c.start)})).sort((a,b)=>a.occ-b.occ);
+  const next=withOcc[0];
+  const mins=Math.max(0,Math.round((next.occ-new Date())/60000));
+  const headcount=DB.students.filter(s=>s.classIds&&s.classIds.includes(next.c.id)).length;
+  const myStudentIds=new Set(DB.students.filter(s=>(s.classIds||[]).some(cid=>myCls.map(c=>c.id).includes(cid))).map(s=>s.id));
+  const branches=new Set(myCls.map(c=>c.placeId)).size;
+  const isToday=next.occ.toDateString()===new Date().toDateString();
+  const now=new Date();
+  el.innerHTML=`
+    <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;margin:0 0 6px">${now.toLocaleDateString(currentLang==='zh'?'zh-CN':'en-MY',{weekday:'long',day:'numeric',month:'long'})}</p>
+    <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0 0 14px">${session.name||''}</h2>
+
+    <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--acc);padding:16px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--acc)"></span>
+        <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0">${tr('nextClass')}</p>
+      </div>
+      <p class="dsp" style="font-size:32px;text-transform:uppercase;margin:0;line-height:.95">${H(next.c.name)}</p>
+      <div class="mn" style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 14px;font-size:10.5px;color:var(--g4)">
+        <span><i class="ph ph-clock" style="color:var(--acc)"></i> ${!isToday?dayLabel(next.c.day)+' · ':''}${H(next.c.start)}</span>
+        <span><i class="ph ph-map-pin" style="color:var(--acc)"></i> ${H(next.c.room)}</span>
+        <span><i class="ph ph-users-three" style="color:var(--acc)"></i> ${headcount} ${tr('students')}</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px">
+        <p class="dsp" style="color:var(--acc);font-size:42px;margin:0;line-height:1">${isToday?mins:Math.round(mins/1440)}</p>
+        <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;margin:0">${isToday?tr('minsToGo'):'days to go'}</p>
+      </div>
+      <button onclick="openMarkFor(${next.c.id})" class="mn btn-fill" style="width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--acc);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:14px;border:0;cursor:pointer">${tr('takeAttendance')}<i class="ph ph-clipboard-text" style="font-size:17px"></i></button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+      <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center"><p class="dsp" style="color:var(--acc);font-size:26px;margin:0">${myCls.length}</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin:6px 0 0">Classes/wk</p></div>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center"><p class="dsp" style="color:var(--acc);font-size:26px;margin:0">${myStudentIds.size}</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin:6px 0 0">${tr('students')}</p></div>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center"><p class="dsp" style="color:var(--acc);font-size:26px;margin:0">${branches}</p><p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin:6px 0 0">Branches</p></div>
+    </div>
+
+    <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 10px">${tr('weekAhead')}</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${withOcc.map(({c,occ})=>{
+        const today=occ.toDateString()===new Date().toDateString();
+        const e=DB.students.filter(s=>s.classIds&&s.classIds.includes(c.id)).length;
+        return `<button onclick="openMarkFor(${c.id})" class="row-hit" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--bd);border-left:3px solid ${today?'var(--acc)':'var(--bd)'};padding:12px">
+          <div style="text-align:center;width:34px;flex-shrink:0"><p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.1em;margin:0;text-transform:uppercase">${occ.toLocaleDateString(currentLang==='zh'?'zh-CN':'en-MY',{weekday:'short'})}</p><p class="dsp" style="font-size:20px;margin:2px 0 0;line-height:1">${occ.getDate()}</p></div>
+          <div style="flex:1;min-width:0"><p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">${H(c.name)}</p><p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">${H(c.start)} · ${e}/${c.max}</p></div>
+          <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 6px;background:${today?'rgba(255,122,41,.18)':'#000'};color:${today?'var(--acc2)':'var(--g5)'};white-space:nowrap">${today?'Today':dayLabel(c.day)}</span>
+        </button>`;}).join('')}
+    </div>`;
+}
+function openMarkFor(classId){ markClassId=classId; goTab('mark'); }
+
+function renderRosterPage(){
+  const tid=session.ref;
+  const myCls=DB.classes.filter(c=>c.teacherId===tid);
+  const el=document.getElementById('pg-roster');
+  el.innerHTML=`
+    <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">${tr('tabRoster')}</h2>
+    <p style="color:var(--g5);font-size:11px;margin:0 0 16px">${tr('rosterLead')}</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      ${myCls.length?myCls.map(c=>{
+        const roster=DB.students.filter(s=>s.classIds&&s.classIds.includes(c.id));
+        const shown=roster.slice(0,6);
+        return `<div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div><p class="dsp" style="color:var(--acc2);font-size:23px;text-transform:uppercase;margin:0;line-height:1">${H(c.name)}</p>
+            <p class="mn" style="color:var(--g5);font-size:10px;margin:6px 0 0">${dayLabel(c.day)} · ${H(c.start)} · ${H(Pl(c.placeId).name)}</p></div>
+            <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;padding:4px 7px;white-space:nowrap">${H(c.style)}</span>
+          </div>
+          <div style="display:flex;gap:5px;margin:12px 0 10px;flex-wrap:wrap">
+            ${shown.map(s=>`<span style="width:27px;height:27px;background:linear-gradient(150deg,#5c2a10,#3a2010);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff" title="${H(s.name)}">${ini(s.name)}</span>`).join('')}
+            <span class="mn" style="height:27px;padding:0 8px;display:flex;align-items:center;border:1px dashed var(--bd);color:var(--g5);font-size:9.5px">${roster.length}/${c.max}</span>
+          </div>
+          <button onclick="openMarkFor(${c.id})" class="mn btn-fill" style="width:100%;background:var(--acc);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border:0;cursor:pointer"><i class="ph ph-check-square" style="margin-right:6px"></i>${tr('markAttendance')}</button>
+        </div>`;}).join(''):`<p style="color:var(--g5);font-size:12px">No classes assigned yet.</p>`}
+    </div>`;
+}
+
+const SALARY_PER_SINGLE=25;
+const SALARY_MONTHLY_TIERS=[{max:20,rate:70},{max:40,rate:75},{max:Infinity,rate:80}];
+function salaryRateForHeadcount(n){ return SALARY_MONTHLY_TIERS.find(t=>n<=t.max).rate; }
+const MONTHS_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function monthNameFromDate(dateStr){ const d=new Date(dateStr+'T00:00:00'); return MONTHS_EN[d.getMonth()]; }
+function payStudent(p){ const typed=p.trialName||p.privateName; return typed?{name:typed,id:null,classIds:[],typed:true}:S(p.studentId); }
+
+function computeTeacherSalary(tid){
+  const myClassIds=new Set(DB.classes.filter(c=>c.teacherId===tid).map(c=>c.id));
+  const isSingle=p=>((p.month||'')+' '+(p.notes||'')).toLowerCase().includes('single class');
+  const isTrial=p=>((p.month||'')+' '+(p.notes||'')).toLowerCase().includes('trial class');
+  const isCreditUse=p=>p.kind==='credit-use';
+  const isBonus=p=>p.kind==='bonus-class';
+  const earnedMonthOf=p=>p.earnedDate?monthNameFromDate(p.earnedDate):p.month;
+  const virtualCreditUses=(DB.attendance||[]).filter(a=>a.paidByCredit&&!a.extra&&a.status==='present'&&myClassIds.has(a.classId))
+    .map(a=>({kind:'credit-use',studentId:a.studentId,classId:a.classId,month:'Credit',amount:0,status:'Paid',date:a.date,earnedDate:a.date}));
+  const virtualBonusClasses=(DB.attendance||[]).filter(a=>a.bonus&&a.status==='present'&&myClassIds.has(a.classId))
+    .map(a=>({kind:'bonus-class',studentId:a.studentId,classId:a.classId,month:'Bonus',amount:0,status:'Paid',date:a.date,earnedDate:a.date}));
+  const myDanceShows=DB.payments.filter(p=>p.kind==='danceshow'&&p.status==='Paid'&&p.teacherId===tid);
+  const myPrivates=DB.payments.filter(p=>p.kind==='private'&&p.status==='Paid'&&p.teacherId===tid);
+  const allPaid=DB.payments.filter(p=>p.status==='Paid'&&p.classId&&myClassIds.has(p.classId)&&!isCreditUse(p))
+    .concat(virtualCreditUses).concat(virtualBonusClasses).concat(myDanceShows).concat(myPrivates);
+
+  let monthlySingleRateEarn=0,monthlyMultiRateEarn=0,singleClassEarn=0,danceShowEarn=0,privateEarn=0;
+  let monthlySingleRateQty=0,monthlyMultiRateClassQty=0,singleClassQty=0,danceShowQty=0,privateQty=0;
+  const rows=[]; const monthlyClassCountByMonth={}; const monthlyPayRows=[];
+
+  allPaid.forEach(p=>{
+    const earnedMonth=earnedMonthOf(p);
+    if(p.kind==='danceshow'){ const earn=(typeof p.teacherEarn==='number')?p.teacherEarn:0; danceShowEarn+=earn; danceShowQty++;
+      rows.push({student:{name:'Dance Show'},type:'Dance Show',amount:p.amount,earn,earnedMonth,date:p.earnedDate||p.date}); return; }
+    if(p.kind==='private'){ const earn=(typeof p.teacherEarn==='number')?p.teacherEarn:0; privateEarn+=earn; privateQty++;
+      rows.push({student:payStudent(p),type:'Private Class',amount:p.amount,earn,earnedMonth,date:p.earnedDate||p.date}); return; }
+    const st=payStudent(p);
+    if(!st||(!st.id&&!st.typed)) return;
+    if(isCreditUse(p)){ singleClassEarn+=SALARY_PER_SINGLE; singleClassQty++; rows.push({student:st,type:'Credit Class',amount:0,earn:SALARY_PER_SINGLE,earnedMonth,date:p.date}); }
+    else if(isBonus(p)){ singleClassEarn+=SALARY_PER_SINGLE; singleClassQty++; rows.push({student:st,type:'Bonus Class',amount:0,earn:SALARY_PER_SINGLE,earnedMonth,date:p.date}); }
+    else if(isSingle(p)){ singleClassEarn+=SALARY_PER_SINGLE; singleClassQty++; rows.push({student:st,type:'Single Class',amount:p.amount,earn:SALARY_PER_SINGLE,earnedMonth,date:p.date}); }
+    else if(isTrial(p)){ singleClassEarn+=SALARY_PER_SINGLE; singleClassQty++; rows.push({student:st,type:'Trial Class',amount:p.amount,earn:SALARY_PER_SINGLE,earnedMonth,date:p.date}); }
+    else{ const totalClasses=(st.classIds||[]).length; monthlyPayRows.push({p,student:st,earnedMonth,isSingleRate:totalClasses<=1});
+      monthlyClassCountByMonth[earnedMonth]=(monthlyClassCountByMonth[earnedMonth]||0)+1; }
+  });
+  monthlyPayRows.forEach(({p,student,earnedMonth,isSingleRate})=>{
+    const rate=salaryRateForHeadcount(monthlyClassCountByMonth[earnedMonth]);
+    if(isSingleRate){ monthlySingleRateEarn+=rate; monthlySingleRateQty++; rows.push({student,type:'Monthly (single-rate)',amount:p.amount,earn:rate,earnedMonth,date:p.date}); }
+    else{ monthlyMultiRateEarn+=rate; monthlyMultiRateClassQty++; rows.push({student,type:'Monthly (multi-rate)',amount:p.amount,earn:rate,earnedMonth,date:p.date}); }
+  });
+  const tierRows=Object.keys(monthlyClassCountByMonth).map(m=>({month:m,headcount:monthlyClassCountByMonth[m],rate:salaryRateForHeadcount(monthlyClassCountByMonth[m])}));
+  const total=monthlySingleRateEarn+monthlyMultiRateEarn+singleClassEarn+danceShowEarn+privateEarn;
+  return {total,monthlySingleRateEarn,monthlySingleRateQty,monthlyMultiRateEarn,monthlyMultiRateClassQty,singleClassEarn,singleClassQty,danceShowEarn,danceShowQty,privateEarn,privateQty,tierRows,
+    rows:rows.sort((a,b)=>(b.date||'').localeCompare(a.date||''))};
+}
+function renderHoursPage(){
+  const tid=session.ref;
+  const sal=computeTeacherSalary(tid);
+  const el=document.getElementById('pg-hours');
+  el.innerHTML=`
+    <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">${tr('mySalary')}</h2>
+    <p style="color:var(--g5);font-size:11px;margin:0 0 14px">${tr('allMonths')}</p>
+    <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--acc);padding:18px;margin-bottom:14px">
+      <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 8px">${tr('estPay')}</p>
+      <p class="dsp" style="font-size:48px;margin:0;line-height:.95">${fmt(sal.total).replace('RM ','RM')}</p>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">${tr('payBreakdown')}</p>
+      ${[['Monthly (single class)',sal.monthlySingleRateQty,sal.monthlySingleRateEarn],['Monthly (multi-class)',sal.monthlyMultiRateClassQty,sal.monthlyMultiRateEarn],
+         ['Single / Trial / Credit / Bonus',sal.singleClassQty,sal.singleClassEarn],['Dance Show',sal.danceShowQty,sal.danceShowEarn],['Private Class',sal.privateQty,sal.privateEarn]]
+        .filter(([,q])=>q>0).map(([label,q,earn])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--bd2)">
+          <div><p style="color:var(--g2);font-size:11.5px;font-weight:600;margin:0">${label}</p><p class="mn" style="color:var(--g5);font-size:10px;margin:3px 0 0">${q}×</p></div>
+          <p class="mn" style="color:#fff;font-size:12px;font-weight:600;margin:0">${fmt(earn).replace('RM ','RM')}</p>
+        </div>`).join('')||`<p style="color:var(--g5);font-size:11px">No paid records yet</p>`}
+    </div>
+    ${sal.tierRows.length?`<p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">Monthly-Fee Rate By Month</p>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
+      ${sal.tierRows.map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--bd2)"><span class="mn" style="color:var(--acc2);font-size:11px">${r.month}</span><span style="color:var(--g5);font-size:11px">${r.headcount} classes</span><span class="mn" style="color:var(--acc);font-weight:700;font-size:11px">RM${r.rate}/class</span></div>`).join('')}
+    </div>`:''}
+    <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">Earning Records</p>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      ${sal.rows.slice(0,30).map(r=>`<div style="background:var(--card);border:1px solid var(--bd);padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px;min-width:0"><span style="width:22px;height:22px;flex-shrink:0;background:linear-gradient(150deg,#5c2a10,#3a2010);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">${ini(r.student.name)}</span>
+        <div style="min-width:0"><p style="color:#fff;font-size:11.5px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${H(r.student.name)}</p><p class="mn" style="color:var(--g5);font-size:9.5px;margin:2px 0 0">${H(r.type)} · ${H(r.earnedMonth||'')}</p></div></div>
+        <span class="mn" style="color:#4ade80;font-weight:700;font-size:11px;white-space:nowrap">+${fmt(r.earn).replace('RM ','RM')}</span>
+      </div>`).join('')||`<p style="color:var(--g5);font-size:12px">No records yet</p>`}
+    </div>`;
+}
+
+function nearestPastOrTodayDate(dayName){
+  const today=new Date();
+  const targetIdx=DAYS.indexOf(dayName);
+  const diff=(today.getDay()-targetIdx+7)%7;
+  const d=new Date(today); d.setDate(today.getDate()-diff);
+  return toLocalISODate(d);
+}
+let markClassId=null, markDate=null, markPending={}, markRemarkOpenFor=null;
+function renderMarkPage(){
+  const tid=session.ref;
+  const myCls=DB.classes.filter(c=>c.teacherId===tid);
+  const el=document.getElementById('pg-mark');
+  if(!myCls.length){ el.innerHTML=`<p style="color:var(--g5);font-size:12px">No classes assigned yet.</p>`; return; }
+  if(!markClassId||!myCls.some(c=>c.id===markClassId)) markClassId=myCls[0].id;
+  const cls=DB.classes.find(c=>c.id===markClassId);
+  if(!markDate) markDate=nearestPastOrTodayDate(cls.day);
+  const roster=DB.students.filter(s=>s.classIds&&s.classIds.includes(cls.id));
+  const statusOf=sid=>{
+    if(markPending[sid]) return markPending[sid];
+    const rec=DB.attendance.find(a=>a.classId===cls.id&&a.date===markDate&&a.studentId===sid&&!a.extra);
+    return rec?{status:rec.status,remark:rec.remark||''}:{status:null,remark:''};
+  };
+  const markedCount=roster.filter(s=>statusOf(s.id).status).length;
+  const pct=roster.length?Math.round(markedCount/roster.length*100):0;
+  el.innerHTML=`
+    <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">${tr('markAttendance')}</h2>
+    <p style="color:var(--g5);font-size:11px;margin:0 0 14px">${tr('pickAClass')}</p>
+    <div class="bd-scroll" style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto">
+      ${myCls.map(c=>`<button onclick="setMarkClass(${c.id})" class="mn" style="flex-shrink:0;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;cursor:pointer;border:1px solid ${c.id===markClassId?'var(--acc)':'var(--bd)'};background:${c.id===markClassId?'var(--acc)':'transparent'};color:${c.id===markClassId?'#000':'var(--g4)'}">${H(c.name)}</button>`).join('')}
+    </div>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <label class="field-label" style="margin:0">Date</label>
+        <input type="date" id="mark-date-input" value="${markDate}" onchange="setMarkDate(this.value)" style="background:#000;border:1px solid #3d3a36;color:#fff;font-size:12px;padding:6px 8px;font-family:'JetBrains Mono',monospace"/>
+      </div>
+      <div class="mn" style="display:flex;justify-content:space-between;font-size:10px;color:var(--g5);margin-bottom:6px"><span>${tr('marked')}</span><span style="color:var(--acc)">${markedCount}/${roster.length}</span></div>
+      <div style="height:6px;background:#000;border:1px solid var(--bd)"><div style="height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:${pct}%;transition:width .3s"></div></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button onclick="markAllPresentLocal()" class="mn" style="flex:1;background:transparent;border:1px solid #a84715;color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px;cursor:pointer"><i class="ph ph-checks" style="margin-right:6px"></i>${tr('allPresent')}</button>
+        <button onclick="resetMarksLocal()" class="mn" style="flex:0 0 auto;background:transparent;border:1px solid var(--bd);color:var(--g5);font-size:9.5px;font-weight:700;padding:10px 12px;cursor:pointer"><i class="ph ph-arrow-counter-clockwise"></i></button>
+      </div>
+    </div>
+    <p style="color:var(--g5);font-size:10px;line-height:1.6;margin:0 0 12px"><i class="ph ph-info"></i> Updates the attendance record only — billing and credit deductions still happen on the desktop site.</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${roster.length?roster.map(s=>{
+        const st=statusOf(s.id);
+        const editing=markRemarkOpenFor===s.id;
+        const opts=[['present','Present','ph-check'],['absent','Absent','ph-x'],['cancelled','Cancelled','ph-prohibit']];
+        return `<div style="background:var(--card);border:1px solid ${st.status?'var(--acc)':'var(--bd)'};padding:11px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:32px;height:32px;flex-shrink:0;background:linear-gradient(150deg,#5c2a10,#3a2010);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">${ini(s.name)}</span>
+            <div style="flex:1;min-width:0"><p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">${H(s.name)}</p><p class="mn" style="color:var(--g5);font-size:9.5px;margin:3px 0 0">Age ${ageOf(s)}</p></div>
+            <button onclick="toggleMarkRemark(${s.id})" style="background:none;border:1px solid var(--bd);color:${st.remark?'#6fa8ff':'var(--g5)'};width:30px;height:30px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center"><i class="ph ph-note-pencil" style="font-size:14px"></i></button>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px">
+            ${opts.map(([val,label,icon])=>`<button onclick="markLocal(${s.id},'${val}')" class="mn" style="flex:1;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 2px;cursor:pointer;border:1px solid ${st.status===val?'var(--acc)':'var(--bd)'};background:${st.status===val?'var(--acc)':'transparent'};color:${st.status===val?'#000':'var(--g4)'}"><i class="ph ${icon}" style="margin-right:5px"></i>${label}</button>`).join('')}
+          </div>
+          ${editing?`<div style="margin-top:10px">
+            <input id="remark-input-${s.id}" value="${H(st.remark||'')}" placeholder="${tr('addRemark')}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12px;padding:10px;outline:none;font-family:Inter,sans-serif"/>
+            <button onclick="saveMarkRemark(${s.id})" class="mn" style="width:100%;margin-top:7px;background:var(--acc);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px;border:0;cursor:pointer">${tr('saveRemark')}</button>
+          </div>`:(st.remark?`<p style="color:#6fa8ff;font-size:10.5px;margin:9px 0 0"><i class="ph ph-note-pencil"></i> ${H(st.remark)}</p>`:'')}
+        </div>`;}).join(''):`<p style="color:var(--g5);font-size:12px">No students enrolled in this class yet.</p>`}
+    </div>
+    <button onclick="saveMarksToServer()" id="mark-save-btn" class="mn btn-fill" style="width:100%;margin-top:14px;background:var(--acc);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer">${tr('saveRoster')}</button>`;
+}
+function setMarkClass(id){ markClassId=id; markDate=null; markPending={}; markRemarkOpenFor=null; renderMarkPage(); }
+function setMarkDate(v){ markDate=v; markPending={}; markRemarkOpenFor=null; renderMarkPage(); }
+function markLocal(sid,status){ markPending[sid]={status,remark:(markPending[sid]&&markPending[sid].remark)||''}; markRemarkOpenFor=null; renderMarkPage(); }
+function markAllPresentLocal(){
+  const cls=DB.classes.find(c=>c.id===markClassId);
+  const roster=DB.students.filter(s=>s.classIds&&s.classIds.includes(cls.id));
+  roster.forEach(s=>{
+    const existing=DB.attendance.find(a=>a.classId===cls.id&&a.date===markDate&&a.studentId===s.id&&!a.extra);
+    if(!markPending[s.id]&&!(existing&&existing.status)) markPending[s.id]={status:'present',remark:''};
+  });
+  renderMarkPage();
+}
+function resetMarksLocal(){ markPending={}; markRemarkOpenFor=null; renderMarkPage(); }
+function toggleMarkRemark(sid){ markRemarkOpenFor=markRemarkOpenFor===sid?null:sid; renderMarkPage(); }
+function saveMarkRemark(sid){
+  const val=document.getElementById('remark-input-'+sid).value;
+  markPending[sid]={status:(markPending[sid]&&markPending[sid].status)||(DB.attendance.find(a=>a.classId===markClassId&&a.date===markDate&&a.studentId===sid&&!a.extra)||{}).status||'present',remark:val};
+  markRemarkOpenFor=null;
+  renderMarkPage();
+}
+async function saveMarksToServer(){
+  const entries=Object.entries(markPending);
+  if(!entries.length){ toast(tr('markSaved')); return; }
+  const btn=document.getElementById('mark-save-btn'); btn.disabled=true; btn.style.opacity='.6';
+  const classId=markClassId, date=markDate;
+  const fresh=await cloudLoadFull();
+  if(!fresh){ btn.disabled=false; btn.style.opacity='1'; toast(tr('markFailed')); return; }
+  entries.forEach(([sid,val])=>{
+    sid=parseInt(sid,10);
+    let rec=DB.attendance.find(a=>a.classId===classId&&a.date===date&&a.studentId===sid&&!a.extra);
+    if(rec){ rec.status=val.status; if(val.remark) rec.remark=val.remark; else delete rec.remark; }
+    else{ const r={id:(nid.attendance=nid.attendance||1)&&nid.attendance++,classId,date,studentId:sid,status:val.status}; if(val.remark) r.remark=val.remark; DB.attendance.push(r); }
+  });
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'POST',headers:authHeaders(),body:JSON.stringify({data:JSON.stringify({db:DB,nid})})},8000);
+    const j=r&&r.ok?await r.json().catch(()=>null):null;
+    btn.disabled=false; btn.style.opacity='1';
+    if(j&&j.ok){ markPending={}; toast(tr('markSaved')); renderMarkPage(); }
+    else toast(tr('markFailed'));
+  }catch(e){ btn.disabled=false; btn.style.opacity='1'; toast(tr('markFailed')); }
+}
+
+function renderTeacherProfilePage(){
+  const tid=session.ref;
+  const t=DB.teachers.find(x=>x.id===tid);
+  const el=document.getElementById('pg-tprofile');
+  if(!t){ el.innerHTML=''; return; }
+  el.innerHTML=`
+    <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">${tr('myPublicProfile')}</h2>
+    <p style="color:var(--g5);font-size:11px;margin:0 0 16px">${tr('shownOnIntro')}</p>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:13px">
+      ${t.photo?`<div style="width:64px;height:64px;border-radius:50%;flex-shrink:0;background-size:cover;background-position:center;background-image:url('${H(t.photo)}')"></div>`
+        :`<div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(150deg,var(--acc),#7a2d0c);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="dsp" style="font-size:26px;color:rgba(0,0,0,.4)">${ini(t.name)}</span></div>`}
+      <div style="flex:1;min-width:0"><p class="dsp" style="font-size:22px;text-transform:uppercase;margin:0;line-height:1">${H(t.name)}</p>
+      <p class="mn" style="color:var(--g5);font-size:10px;margin:5px 0 0">${H((t.specs||[]).join(' · '))}</p>
+      <p style="color:var(--g5);font-size:10px;margin:8px 0 0"><i class="ph ph-info"></i> Photo upload — use the desktop site for now</p></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+      <label class="field-label">${tr('quote')}</label>
+      <textarea id="tp-quote" rows="3" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px;outline:none;resize:none;font-family:Inter,sans-serif;line-height:1.6;margin-bottom:12px">${H(t.quote||'')}</textarea>
+      <label class="field-label">${tr('instagramHandle')}</label>
+      <div style="display:flex;align-items:center;border:1px solid #3d3a36;background:#000;margin-bottom:12px">
+        <span style="padding:0 9px;color:var(--acc);font-size:15px"><i class="ph ph-instagram-logo"></i></span>
+        <input id="tp-ig" value="${H(t.instagram||'')}" style="flex:1;background:transparent;border:0;color:#fff;font-size:12.5px;padding:10px 10px 10px 0;outline:none;font-family:'JetBrains Mono',monospace"/>
+      </div>
+      <label class="field-label">Xiaohongshu</label>
+      <div style="display:flex;align-items:center;border:1px solid #3d3a36;background:#000;margin-bottom:12px">
+        <span style="padding:0 9px;color:var(--acc);font-size:15px"><i class="ph ph-note"></i></span>
+        <input id="tp-xhs" value="${H(t.xiaohongshu||'')}" style="flex:1;background:transparent;border:0;color:#fff;font-size:12.5px;padding:10px 10px 10px 0;outline:none;font-family:'JetBrains Mono',monospace"/>
+      </div>
+      <label class="field-label">${tr('showreelLink')}</label>
+      <div style="display:flex;align-items:center;border:1px solid #3d3a36;background:#000">
+        <span style="padding:0 9px;color:var(--acc);font-size:15px"><i class="ph ph-video-camera"></i></span>
+        <input id="tp-video" value="${H(t.video||'')}" placeholder="https://youtu.be/..." style="flex:1;background:transparent;border:0;color:#fff;font-size:12.5px;padding:10px 10px 10px 0;outline:none;font-family:'JetBrains Mono',monospace"/>
+      </div>
+    </div>
+    <button onclick="saveTeacherProfileMobile()" id="tp-save-btn" class="mn btn-fill" style="width:100%;background:var(--acc);color:var(--ink);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px;border:0;cursor:pointer">${tr('saveProfile')}</button>`;
+}
+async function saveTeacherProfileMobile(){
+  const tid=session.ref;
+  const quote=document.getElementById('tp-quote').value.trim();
+  const instagram=document.getElementById('tp-ig').value.trim();
+  const xiaohongshu=document.getElementById('tp-xhs').value.trim();
+  const video=document.getElementById('tp-video').value.trim();
+  const btn=document.getElementById('tp-save-btn'); btn.disabled=true; btn.style.opacity='.6';
+  const fresh=await cloudLoadFull();
+  if(!fresh){ btn.disabled=false; btn.style.opacity='1'; toast(tr('markFailed')); return; }
+  const t=DB.teachers.find(x=>x.id===tid);
+  if(!t){ btn.disabled=false; btn.style.opacity='1'; return; }
+  t.quote=quote; t.instagram=instagram; t.xiaohongshu=xiaohongshu; t.video=video;
+  try{
+    const r=await fetchWithTimeout(CLOUD_URL,{method:'POST',headers:authHeaders(),body:JSON.stringify({data:JSON.stringify({db:DB,nid})})},8000);
+    const j=r&&r.ok?await r.json().catch(()=>null):null;
+    btn.disabled=false; btn.style.opacity='1';
+    if(j&&j.ok) toast(tr('profileSaved'));
+    else toast(tr('markFailed'));
+  }catch(e){ btn.disabled=false; btn.style.opacity='1'; toast(tr('markFailed')); }
+}
+
+boot();
+</script>
 </body>
 </html>
