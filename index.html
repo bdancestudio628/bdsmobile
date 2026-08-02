@@ -6,16 +6,28 @@
 <title>B Dance Studio</title>
 <script>
 window.__bootStarted=false;
-setTimeout(function(){
-  if(window.__bootStarted) return;
+window.__errLog=[];
+function __showErr(msg){
+  window.__errLog.push(msg);
   var ls=document.getElementById('loading-screen');
   if(!ls) return;
-  ls.innerHTML='<div style="text-align:center;padding:0 24px;color:#fff;font-family:sans-serif">'
-    +'<p style="color:#ff6b5a;font-size:20px;margin:0 0 10px">Stuck before the app could start</p>'
-    +'<p style="color:#b9b5ad;font-size:12px;line-height:1.6;margin:0 0 18px">A resource (fonts or icons) may be blocked on this network, which held up the page script from ever running.</p>'
-    +'<button onclick="location.reload()" style="background:#ff7a29;color:#000;font-weight:700;font-size:11px;padding:12px 20px;border:0;cursor:pointer">Reload</button>'
+  ls.innerHTML='<div style="text-align:left;padding:20px;color:#fff;font-family:monospace;font-size:11px;line-height:1.6;max-height:100%;overflow-y:auto">'
+    +'<p style="color:#ff6b5a;font-size:16px;font-family:sans-serif;margin:0 0 14px">JS Error Caught:</p>'
+    +window.__errLog.map(function(e){ return '<p style="margin:0 0 10px;word-break:break-word;border-left:2px solid #ff4d2e;padding-left:8px">'+e+'</p>'; }).join('')
+    +'<button onclick="location.reload()" style="background:#ff7a29;color:#000;font-weight:700;font-size:11px;padding:10px 16px;border:0;cursor:pointer;margin-top:10px">Reload</button>'
     +'</div>';
-},15000);
+}
+window.onerror=function(msg,src,line,col,err){
+  __showErr((msg||'Unknown error')+' — line '+line+':'+col+(src?(' in '+src.split('/').pop()):'')+(err&&err.stack?('<br><span style="color:#888;font-size:9px">'+String(err.stack).slice(0,300)+'</span>'):''));
+  return false;
+};
+window.addEventListener('unhandledrejection',function(ev){
+  __showErr('Unhandled promise rejection: '+(ev.reason&&ev.reason.message?ev.reason.message:String(ev.reason)));
+});
+setTimeout(function(){
+  if(window.__bootStarted) return;
+  __showErr('Nothing ran at all after 6s — no error, no boot(). Likely something outside normal JS execution (a browser extension/blocker removing the script tag, or the page not actually being this file).');
+},6000);
 </script>
 <link rel="icon" type="image/png" href="assets/icon-192.png">
 <link rel="apple-touch-icon" href="assets/icon-192.png">
@@ -806,12 +818,7 @@ async function boot(){
     document.getElementById('loading-screen').classList.remove('active');
     goIntro();
   }catch(e){
-    const ls=document.getElementById('loading-screen');
-    ls.innerHTML=`<div style="text-align:center;padding:0 24px">
-      <p class="dsp" style="color:#ff6b5a;font-size:22px;text-transform:uppercase;margin:0 0 10px">Something went wrong</p>
-      <p style="color:var(--g5);font-size:12px;line-height:1.6;margin:0 0 18px">${H(e&&e.message||'Unknown error')}</p>
-      <button onclick="location.reload()" class="mn" style="background:var(--acc);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;border:0;cursor:pointer">Reload</button>
-    </div>`;
+    if(window.__showErr) window.__showErr('boot() threw: '+(e&&e.message||String(e))+(e&&e.stack?('<br><span style="color:#888;font-size:9px">'+String(e.stack).slice(0,300)+'</span>'):''));
     if(window.console&&console.error) console.error('boot() failed:',e);
   }
 }
