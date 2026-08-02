@@ -1,4 +1,8 @@
 // B Dance Studio — Supabase bridge (secure; your SECRET key stays on the server).
+// Ported from Netlify Functions to a Vercel serverless function (api/db.js).
+// Same behavior as the original netlify/functions/db.js — only the request/response
+// wrapper changed (Vercel hands you (req, res) instead of a Netlify `event`, and
+// Vercel serves this at /api/db instead of /.netlify/functions/db).
 //
 // The whole app database is stored as ONE JSON row in the "app_state" table
 // (column: data jsonb). The website loads/saves through this function so your
@@ -10,8 +14,8 @@
 //   SUPABASE_KEY = your SECRET key  (sb_secret_...  or legacy service_role)
 //                  (server-side only — never the publishable/anon key)
 //
-// After adding/changing these, redeploy (Vercel does NOT hot-reload env vars —
-// Deployments → ⋯ → Redeploy, or just push a new commit).
+// After adding/changing these, ALWAYS redeploy — Vercel does not hot-apply env
+// var changes to existing deployments (Deployments → ⋯ → Redeploy).
 
 const URL_ENV = () => (process.env.SUPABASE_URL || '').trim();
 const KEY_ENV = () => (process.env.SUPABASE_KEY || '').trim();
@@ -21,7 +25,51 @@ const IG_ID = () => (process.env.IG_USER_ID || '').trim();     // studio's Insta
 const IG_TOKEN = () => (process.env.IG_TOKEN || '').trim();    // long-lived / system-user access token
 const GRAPH = 'https://graph.facebook.com/v21.0';        // Facebook-Login route (needs IG_USER_ID)
 const IG_GRAPH = 'https://graph.instagram.com';           // Instagram-Login route (token only)
-const TIMEOUT_MS = 7000; // never hang: a stuck request becomes a clean 504 instead of an opaque platform timeout
+const TIMEOUT_MS = 7000; // never hang: a stuck request becomes a clean 504 instead of a platform timeout
+
+// ── Optional read cache (Upstash Redis) ──────────────────────────────
+// Every signed-in device polls GET roughly every 45s, plus a 4s save-or-pull tick, and every
+// landing-page visitor hits GET once on load — all reading the same one JSON row, which changes far
+// less often than it's read. This sits in front of that read only. It never touches writes, session
+// tokens, logins, or Instagram import — everything else in this file is unchanged.
+//
+// Configure by setting UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in Vercel (same names
+// Upstash's own SDK expects — copy them from your Upstash dashboard's REST API section, no separate
+// npm package needed here, this talks to the REST API directly). Leave them unset and every one of
+// these calls is a no-op: reads go straight to Supabase exactly as they do today. Same if Upstash
+// times out or errors — this never makes a request slower or less reliable than without it.
+//
+// One caveat worth knowing: this app stores uploaded photos as base64 directly in the JSON row, so
+// the cached value can be large. Upstash's free tier caps how big a single cached value can be; if
+// your database grows past that, caching this row silently stops helping (falls straight through to
+// Supabase, same as unconfigured) rather than failing anything.
+const REDIS_URL = () => (process.env.UPSTASH_REDIS_REST_URL || '').trim();
+const REDIS_TOKEN = () => (process.env.UPSTASH_REDIS_REST_TOKEN || '').trim();
+const REDIS_TIMEOUT_MS = 1500;
+const CACHE_KEY = 'bdance:app_state:raw';
+const CACHE_TTL_S = 20; // bounds staleness on its own; a save invalidates this immediately anyway
+
+async function redisCmd(args) {
+  const url = REDIS_URL(), token = REDIS_TOKEN();
+  if (!url || !token) return null; // not configured — every caller below just treats this as a cache miss
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), REDIS_TIMEOUT_MS);
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(args),
+      signal: ac.signal,
+    });
+    if (!r.ok) return null;
+    const j = await r.json().catch(() => null);
+    return j ? j.result : null;
+  } catch (e) { return null; }        // network error, timeout, bad credentials — same as a cache miss
+  finally { clearTimeout(timer); }
+}
+const cacheGetRaw = () => redisCmd(['GET', CACHE_KEY]);
+const cacheSetRaw = (value) => redisCmd(['SETEX', CACHE_KEY, String(CACHE_TTL_S), value]);
+const cacheInvalidate = () => redisCmd(['DEL', CACHE_KEY]);
 
 function headers(extra) {
   const k = KEY_ENV();
@@ -35,8 +83,6 @@ function apiBase() {
   return u;
 }
 async function fetchWithTimeout(url, opts = {}) {
-  if (typeof fetch === 'undefined')
-    throw new Error('fetch is not available in this Node runtime — set Node.js Version to 18.x or higher in Vercel → Project → Settings → General.');
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), TIMEOUT_MS);
   try {
@@ -98,7 +144,7 @@ function publicSlice(db) {
   const d = db && typeof db === 'object' ? db : {};
   const teachers = Array.isArray(d.teachers) ? d.teachers.map(t => ({
     id: t.id, name: t.name, photo: t.photo, specs: t.specs,
-        quote: t.quote, instagram: t.instagram, xiaohongshu: t.xiaohongshu,
+    quote: t.quote, instagram: t.instagram, xiaohongshu: t.xiaohongshu,
     video: t.video, status: t.status, color: t.color,
   })) : [];
   // Classes drive the "styles we teach" counts and the timetable preview — times and styles only,
@@ -114,10 +160,10 @@ function publicSlice(db) {
     classes,
   };
 }
-// Pulls the session token out of the Authorization header (case varies by platform).
-function bearerToken(event) {
-  const h = (event && event.headers) || {};
-  const raw = h.authorization || h.Authorization || '';
+// Pulls the session token out of the Authorization header.
+// (Node/Vercel lowercases incoming header names, unlike Netlify's `event.headers`.)
+function bearerToken(req) {
+  const raw = (req.headers && (req.headers.authorization || req.headers.Authorization)) || '';
   const m = /^Bearer\s+(.+)$/i.exec(String(raw).trim());
   return m ? m[1] : '';
 }
@@ -128,21 +174,20 @@ function sameSecret(a, b) {
   return x.length === y.length && crypto.timingSafeEqual(x, y);
 }
 
-async function handleEvent(event) {
-  const cors = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Content-Type': 'application/json',
-  };
-  const ok = (obj) => ({ statusCode: 200, headers: cors, body: JSON.stringify(obj) });
-  const fail = (code, msg) => ({ statusCode: code, headers: cors, body: JSON.stringify({ error: String(msg) }) });
+module.exports = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Content-Type', 'application/json');
+
+  const ok = (obj) => res.status(200).json(obj);
+  const fail = (code, msg) => res.status(code).json({ error: String(msg) });
 
   try {
-    if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: cors, body: '' };
+    if (req.method === 'OPTIONS') return res.status(204).end();
 
     // Quick self-check: /api/db?health=1 → shows config without leaking the key
-    if (event.httpMethod === 'GET' && event.queryStringParameters && event.queryStringParameters.health) {
+    if (req.method === 'GET' && req.query && req.query.health) {
       let bucket = 'unknown';
       if (URL_ENV() && KEY_ENV()) {
         try {
@@ -150,7 +195,25 @@ async function handleEvent(event) {
           bucket = b.ok ? 'ok' : (b.status === 404 ? 'missing — run supabase_setup.sql' : 'HTTP ' + b.status);
         } catch (e) { bucket = String((e && e.message) || e); }
       }
-      return ok({ ok: true, hasUrl: !!URL_ENV(), hasKey: !!KEY_ENV(), base: apiBase() || null, bucket,
+
+      // Real round-trip test — not just "are the env vars set". Writes a throwaway key, reads it
+      // back, then deletes it, so this never touches the real app-state cache entry or its TTL.
+      let cache = 'not configured — add UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN';
+      if (REDIS_URL() && REDIS_TOKEN()) {
+        const probeKey = 'bdance:health-check:' + Date.now();
+        try {
+          const setResult = await redisCmd(['SET', probeKey, 'ok']);
+          const getResult = await redisCmd(['GET', probeKey]);
+          await redisCmd(['DEL', probeKey]); // clean up regardless of outcome
+          cache = (setResult === 'OK' && getResult === 'ok')
+            ? 'connected'
+            : 'configured but round-trip failed — check the URL/token are correct and unexpired';
+        } catch (e) {
+          cache = 'error: ' + String((e && e.message) || e);
+        }
+      }
+
+      return ok({ ok: true, hasUrl: !!URL_ENV(), hasKey: !!KEY_ENV(), base: apiBase() || null, bucket, cache,
         instagram: IG_TOKEN()
           ? ('configured (' + (IG_ID() ? 'facebook-login route' : 'instagram-login route') + ')')
           : 'not configured — add IG_TOKEN' });
@@ -159,17 +222,24 @@ async function handleEvent(event) {
     if (!URL_ENV() || !KEY_ENV())
       return fail(500, 'Missing SUPABASE_URL or SUPABASE_KEY — add both in Vercel → Project → Settings → Environment Variables, then redeploy.');
 
-    if (event.httpMethod === 'GET') {
-      const r = await rest('app_state?id=eq.' + ROW_ID + '&select=data');
-      if (!r.ok) return { statusCode: r.status, headers: cors, body: await r.text() };
-      const rows = await r.json();
-      const stored = rows[0] && rows[0].data ? rows[0].data : null;
+    if (req.method === 'GET') {
+      let stored = null;
+      const cached = await cacheGetRaw();
+      if (cached) { try { stored = JSON.parse(cached); } catch (e) { stored = null; } }
+      if (!stored) {
+        const r = await rest('app_state?id=eq.' + ROW_ID + '&select=data');
+        if (!r.ok) return res.status(r.status).send(await r.text());
+        const rows = await r.json();
+        stored = rows[0] && rows[0].data ? rows[0].data : null;
+        if (stored) await cacheSetRaw(JSON.stringify(stored));
+      }
       if (!stored) return ok({ data: '' });
       // ── The read gate ───────────────────────────────────────────────
       // Signed in → the full database, as before. Not signed in → only the marketing content the
       // landing page draws. This is what stops the whole roster — names, phone numbers, payments,
       // passwords — being handed to anyone who opens the site or types this address in a browser.
-      const reader = readToken(bearerToken(event));
+      // Unchanged by caching: this runs fresh every time on whatever `stored` is, cached or not.
+      const reader = readToken(bearerToken(req));
       if (reader) return ok({ data: JSON.stringify(stored), scope: 'full' });
       // nid holds the next-id counters (students: 26, payments: 60 …). Harmless on its own, but it
       // quietly discloses how many students and payments the studio has, and a visitor drawing the
@@ -180,8 +250,10 @@ async function handleEvent(event) {
       });
     }
 
-    if (event.httpMethod === 'POST') {
-      const body = JSON.parse(event.body || '{}');
+    if (req.method === 'POST') {
+      // Vercel auto-parses a JSON request body into req.body when Content-Type is application/json;
+      // this still copes if it ever arrives as a raw string.
+      const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
       if (body.action === 'mirror') return ok({ ok: true }); // not needed on Supabase (views handle it)
 
       // ── Sign in, server-side ──────────────────────────────────────
@@ -194,7 +266,7 @@ async function handleEvent(event) {
         const wantRole = String(body.role || '').trim(); // desktop picks a role on the sign-in screen
         if (!user || !pass) return fail(400, 'Missing username or password');
         const r = await rest('app_state?id=eq.' + ROW_ID + '&select=data');
-        if (!r.ok) return { statusCode: r.status, headers: cors, body: await r.text() };
+        if (!r.ok) return res.status(r.status).send(await r.text());
         const rows = await r.json();
         const db = (rows[0] && rows[0].data && rows[0].data.db) || {};
         const accounts = Array.isArray(db.accounts) ? db.accounts : [];
@@ -221,22 +293,15 @@ async function handleEvent(event) {
       }
 
       // Hand the browser a one-time signed URL so the file goes STRAIGHT to Supabase Storage.
-      // We deliberately do NOT proxy the bytes: a Vercel serverless function request body is capped at ~4.5MB and
+      // We deliberately do NOT proxy the bytes: a serverless function request body has a size cap and
       // base64 inflates a file by ~33%, so any real video would fail here. Signing keeps the secret
       // key on the server while letting the upload itself bypass the function entirely.
-      // Remove an uploaded file once nothing in the database points at it any more. The browser
-      // checks "is this still referenced?" before calling; this end just enforces that the delete
-      // stays inside BUCKET and can't be walked out of it with a crafted path.
-      // Paste a reel link -> real .mp4 in Supabase. Only reaches media on the account IG_TOKEN belongs to.
-      // Patches ONE student's record atomically via the update_student_fields Postgres function
-      // instead of the whole-database overwrite below — so many students saving their own
-      // profile at the same time can never wipe out each other's edit (see supabase_setup.sql §4).
       if (body.action === 'update-student') {
         const id = String(body.id || '').trim();
         if (!id) return fail(400, 'Missing student id');
         // A student may only patch their OWN record; staff may patch anyone. Without this, one
         // student could edit another's profile just by changing the id in the request.
-        const who = readToken(bearerToken(event));
+        const who = readToken(bearerToken(req));
         if (!who) return fail(401, 'Sign in again — your session has expired or is missing.');
         const isStaff = ['admin', 'counter', 'teacher'].includes(String(who.r));
         if (!isStaff && String(who.ref) !== id) return fail(403, 'You can only update your own record.');
@@ -253,12 +318,13 @@ async function handleEvent(event) {
         }
         const found = await r.json().catch(() => false);
         if (!found) return fail(404, 'That student no longer exists.');
+        await cacheInvalidate();
         return ok({ ok: true });
       }
 
       if (body.action === 'ig-import') {
         if (!IG_TOKEN())
-          return fail(400, 'Instagram import is not set up — add IG_TOKEN in Vercel \u2192 Project \u2192 Settings \u2192 Environment Variables, then redeploy.');
+          return fail(400, 'Instagram import is not set up — add IG_TOKEN in Vercel → Project → Settings → Environment Variables, then redeploy.');
         const code = igShortcode(body.url);
         if (!code) return fail(400, 'That does not look like an Instagram reel link.');
 
@@ -346,7 +412,7 @@ async function handleEvent(event) {
       // This request replaces the entire studio database, so it must prove who's asking. Without
       // this check anyone who knows the URL could POST an empty object and erase everything.
       // Students never come through here; they patch their own record via 'update-student' above.
-      const writer = readToken(bearerToken(event));
+      const writer = readToken(bearerToken(req));
       if (!writer) return fail(401, 'Sign in again to save — your session has expired or is missing.');
       if (!['admin', 'counter', 'teacher'].includes(String(writer.r))) return fail(403, 'This account is not allowed to save studio data.');
 
@@ -362,7 +428,10 @@ async function handleEvent(event) {
         headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
         body: JSON.stringify([{ id: ROW_ID, data: obj, updated_at: new Date().toISOString() }]),
       });
-      if (!r.ok) return { statusCode: r.status, headers: cors, body: await r.text() };
+      if (!r.ok) return res.status(r.status).send(await r.text());
+      // Repopulate rather than just delete: we know exactly what's now in Supabase (we just wrote it),
+      // so there's no need to leave a window where a concurrent read could re-cache something stale.
+      await cacheSetRaw(JSON.stringify(obj));
       return ok({ ok: true });
     }
 
@@ -373,30 +442,4 @@ async function handleEvent(event) {
       return fail(504, 'Supabase did not respond in time — check that SUPABASE_URL is correct and the project is not paused.');
     return fail(500, e && e.message ? e.message : e);
   }
-}
-
-// ── Vercel adapter ────────────────────────────────────────────────────
-// Everything above this line is unchanged from the Netlify version — handleEvent() takes a plain
-// { httpMethod, headers, queryStringParameters, body } object and returns a plain
-// { statusCode, headers, body } object, with no dependency on either platform's request/response
-// types. This wrapper is the only Vercel-specific part: it adapts Vercel's (req, res) signature to
-// that shape and writes the result back out.
-module.exports = async (req, res) => {
-  // Vercel already parses a JSON request body into an object when Content-Type is application/json
-  // (which every caller in this app sends) — re-stringify so handleEvent can JSON.parse it exactly
-  // like it did with Netlify's raw event.body string.
-  let body = req.body;
-  if (body && typeof body !== 'string') body = JSON.stringify(body);
-
-  const event = {
-    httpMethod: req.method,
-    headers: req.headers || {},               // Node lowercases header names already
-    queryStringParameters: req.query || {},
-    body: body || '',
-  };
-
-  const result = await handleEvent(event);
-  res.status(result.statusCode);
-  for (const [k, v] of Object.entries(result.headers || {})) res.setHeader(k, v);
-  res.send(result.body);
 };
