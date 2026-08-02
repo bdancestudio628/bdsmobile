@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.6/dist/motion.js"></script>
+<style>
+:root{--acc:#ff7a29;--acc2:#ffa057;--bd:#3a2010;--bd2:rgba(58,32,16,.45);--card:#171412;--card2:#0c0c0c;--ink:#1a1006;--g5:#8a857d;--g4:#b9b5ad;--g2:#e8e4dc;--ember:#ff4d2e}
+body{margin:0;background:#0a0a0a;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--acc);text-decoration:none}a:hover{color:var(--acc2)}
+*{box-sizing:border-box}
+i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
+.dsp{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:-.5px}
+.mn{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.bd-scroll{-ms-overflow-style:none;scrollbar-width:none}
+.bd-scroll::-webkit-scrollbar{display:none}
+@keyframes rake{0%{transform:translateX(-14%) skewX(-12deg)}50%{transform:translateX(10%) skewX(-12deg)}100%{transform:translateX(-14%) skewX(-12deg)}}
+@keyframes ctick{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@keyframes glowpulse{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes spinl{to{transform:rotate(360deg)}}
+@keyframes bounce3{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+@keyframes sheen{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
+@keyframes ringpop{0%{transform:scale(.6);opacity:.8}100%{transform:scale(2.1);opacity:0}}
+@keyframes barpulse{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes blob{0%{transform:translate(0,0) scale(1)}33%{transform:translate(8%,-6%) scale(1.18)}66%{transform:translate(-7%,7%) scale(.92)}100%{transform:translate(0,0) scale(1)}}
+@keyframes tape{from{background-position:0 0}to{background-position:64px 0}}
+@keyframes gridpan{from{transform:translateY(0)}to{transform:translateY(-46px)}}
+@keyframes crawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes flick{0%,94%,100%{opacity:.22}96%{opacity:.06}98%{opacity:.3}}
+@keyframes tag{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-14px) rotate(-4deg)}}
+.ct{opacity:0;animation:ctick .2s ease-out forwards}
+.sheen{position:relative;overflow:hidden}
+.sheen::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.28) 50%,transparent 80%);animation:sheen 2.6s ease-in-out infinite}
+</style>
+</helmet>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+<div style="height:100%;position:relative;overflow:hidden;background:#000;color:#fff;font-size:14px">
+
+<!-- ══════════ PUBLIC INTRO ══════════ -->
+<sc-if value="{{ streetBg }}" hint-placeholder-val="{{ true }}">
+<div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;background:radial-gradient(120% 80% at 80% 0%,#100d0b,#0a0a0a 55%)">
+  <div style="position:absolute;top:-10%;left:-25%;width:70%;height:45%;border-radius:50%;filter:blur(46px);background:radial-gradient(circle,rgba(255,122,41,.15),transparent 66%);animation:blob 17s ease-in-out infinite"></div>
+  <div style="position:absolute;bottom:6%;right:-22%;width:66%;height:40%;border-radius:50%;filter:blur(52px);background:radial-gradient(circle,rgba(255,77,46,.11),transparent 70%);animation:blob 23s ease-in-out -6s infinite"></div>
+  <div style="position:absolute;inset:-46px 0;opacity:.45;background-image:linear-gradient(rgba(255,122,41,.035) 1px,transparent 1px);background-size:100% 46px;animation:gridpan 5.5s linear infinite"></div>
+  <div style="position:absolute;top:34%;left:-8%;right:-8%;height:26px;transform:rotate(-7deg);opacity:.055;background-image:repeating-linear-gradient(115deg,var(--acc) 0 22px,transparent 22px 44px);animation:tape 1.9s linear infinite"></div>
+  <div style="position:absolute;bottom:20%;left:-8%;right:-8%;height:18px;transform:rotate(5deg);opacity:.04;background-image:repeating-linear-gradient(115deg,#fff 0 16px,transparent 16px 34px);animation:tape 3.1s linear infinite reverse"></div>
+  <div style="position:absolute;top:12%;left:0;right:0;overflow:hidden;opacity:.03">
+    <div class="dsp" style="display:flex;gap:26px;width:max-content;font-size:92px;line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--acc);white-space:nowrap;animation:crawl 26s linear infinite">
+      <span>BRAVE · DREAM · SHINE ·</span><span>BRAVE · DREAM · SHINE ·</span><span>BRAVE · DREAM · SHINE ·</span><span>BRAVE · DREAM · SHINE ·</span>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:34%;left:0;right:0;overflow:hidden;opacity:.028">
+    <div class="dsp" style="display:flex;gap:30px;width:max-content;font-size:74px;line-height:.8;color:transparent;-webkit-text-stroke:1.5px #fff;white-space:nowrap;animation:crawl 34s linear infinite reverse">
+      <span>BELIEVE IN YOUR DANCE · SHINE WITH CONFIDENCE ·</span><span>BELIEVE IN YOUR DANCE · SHINE WITH CONFIDENCE ·</span><span>BELIEVE IN YOUR DANCE · SHINE WITH CONFIDENCE ·</span><span>BELIEVE IN YOUR DANCE · SHINE WITH CONFIDENCE ·</span>
+    </div>
+  </div>
+  <div style="position:absolute;inset:0;opacity:.16;background-image:repeating-linear-gradient(180deg,rgba(0,0,0,.5) 0 1px,transparent 1px 3px);animation:flick 7s steps(1,end) infinite"></div>
+</div>
+</sc-if>
+
+<div class="bd-scroll" data-screen-label="Intro" style="position:absolute;inset:0;overflow-y:auto;padding-top:52px;z-index:1">
+
+  <div id="intro-topbar" style="display:flex;justify-content:space-between;align-items:center;padding:6px 18px 0;gap:8px;transition:opacity .3s,transform .35s cubic-bezier(.16,.84,.34,1);opacity:{{ heroBarOpacity }};transform:{{ heroBarTransform }};pointer-events:{{ heroBarEvents }}">
+    <button onClick="{{ goAuth }}" class="mn" style="display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px -8px rgba(255,122,41,.85),inset 0 1px 0 rgba(255,255,255,.32);transition:transform .2s"><i class="ph ph-sign-in" style="font-size:15px"></i>{{ t.signIn }}</button>
+    <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card);font-size:10.5px;font-weight:700">
+      <button onClick="{{ setEn }}" style="padding:7px 13px;border:0;cursor:pointer;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
+      <button onClick="{{ setZh }}" style="padding:7px 13px;border:0;cursor:pointer;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中文</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div style="position:relative;overflow:hidden;padding:22px 18px 26px">
+    <div aria-hidden="true" style="pointer-events:none;position:absolute;top:-25%;right:-60px;height:150%;width:70%;background:linear-gradient(to bottom left,rgba(255,122,41,.17),rgba(255,77,46,.07),transparent);animation:rake 9s ease-in-out infinite"></div>
+    <div style="position:relative">
+      <img src="assets/logo.png" alt="B Dance Studio" style="width:46px;height:46px;object-fit:contain;margin-bottom:16px" />
+      <p class="mn" style="color:var(--acc);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.2em;margin:0 0 10px">{{ t.heroEyebrow }}</p>
+      <div class="mn" aria-hidden="true" style="font-size:11px;letter-spacing:.28em;color:#6b6660;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+        <b class="ct" style="color:var(--acc);animation-delay:.08s">5</b>
+        <b class="ct" style="color:var(--acc);animation-delay:.2s">6</b>
+        <b class="ct" style="color:var(--acc);animation-delay:.32s">7</b>
+        <b class="ct" style="color:var(--acc);animation-delay:.44s">8</b>
+        <i class="ct" style="font-style:normal;font-size:9px;letter-spacing:.16em;animation-delay:.56s">{{ t.fromTop }}</i>
+      </div>
+      <h1 class="dsp" data-om-words="1" style="font-size:54px;line-height:.86;text-transform:uppercase;margin:0 0 14px">{{ t.heroLine1 }}</h1>
+      <h1 class="dsp" data-om-words="1" style="font-size:54px;line-height:.86;text-transform:uppercase;margin:-14px 0 14px;color:var(--acc)">{{ t.heroLine2 }}</h1>
+      <p style="color:var(--g4);font-size:13px;line-height:1.65;margin:0 0 18px" data-om-fade="1">{{ t.heroLead }}</p>
+
+      <div style="display:flex;gap:8px;margin-bottom:22px">
+        <button data-fancy="1" onClick="{{ goLocations }}" class="mn" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:7px;padding:11px 15px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;box-shadow:0 8px 20px -8px rgba(255,122,41,.85),inset 0 1px 0 rgba(255,255,255,.32);transition:transform .2s,box-shadow .2s"><i class="ph ph-map-pin" style="font-size:15px"></i>{{ t.findShort }}</button>
+        <button data-fancy="1" onClick="{{ goInstructors }}" class="mn" style="position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:7px;padding:11px 15px;border-radius:999px;border:1px solid rgba(255,160,87,.4);background:rgba(255,122,41,.07);color:var(--acc2);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:all .22s"><i class="ph ph-users-three" style="font-size:15px"></i>{{ t.meetShort }}</button>
+      </div>
+      <div style="display:none">
+        <button onClick="{{ goLocations }}" style="display:flex;align-items:stretch;padding:0;border:0;background:var(--acc);cursor:pointer;box-shadow:5px 5px 0 var(--ember);transition:all .18s">
+          <span style="width:48px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.88);color:var(--acc);font-size:20px"><i class="ph ph-map-pin"></i></span>
+          <span class="mn" style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 13px;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">{{ t.findBtn }}<span style="font-size:15px">&rarr;</span></span>
+        </button>
+        <button onClick="{{ goInstructors }}" class="mn" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;background:transparent;border:1px solid #a84715;color:var(--acc2);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .2s">{{ t.meetBtn }}<i class="ph ph-users-three" style="font-size:17px"></i></button>
+      </div>
+
+      <!-- reel -->
+      <div data-om-video="1" style="position:relative;background:#000;border:1px solid var(--bd);aspect-ratio:16/9;overflow:hidden;margin-bottom:20px;cursor:pointer" onClick="{{ toggleReel }}">
+        <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 30% 20%,rgba(255,122,41,.22),transparent 60%),linear-gradient(160deg,#1b1613,#000)"></div>
+        <div data-part="curtain" aria-hidden="true" style="position:absolute;inset:0;background:#0a0a0a;transform-origin:right center"></div>
+        <div class="mn" style="position:absolute;top:10px;left:12px;font-size:9px;letter-spacing:.2em;color:var(--g5);text-transform:uppercase">{{ t.studioReel }}</div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:56px;height:56px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border:1px solid var(--acc);border-radius:50%;animation:ringpop 2.2s ease-out infinite"></div>
+            <div data-part="play" style="width:46px;height:46px;border-radius:50%;background:var(--acc);color:#000;display:flex;align-items:center;justify-content:center;font-size:17px;padding-left:3px"><i class="ph {{ reelIcon }}"></i></div>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.08)">
+          <div style="height:100%;background:var(--acc);width:{{ reelPct }}%;transition:width .3s linear"></div>
+        </div>
+        <div style="position:absolute;bottom:12px;right:12px;display:flex;gap:3px;align-items:flex-end;height:18px">
+          <span style="width:3px;height:100%;background:var(--acc);transform-origin:bottom;animation:barpulse .7s ease-in-out infinite"></span>
+          <span style="width:3px;height:100%;background:var(--acc);transform-origin:bottom;animation:barpulse .7s ease-in-out .15s infinite"></span>
+          <span style="width:3px;height:100%;background:var(--acc);transform-origin:bottom;animation:barpulse .7s ease-in-out .3s infinite"></span>
+          <span style="width:3px;height:100%;background:var(--acc);transform-origin:bottom;animation:barpulse .7s ease-in-out .45s infinite"></span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div style="padding:12px 2px;text-align:center;border-right:1px solid var(--bd)">
+            <p class="dsp" data-count="{{ s.val }}" style="color:var(--acc);font-size:30px;line-height:1;margin:0">{{ s.val }}</p>
+            <p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin:6px 0 0">{{ s.label }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events -->
+  <div style="padding:26px 18px;border-top:1px solid var(--bd2)">
+    <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 12px">{{ t.eventsTitle }}</p>
+    <div onTouchStart="{{ evStart }}" onTouchMove="{{ evMove }}" onTouchEnd="{{ evEnd }}" onMouseDown="{{ evStart }}" onMouseMove="{{ evMove }}" onMouseUp="{{ evEnd }}" onMouseLeave="{{ evEnd }}" style="overflow:hidden;border:1px solid var(--bd);background:var(--card);cursor:{{ evCursor }};touch-action:pan-y">
+      <div style="display:flex;transition:{{ evTransition }};transform:{{ evTransform }}">
+        <sc-for list="{{ events }}" as="ev" hint-placeholder-count="2">
+          <div style="flex:0 0 100%;min-width:100%;padding:14px">
+            <div style="position:relative;margin-bottom:12px">
+              <img src="assets/default-event-poster.jpg" alt="event poster" style="width:100%;display:block;border:1px solid var(--bd2)" />
+              <span class="mn" style="position:absolute;top:8px;left:8px;background:var(--acc);color:#000;font-size:9.5px;font-weight:700;padding:3px 8px;text-transform:uppercase;letter-spacing:.08em">{{ ev.badge }}</span>
+            </div>
+            <h2 class="dsp" style="font-size:26px;text-transform:uppercase;margin:0 0 8px;min-height:26px"><span data-om-type="{{ ev.typeKey }}" data-om-order="0">{{ ev.title }}</span></h2>
+            <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 10px;min-height:40px"><span data-om-type="{{ ev.typeKey }}" data-om-order="1">{{ ev.lead }}</span></p>
+            <div class="mn" style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--g2);margin-bottom:12px">
+              <p style="margin:0"><i class="ph ph-calendar-blank" style="color:var(--acc)"></i> <span data-om-type="{{ ev.typeKey }}" data-om-order="2">{{ ev.date }}</span></p>
+              <p style="margin:0"><i class="ph ph-clock" style="color:var(--acc)"></i> <span data-om-type="{{ ev.typeKey }}" data-om-order="3">{{ ev.time }}</span></p>
+              <p style="margin:0"><i class="ph ph-map-pin" style="color:var(--acc)"></i> <span data-om-type="{{ ev.typeKey }}" data-om-order="4">{{ ev.venue }}</span></p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+              <sc-for list="{{ ev.catList }}" as="c" hint-placeholder-count="3">
+                <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9.5px;font-weight:600;padding:4px 8px">{{ c }}</span>
+              </sc-for>
+            </div>
+            <button onClick="{{ goAuth }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px;border:0;cursor:pointer;transition:transform .15s">{{ t.eventBtn }}</button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:7px;margin-top:14px">
+      <sc-for list="{{ eventDots }}" as="d" hint-placeholder-count="2">
+        <button onClick="{{ d.go }}" aria-label="event" style="height:6px;border:0;padding:0;cursor:pointer;transition:all .35s;width:{{ d.w }};background:{{ d.bg }}"></button>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- Shops -->
+  <div style="padding:26px 0 26px;border-top:1px solid var(--bd2)">
+    <div style="padding:0 18px">
+      <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px">{{ t.shopsEyebrow }}</p>
+      <h2 class="dsp" data-om-words="1" style="font-size:30px;text-transform:uppercase;margin:0 0 8px">{{ t.shopsTitle }}</h2>
+      <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 16px">{{ t.shopsLead }}</p>
+    </div>
+    <div style="overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)">
+      <div style="display:flex;gap:14px;width:max-content;animation:drift 26s linear infinite;padding:0 18px">
+        <sc-for list="{{ shopLoop }}" as="sh" hint-placeholder-count="8">
+          <button onClick="{{ sh.open }}" style="background:none;border:0;padding:0;cursor:pointer;width:78px;display:flex;flex-direction:column;align-items:center;gap:7px;transition:transform .2s">
+            <div style="width:70px;height:70px;background:linear-gradient(150deg,{{ sh.c1 }},{{ sh.c2 }});display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:22px;border:1px solid var(--bd2)">{{ sh.initial }}</div>
+            <span style="color:#fff;font-size:10.5px;font-weight:600;text-align:center;line-height:1.2">{{ sh.name }}</span>
+            <span class="mn" style="color:var(--acc);font-size:8.5px;font-weight:700;letter-spacing:.08em">{{ t.shopOff }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div style="padding:26px 18px;border-top:1px solid var(--bd2)">
+    <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px">{{ t.aboutEyebrow }}</p>
+    <h2 class="dsp" data-om-words="1" style="font-size:30px;text-transform:uppercase;line-height:.95;margin:0 0 10px">{{ t.aboutTitle }}</h2>
+    <p style="color:var(--g4);font-size:12.5px;line-height:1.7;margin:0">{{ t.aboutLead }}</p>
+  </div>
+
+  <!-- Instructors -->
+  <div id="intro-instructors" style="padding:26px 18px;border-top:1px solid var(--bd2);position:relative">
+    <div data-om-glow="1" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(80% 40% at 20% 0%,rgba(255,122,41,.4),transparent 70%)"></div>
+    <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px">{{ t.instrEyebrow }}</p>
+    <h2 class="dsp" data-om-words="1" style="font-size:30px;text-transform:uppercase;line-height:.95;margin:0 0 10px">{{ t.instrTitle }}</h2>
+    <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 16px">{{ t.instrLead }}</p>
+    <div id="teacher-list" data-om-stagger="1" style="display:flex;flex-direction:column;gap:10px;overflow:hidden">
+      <sc-for list="{{ introTeachers }}" as="tc" hint-placeholder-count="6">
+        <button data-row="1" onClick="{{ tc.open }}" style="position:relative;overflow:hidden;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);padding:11px;display:flex;align-items:center;gap:12px;cursor:pointer">
+          <span data-part="sweep" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent 25%,rgba(255,122,41,.22) 50%,transparent 75%)"></span>
+          <div data-part="num" style="width:54px;height:54px;border-radius:50%;flex-shrink:0;background:linear-gradient(150deg,{{ tc.c1 }},{{ tc.c2 }});display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:19px">{{ tc.initial }}</div>
+          <div style="flex:1;min-width:0">
+            <p style="color:#fff;font-weight:700;font-size:13.5px;margin:0">{{ tc.name }}</p>
+            <p style="color:var(--g5);font-size:11px;margin:3px 0 0">{{ tc.specLine }}</p>
+            <p class="mn" style="color:var(--acc);font-size:9px;margin:5px 0 0;letter-spacing:.1em;text-transform:uppercase">{{ t.tapToView }}</p>
+          </div>
+          <span data-part="arrow" style="color:var(--acc);font-size:16px;display:inline-block"><i class="ph ph-arrow-right"></i></span>
+        </button>
+      </sc-for>
+    </div>
+    <button onClick="{{ toggleAllTeachers }}" class="mn" style="width:100%;margin-top:14px;background:transparent;border:1px solid #a84715;color:var(--acc2);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:12px;cursor:pointer;transition:all .2s">{{ teacherToggleLabel }}</button>
+  </div>
+
+  <!-- Locations -->
+  <div id="intro-locations" style="padding:26px 18px;border-top:1px solid var(--bd2);position:relative">
+    <div data-om-glow="1" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(80% 40% at 20% 0%,rgba(255,122,41,.4),transparent 70%)"></div>
+    <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px">{{ t.locEyebrow }}</p>
+    <h2 class="dsp" data-om-words="1" style="font-size:30px;text-transform:uppercase;line-height:.95;margin:0 0 10px">{{ t.locTitle }}</h2>
+    <p style="color:var(--g4);font-size:12.5px;line-height:1.6;margin:0 0 16px">{{ t.locLead }}</p>
+    <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ introPlaces }}" as="pl" hint-placeholder-count="4">
+        <button data-row="1" onClick="{{ pl.open }}" style="position:relative;overflow:hidden;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer">
+          <span data-part="sweep" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent 25%,rgba(255,122,41,.22) 50%,transparent 75%)"></span>
+          <div data-part="num" class="dsp" style="width:38px;height:38px;background:#000;border:1px solid var(--bd);color:var(--acc);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">{{ pl.n }}</div>
+          <div style="flex:1;min-width:0">
+            <p style="color:#fff;font-weight:700;font-size:13px;margin:0">{{ pl.name }}</p>
+            <p style="color:var(--g5);font-size:11px;margin:3px 0 0">{{ pl.address }}</p>
+          </div>
+          <span data-part="arrow" style="color:var(--acc);font-size:16px;display:inline-block"><i class="ph ph-arrow-right"></i></span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="padding:34px 18px;border-top:1px solid var(--bd2);text-align:center">
+    <h2 class="dsp" data-om-words="1" style="font-size:34px;text-transform:uppercase;margin:0 0 8px">{{ t.ctaTitle }}</h2>
+    <p style="color:var(--g4);font-size:12.5px;margin:0 0 18px">{{ t.ctaLead }}</p>
+    <button onClick="{{ openContact }}" class="mn sheen" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember)">{{ t.contactBtn }}</button>
+  </div>
+
+  <!-- Footer -->
+  <div style="padding:26px 18px 40px;border-top:1px solid var(--bd2);background:rgba(5,5,5,.82)">
+    <h5 class="dsp" style="color:#fff;font-size:22px;text-transform:uppercase;margin:0 0 8px">B Dance Studio</h5>
+    <p style="color:var(--g5);font-size:11px;line-height:1.7;margin:0 0 14px">{{ t.footTag }}</p>
+    <div class="mn" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+      <a href="#" style="color:var(--acc);font-size:10px;font-weight:600;letter-spacing:.08em">INSTAGRAM</a>
+      <a href="#" style="color:var(--acc);font-size:10px;font-weight:600;letter-spacing:.08em">TIKTOK</a>
+      <a href="#" style="color:var(--acc);font-size:10px;font-weight:600;letter-spacing:.08em">XIAOHONGSHU</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:var(--g4)">
+      <a href="{{ waHref }}" target="_blank" rel="noreferrer" style="color:var(--g4);display:flex;align-items:center;gap:7px"><i class="ph ph-whatsapp-logo" style="color:var(--acc);font-size:15px"></i> {{ t.footPhone }} <span class="mn" style="font-size:9px;letter-spacing:.1em;color:var(--acc);text-transform:uppercase">WhatsApp</span></a>
+      <span><i class="ph ph-clock" style="color:var(--acc)"></i> {{ t.footHours }}</span>
+    </div>
+    <p class="mn" style="color:#4a4640;font-size:9px;text-align:center;margin:26px 0 0">© 2026 B DANCE STUDIO · ADDA HEIGHT · HORIZON SQUARE · TASEK · KULAI</p>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ AUTH ══════════ -->
+<sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+<div class="bd-scroll" data-screen-label="Sign in" style="position:absolute;inset:0;overflow-y:auto;padding:60px 22px 40px">
+  <div aria-hidden="true" style="pointer-events:none;position:absolute;top:0;right:-80px;height:70%;width:80%;background:linear-gradient(to bottom left,rgba(255,122,41,.14),transparent 65%);animation:rake 11s ease-in-out infinite"></div>
+  <div style="position:relative">
+    <button onClick="{{ goIntro }}" class="mn" style="background:none;border:0;color:var(--g5);font-size:10px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;padding:0;margin-bottom:26px">← {{ t.back }}</button>
+    <div style="text-align:center;margin-bottom:26px">
+      <img src="assets/logo.png" alt="B Dance Studio" data-om-logo="1" style="width:78px;height:78px;object-fit:contain;margin:0 auto 14px;display:block" />
+      <h1 class="dsp" style="font-size:38px;text-transform:uppercase;margin:0">B Dance Studio</h1>
+      <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;margin:6px 0 0">{{ t.portal }}</p>
+    </div>
+
+    <!-- role picker -->
+    <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px">{{ t.iAmA }}</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+      <button onClick="{{ pickStudent }}" style="position:relative;overflow:hidden;padding:16px 10px;cursor:pointer;text-align:left;transition:all .25s;border:1px solid {{ stuBd }};background:{{ stuBg }}">
+        <div style="font-size:22px;line-height:1;margin-bottom:8px"><i class="ph ph-graduation-cap"></i></div>
+        <p class="mn" style="margin:0;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:{{ stuFg }}">{{ t.student }}</p>
+        <p style="margin:4px 0 0;font-size:10px;color:var(--g5);line-height:1.4">{{ t.studentSub }}</p>
+      </button>
+      <button onClick="{{ pickTeacher }}" style="position:relative;overflow:hidden;padding:16px 10px;cursor:pointer;text-align:left;transition:all .25s;border:1px solid {{ tchBd }};background:{{ tchBg }}">
+        <div style="font-size:22px;line-height:1;margin-bottom:8px"><i class="ph ph-person-simple-run"></i></div>
+        <p class="mn" style="margin:0;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:{{ tchFg }}">{{ t.teacher }}</p>
+        <p style="margin:4px 0 0;font-size:10px;color:var(--g5);line-height:1.4">{{ t.teacherSub }}</p>
+      </button>
+    </div>
+
+    <div data-om-pop="{{ loginRole }}" style="background:var(--card);border:1px solid var(--bd);padding:20px">
+      <p class="mn" style="color:var(--acc);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 14px">{{ loginHeading }}</p>
+      <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ t.username }}</label>
+      <input value="{{ userVal }}" onChange="{{ onUser }}" placeholder="{{ userPlaceholder }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px;outline:none;margin-bottom:12px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+      <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ t.password }}</label>
+      <div style="position:relative;margin-bottom:18px">
+        <input type="{{ pwType }}" value="{{ pwVal }}" onChange="{{ onPw }}" placeholder="••••••••" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px 42px 12px 12px;outline:none;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+        <button onClick="{{ togglePw }}" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;font-size:14px"><i class="ph {{ pwEye }}" style="color:var(--g5);font-size:16px"></i></button>
+      </div>
+      <button data-fancy="1" onClick="{{ doLogin }}" class="mn" style="position:relative;overflow:hidden;width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);transition:all .16s">{{ loginCta }}</button>
+      <p class="mn" style="color:#4a4640;font-size:9px;text-align:center;margin:14px 0 0;letter-spacing:.06em">{{ t.demoHint }}</p>
+    </div>
+
+    <div style="display:flex;border:1px solid var(--bd);background:var(--card);font-size:11px;font-weight:700;overflow:hidden;width:max-content;margin:22px auto 0">
+      <button onClick="{{ setEn }}" style="padding:7px 14px;border:0;cursor:pointer;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
+      <button onClick="{{ setZh }}" style="padding:7px 14px;border:0;cursor:pointer;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中文</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ LOADING ══════════ -->
+<sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#000;z-index:300;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center">
+    <img src="assets/logo.png" alt="" style="width:64px;height:64px;object-fit:contain;margin:0 auto 16px;display:block;animation:glowpulse 1.1s ease-in-out infinite" />
+    <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:bounce3 1.1s infinite"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:bounce3 1.1s .15s infinite"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:bounce3 1.1s .3s infinite"></span>
+    </div>
+    <p class="mn" style="color:var(--g5);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin:0">{{ t.loggingIn }}</p>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ MODALS ══════════ -->
+<sc-if value="{{ teacherModalOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeTeacher }}" style="position:absolute;inset:0;background:rgba(0,0,0,.86);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px">
+  <div data-tmodal="1" data-om-pop="{{ modalTeacher.id }}" onClick="{{ stop }}" style="background:var(--card);border:1px solid #a84715;width:100%;max-width:300px;box-shadow:0 30px 60px rgba(0,0,0,.7)">
+    <div style="position:relative;aspect-ratio:1;overflow:hidden;background:#000;perspective:900px">
+      <div data-om-keyed="{{ tmSlide }}" data-om-kind="slide" data-om-dir="{{ tmDir }}" style="position:absolute;inset:0;transform-style:preserve-3d">
+      <sc-if value="{{ tmIsPhoto }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;background:linear-gradient(150deg,{{ modalTeacher.c1 }},{{ modalTeacher.c2 }});display:flex;align-items:center;justify-content:center">
+          <span class="dsp" style="font-size:96px;color:rgba(0,0,0,.35)">{{ modalTeacher.initial }}</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ tmIsQuote }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(90% 70% at 50% 20%,rgba(255,122,41,.16),#000)">
+          <div class="dsp" style="color:var(--acc);font-size:52px;line-height:.6;margin-bottom:14px"><i class="ph ph-quotes"></i></div>
+          <p style="color:#fff;font-size:14px;font-style:italic;line-height:1.6;margin:0">{{ modalTeacher.quote }}</p>
+          <p class="mn" style="color:var(--acc);font-size:10px;font-weight:600;margin:14px 0 0;letter-spacing:.1em">— {{ modalTeacher.name }}</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ tmIsVideo }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:radial-gradient(110% 80% at 40% 30%,rgba(255,122,41,.2),#000);display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:62px;height:62px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;inset:0;border:1px solid var(--acc);border-radius:50%;animation:ringpop 2s ease-out infinite"></div>
+            <div style="width:50px;height:50px;border-radius:50%;background:var(--acc);color:#000;display:flex;align-items:center;justify-content:center;font-size:19px;padding-left:3px">▶</div>
+          </div>
+          <p class="mn" style="position:absolute;bottom:12px;left:0;right:0;text-align:center;color:var(--g5);font-size:9px;letter-spacing:.16em;text-transform:uppercase;margin:0">{{ t.showreel }}</p>
+        </div>
+      </sc-if>
+      </div>
+      <div data-om-keyed="{{ tmSlide }}" data-om-kind="flash" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,122,41,.55) 50%,transparent 70%);opacity:0"></div>
+      <button onClick="{{ tmPrev }}" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.55);border:0;color:#fff;font-size:17px;cursor:pointer">‹</button>
+      <button onClick="{{ tmNext }}" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.55);border:0;color:#fff;font-size:17px;cursor:pointer">›</button>
+    </div>
+    <div data-om-keyed="{{ tmSlide }}" data-om-kind="dots" style="display:flex;justify-content:center;gap:5px;padding:10px 0 0">
+      <sc-for list="{{ tmDots }}" as="d" hint-placeholder-count="3">
+        <span style="width:5px;height:5px;border-radius:50%;background:{{ d.bg }};transition:all .3s"></span>
+      </sc-for>
+    </div>
+    <div style="padding:14px 20px 20px;text-align:center">
+      <h3 class="dsp" style="font-size:28px;text-transform:uppercase;margin:0">{{ modalTeacher.name }}</h3>
+      <p style="color:var(--g5);font-size:11px;margin:4px 0 14px">{{ modalTeacher.specLine }}</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="#" class="mn" style="background:var(--acc);color:#000;font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:12px;text-align:center;transition:transform .15s"><i class="ph ph-instagram-logo"></i> {{ t.openInstagram }}</a>
+        <button onClick="{{ closeTeacher }}" class="mn" style="background:transparent;border:1px solid #a84715;color:var(--acc2);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:11px;cursor:pointer">{{ t.close }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(0,0,0,.82);z-index:210;display:flex;align-items:flex-end">
+  <div data-om-sheet="{{ sheetKey }}" onClick="{{ stop }}" style="width:100%;background:var(--card);border-top:2px solid var(--acc);padding:20px 18px 34px;max-height:82%;overflow-y:auto" class="bd-scroll">
+    <div style="width:42px;height:4px;background:#3d3a36;margin:0 auto 16px"></div>
+    <h3 class="dsp" style="font-size:26px;text-transform:uppercase;margin:0 0 4px">{{ sheetTitle }}</h3>
+    <p style="color:var(--g5);font-size:11.5px;margin:0 0 16px">{{ sheetSub }}</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ sheetRows }}" as="r" hint-placeholder-count="3">
+        <a href="{{ r.href }}" target="_blank" rel="noreferrer" onClick="{{ closeSheet }}" style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--bd);color:#fff;padding:13px;font-size:12.5px;transition:all .2s">
+          <span><i class="ph {{ r.icon }}" style="margin-right:8px;color:var(--acc2)"></i>{{ r.label }}</span><span style="color:var(--acc)">→</span>
+        </a>
+      </sc-for>
+    </div>
+    <button onClick="{{ closeSheet }}" class="mn" style="width:100%;margin-top:16px;background:transparent;border:1px solid #a84715;color:var(--acc2);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:12px;cursor:pointer">{{ t.close }}</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;top:58px;right:12px;z-index:145;transition:opacity .28s,transform .4s cubic-bezier(.16,.84,.34,1);opacity:{{ stuckOpacity }};transform:{{ stuckTransform }};pointer-events:{{ stuckEvents }}">
+  <button onClick="{{ toggleIntroMenu }}" aria-label="Menu" style="width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,122,41,.5);background:rgba(10,10,10,.88);backdrop-filter:blur(14px);color:var(--acc);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 8px 22px rgba(0,0,0,.55);transition:transform .18s">
+    <span style="width:15px;height:1.5px;background:currentColor;transition:transform .3s cubic-bezier(.16,.84,.34,1);transform:{{ barTop }}"></span>
+    <span style="width:15px;height:1.5px;background:currentColor;transition:opacity .2s;opacity:{{ barMidOp }}"></span>
+    <span style="width:15px;height:1.5px;background:currentColor;transition:transform .3s cubic-bezier(.16,.84,.34,1);transform:{{ barBot }}"></span>
+  </button>
+  <sc-if value="{{ introMenu }}" hint-placeholder-val="{{ false }}">
+  <div data-om-pop="intro-menu" style="position:absolute;top:48px;right:0;width:190px;background:rgba(12,12,12,.96);backdrop-filter:blur(18px);border:1px solid rgba(255,122,41,.4);padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 20px 44px rgba(0,0,0,.65)">
+    <button onClick="{{ goAuth }}" class="mn" style="display:flex;align-items:center;gap:8px;padding:11px 13px;border:0;border-radius:999px;background:linear-gradient(100deg,#ff8b3d,var(--acc) 60%,#e8611a);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:transform .18s"><i class="ph ph-sign-in" style="font-size:14px"></i>{{ t.signInShort }}</button>
+    <button onClick="{{ openContact }}" class="mn" style="display:flex;align-items:center;gap:8px;padding:10px 13px;border-radius:999px;border:1px solid rgba(255,160,87,.38);background:rgba(255,122,41,.07);color:var(--acc2);font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s"><i class="ph ph-chat-circle-dots" style="font-size:14px"></i>{{ t.contactShort }}</button>
+    <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card)">
+      <button onClick="{{ setEn }}" style="flex:1;padding:7px 0;border:0;cursor:pointer;font-size:9.5px;font-weight:700;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
+      <button onClick="{{ setZh }}" style="flex:1;padding:7px 0;border:0;cursor:pointer;font-size:9.5px;font-weight:700;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中文</button>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showTop }}" hint-placeholder-val="{{ false }}">
+<div data-mo-top="1" style="position:absolute;right:14px;bottom:{{ topBottom }};z-index:150;opacity:0">
+  <button onClick="{{ goTop }}" aria-label="Back to top" style="width:46px;height:46px;border-radius:50%;background:var(--acc);color:#000;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.5),0 0 0 1px rgba(255,122,41,.5);transition:all .18s"><i class="ph ph-arrow-up" style="font-size:19px"></i></button>
+</div>
+</sc-if>
+
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div data-om-toast="{{ toast }}" style="position:absolute;bottom:96px;left:50%;transform:translateX(-50%);background:#0c2a1c;border:1px solid #1f7a4d;color:#7ee2ab;font-size:12px;font-weight:600;padding:10px 16px;z-index:260;white-space:nowrap"><i class="ph ph-check-circle" style="margin-right:6px"></i>{{ toast }}</div>
+</sc-if>
+
+<!-- ══════════ SIGNED-IN APP ══════════ -->
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:50px">
+
+  <header style="border-bottom:2px solid var(--acc);background:#000;flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px">
+      <div style="display:flex;align-items:center;gap:9px;min-width:0">
+        <img src="assets/logo.png" alt="" style="width:26px;height:26px;object-fit:contain" />
+        <div style="min-width:0">
+          <p class="dsp" style="font-size:17px;text-transform:uppercase;margin:0;line-height:1">B Dance Studio</p>
+          <p class="mn" style="font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;margin:2px 0 0;color:var(--acc)">{{ whoLine }}</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;border:1px solid var(--bd);background:var(--card);font-size:10px;font-weight:700;overflow:hidden">
+          <button onClick="{{ setEn }}" style="padding:5px 8px;border:0;cursor:pointer;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
+          <button onClick="{{ setZh }}" style="padding:5px 8px;border:0;cursor:pointer;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中</button>
+        </div>
+        <button onClick="{{ toggleMenu }}" style="background:none;border:1px solid var(--bd);color:var(--acc);width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s"><i class="ph {{ menuIcon }}"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="bd-scroll" style="flex:1;overflow-y:auto;padding:16px 14px 22px">
+
+    <!-- ───── STUDENT · FEES ───── -->
+    <sc-if value="{{ pgFees }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Student · Fees">
+      <p class="mn" data-om-words="1" style="color:var(--acc);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">{{ t.howToPay }}</p>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
+        <p class="mn" style="color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-bank"></i> {{ t.bankTransfer }}</p>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+          <sc-for list="{{ bankRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--bd2);padding-bottom:6px">
+              <span style="color:var(--g5)">{{ r.k }}</span>
+              <span class="mn" style="color:#fff;font-weight:600;text-align:right">{{ r.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd2)">
+          <div style="width:74px;height:74px;background:#f3efe6;padding:6px;flex-shrink:0">
+            <div style="width:100%;height:100%;background-image:linear-gradient(45deg,#1a1006 25%,transparent 25%,transparent 75%,#1a1006 75%),linear-gradient(45deg,#1a1006 25%,transparent 25%,transparent 75%,#1a1006 75%);background-size:12px 12px;background-position:0 0,6px 6px"></div>
+          </div>
+          <div>
+            <p class="mn" style="color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 5px"><i class="ph ph-device-mobile"></i> TNG eWallet</p>
+            <p style="color:#fff;font-size:12.5px;font-weight:600;margin:0">B Dance Studio Sdn Bhd</p>
+            <p class="mn" style="color:var(--g5);font-size:11px;margin:3px 0 0">+60 12-345 6789</p>
+            <p class="mn" style="color:#4a4640;font-size:9px;margin:5px 0 0;letter-spacing:.1em;text-transform:uppercase">{{ t.scanToPay }}</p>
+          </div>
+        </div>
+        <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--bd2)"><i class="ph ph-lightbulb"></i> {{ t.payHint }}</p>
+      </div>
+
+      <div style="background:linear-gradient(135deg,rgba(255,122,41,.16),transparent 70%),var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+        <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0">{{ me.name }}</p>
+        <p style="color:var(--g5);font-size:11px;margin:4px 0 0">{{ feeSubline }}</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+        <sc-for list="{{ feeTiles }}" as="ft" hint-placeholder-count="3">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center">
+            <p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.08em;margin:0">{{ ft.label }}</p>
+            <p class="dsp" data-count="{{ ft.n }}" data-pre="{{ ft.pre }}" style="font-size:26px;margin:6px 0 0;color:{{ ft.c }}">{{ ft.pre }}{{ ft.n }}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ hasOutstanding }}" hint-placeholder-val="{{ true }}">
+      <p class="mn" style="color:#ff6b5a;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-warning"></i> {{ t.outstanding }}</p>
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        <sc-for list="{{ outstanding }}" as="p" hint-placeholder-count="1">
+          <div style="background:var(--card);border:1px solid #7a2a22;border-left:3px solid #ff4d2e;padding:12px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">{{ p.title }}</p>
+              <span class="mn" style="display:inline-block;background:rgba(255,77,46,.16);color:#ff8a78;font-size:9px;font-weight:700;padding:3px 7px;margin-top:6px;letter-spacing:.08em;text-transform:uppercase">{{ t.unpaid }}</span>
+            </div>
+            <p class="dsp" style="color:#ff8a78;font-size:24px;margin:0">RM{{ p.amount }}</p>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <p class="mn" style="color:#fff;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.payHistory }}</p>
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ payRows }}" as="p" hint-placeholder-count="5">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:12px;display:flex;justify-content:space-between;align-items:center;transition:all .2s">
+            <div>
+              <p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">{{ p.month }} · <span style="color:var(--acc2)">{{ p.cls }}</span></p>
+              <p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">{{ p.meta }}</p>
+            </div>
+            <div style="text-align:right">
+              <p class="mn" style="color:#fff;font-weight:600;font-size:12.5px;margin:0">RM{{ p.amount }}</p>
+              <span class="mn" style="display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;margin-top:4px;background:{{ p.badgeBg }};color:{{ p.badgeFg }}"><i class="ph {{ p.badgeIcon }}"></i> {{ p.badge }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── STUDENT · MY CLASSES ───── -->
+    <sc-if value="{{ pgClasses }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Student · My Classes">
+      <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid #ffdf6e;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:26px"><i class="ph ph-graduation-cap"></i></div>
+        <div style="flex:1">
+          <p class="dsp" style="font-size:22px;text-transform:uppercase;margin:0">{{ t.myClasses }}</p>
+          <p style="color:var(--g5);font-size:10.5px;margin:3px 0 0">{{ enrolledLine }}</p>
+        </div>
+        <div style="font-size:22px"><i class="ph ph-medal"></i></div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:14px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.myProfile }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;font-size:11.5px">
+          <sc-for list="{{ profileRows }}" as="r" hint-placeholder-count="4">
+            <p style="margin:0"><span style="color:var(--g5)">{{ r.k }}</span><br /><span style="color:var(--g2)">{{ r.v }}</span></p>
+          </sc-for>
+        </div>
+      </div>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 14px"><i class="ph ph-lightbulb"></i> {{ t.enrollHint }}</p>
+
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ myClassCards }}" as="c" hint-placeholder-count="2">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+              <p class="dsp" style="color:var(--acc2);font-size:23px;text-transform:uppercase;margin:0;line-height:1">{{ c.name }}</p>
+              <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;padding:4px 7px;white-space:nowrap">{{ c.style }}</span>
+            </div>
+            <div class="mn" style="display:flex;flex-direction:column;gap:4px;margin:10px 0 12px;font-size:10.5px;color:var(--g5)">
+              <span><i class="ph ph-calendar-blank"></i> {{ c.when }}</span>
+              <span><i class="ph ph-map-pin"></i> {{ c.where }}</span>
+              <span><i class="ph ph-user"></i> <span style="color:var(--acc2)">{{ c.teacher }}</span></span>
+            </div>
+            <p class="mn" style="color:#fff;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px">{{ c.matesLabel }}</p>
+            <div style="display:flex;flex-direction:column;gap:0">
+              <sc-for list="{{ c.mates }}" as="m" hint-placeholder-count="4">
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:7px 0;border-top:1px solid var(--bd2)">
+                  <span style="display:flex;align-items:center;gap:8px;color:var(--g2)">
+                    <span style="width:22px;height:22px;background:linear-gradient(150deg,#5c2a10,#3a2010);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff">{{ m.initial }}</span>
+                    {{ m.name }}
+                  </span>
+                  <span class="mn" style="color:var(--g5);font-size:10px">{{ m.ageLabel }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── STUDENT · ALL CLASSES ───── -->
+    <sc-if value="{{ pgAll }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Student · All Classes">
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:26px"><i class="ph ph-chalkboard-teacher"></i></div>
+        <div>
+          <p class="dsp" style="font-size:22px;text-transform:uppercase;margin:0">{{ t.allClasses }}</p>
+          <p style="color:var(--g5);font-size:10.5px;margin:3px 0 0">{{ allClassesLine }}</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto" class="bd-scroll">
+        <sc-for list="{{ styleChips }}" as="ch" hint-placeholder-count="5">
+          <button onClick="{{ ch.go }}" class="mn" style="flex-shrink:0;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:8px 11px;cursor:pointer;transition:all .22s;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.fg }}">{{ ch.label }}</button>
+        </sc-for>
+      </div>
+
+      <div data-om-stagger="{{ styleFilter }}" style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ allClassRows }}" as="c" hint-placeholder-count="6">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:13px;transition:all .2s">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+              <div>
+                <p class="dsp" style="color:var(--acc2);font-size:21px;text-transform:uppercase;margin:0;line-height:1">{{ c.name }}</p>
+                <span class="mn" style="display:inline-block;background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:8.5px;font-weight:600;padding:3px 6px;margin-top:6px">{{ c.style }}</span>
+              </div>
+              <span class="mn" style="font-size:9px;font-weight:700;padding:4px 7px;white-space:nowrap;background:{{ c.capBg }};color:{{ c.capFg }}">{{ c.cap }}</span>
+            </div>
+            <div class="mn" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:10px;color:var(--g5)">
+              <span><i class="ph ph-buildings"></i> {{ c.place }}</span><span><i class="ph ph-user"></i> {{ c.teacher }}</span><span><i class="ph ph-calendar-blank"></i> {{ c.when }}</span><span><i class="ph ph-map-pin"></i> {{ c.room }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:14px 0 0"><i class="ph ph-lightbulb"></i> {{ t.joinHint }}</p>
+    </div>
+    </sc-if>
+
+    <!-- ───── STUDENT · ATTENDANCE ───── -->
+    <sc-if value="{{ pgAtt }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Student · Attendance">
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+        <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0">{{ t.myAttendance }}</p>
+        <p style="color:var(--g5);font-size:10.5px;margin:4px 0 0">{{ attSubline }}</p>
+      </div>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 14px"><i class="ph ph-lightbulb"></i> {{ t.attHint }}</p>
+
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ attCards }}" as="c" hint-placeholder-count="2">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px">
+              <div>
+                <p class="dsp" style="color:var(--acc2);font-size:21px;text-transform:uppercase;margin:0;line-height:1">{{ c.name }}</p>
+                <p class="mn" style="color:var(--g5);font-size:10px;margin:5px 0 0">{{ c.meta }}</p>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end">
+                <sc-for list="{{ c.pills }}" as="p" hint-placeholder-count="2">
+                  <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 6px;white-space:nowrap;background:{{ p.bg }};color:{{ p.fg }}">{{ p.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="margin-bottom:12px">
+              <div class="mn" style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--g5);margin-bottom:5px">
+                <span>{{ t.cycleProgress }}</span><span>{{ c.cycleLabel }}</span>
+              </div>
+              <div style="width:100%;background:#000;height:6px;border:1px solid var(--bd)">
+                <div data-om-bar="{{ c.cyclePct }}" style="height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:{{ c.cyclePct }}%"></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ c.records }}" as="r" hint-placeholder-count="4">
+                <div style="padding:7px 0;border-top:1px solid var(--bd2)">
+                  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                    <span class="mn" style="color:var(--g4);font-size:10.5px">{{ r.date }}</span>
+                    <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 7px;background:{{ r.bg }};color:{{ r.fg }}">{{ r.label }}</span>
+                  </div>
+                  <sc-if value="{{ r.remark }}" hint-placeholder-val="{{ false }}">
+                    <p style="color:#6fa8ff;font-size:10px;margin:5px 0 0"><i class="ph ph-note-pencil"></i> {{ r.remark }}</p>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:20px 0 10px"><i class="ph ph-ticket"></i> {{ t.creditUsage }}</p>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+        <sc-for list="{{ creditRows }}" as="r" hint-placeholder-count="2">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--bd2)">
+            <div>
+              <p style="color:var(--g2)ic;font-size:11.5px;font-weight:600;margin:0;color:var(--g2)">{{ r.title }}</p>
+              <p class="mn" style="color:var(--g5);font-size:10px;margin:3px 0 0">{{ r.meta }}</p>
+            </div>
+            <span class="mn" style="background:rgba(255,122,41,.16);color:var(--acc2);font-size:9.5px;font-weight:700;padding:3px 7px;white-space:nowrap">{{ r.cost }} <i class="ph ph-ticket"></i></span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── STUDENT · REWARDS ───── -->
+    <sc-if value="{{ pgRewards }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Student · Rewards">
+      <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--bd);border-left:3px solid #ffdf6e;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px">
+        <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,223,110,.12),transparent 60%);animation:glowpulse 4s ease-in-out infinite"></div>
+        <div style="font-size:34px;position:relative"><i class="ph ph-medal"></i></div>
+        <div style="flex:1;position:relative">
+          <p class="dsp" style="font-size:21px;text-transform:uppercase;margin:0">{{ gradeLine }}</p>
+          <p style="color:var(--g5);font-size:10.5px;margin:3px 0 0">{{ t.keepDancing }}</p>
+        </div>
+        <div style="text-align:right;position:relative">
+          <p class="dsp" data-count="{{ points }}" style="color:var(--acc);font-size:34px;margin:0;line-height:1">{{ points }}</p>
+          <p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.1em;margin:3px 0 0">{{ t.points }}</p>
+        </div>
+      </div>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 18px"><i class="ph ph-lightbulb"></i> {{ earnLine }}</p>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-t-shirt"></i> {{ t.freeTshirt }}</p>
+      <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--acc);padding:13px;margin-bottom:6px;display:flex;align-items:center;gap:11px">
+        <div style="width:19px;height:19px;background:var(--acc);color:#000;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0"><i class="ph ph-check"></i></div>
+        <div>
+          <p style="color:#fff;font-weight:600;font-size:12px;margin:0">{{ t.tshirtTitle }}</p>
+          <p style="color:var(--g5);font-size:10.5px;margin:4px 0 0">{{ t.tshirtDone }}</p>
+        </div>
+      </div>
+      <p class="mn" style="color:#4a4640;font-size:9px;margin:0 0 20px;letter-spacing:.06em"><i class="ph ph-calendar-check"></i> {{ t.tshirtUntil }}</p>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-medal"></i> {{ t.gradesByStyle }}</p>
+      <div data-om-stagger="1" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
+        <sc-for list="{{ gradeCards }}" as="g" hint-placeholder-count="2">
+          <div style="background:var(--card);border:1px solid {{ g.bd }};padding:12px;text-align:center">
+            <div style="font-size:24px;color:{{ g.c }}"><i class="ph {{ g.badge }}"></i></div>
+            <p style="color:#fff;font-weight:600;font-size:11.5px;margin:6px 0 0">{{ g.style }}</p>
+            <p class="mn" style="color:var(--g5);font-size:9.5px;margin:4px 0 0">{{ g.tier }}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-cake"></i> {{ t.birthday }}</p>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:16px;margin-bottom:20px;text-align:center">
+        <p class="dsp" style="color:var(--acc2);font-size:26px;margin:0">{{ bdayLine }}</p>
+        <p style="color:var(--g5);font-size:10.5px;margin:6px 0 0">{{ t.bdayGift }}</p>
+      </div>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-gift"></i> {{ t.redeemRewards }}</p>
+      <div data-om-stagger="1" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
+        <sc-for list="{{ rewardCards }}" as="r" hint-placeholder-count="6">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:12px;text-align:center">
+            <div style="font-size:23px;color:var(--acc2)"><i class="ph {{ r.icon }}"></i></div>
+            <p style="color:#fff;font-size:11px;font-weight:600;margin:6px 0 0;min-height:28px">{{ r.name }}</p>
+            <p class="mn" style="color:var(--acc);font-weight:700;font-size:11.5px;margin:4px 0 8px">{{ r.cost }} pts</p>
+            <button onClick="{{ r.redeem }}" class="mn" style="width:100%;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px;border:0;cursor:{{ r.cursor }};transition:all .18s;background:{{ r.bg }};color:{{ r.fg }}">{{ r.label }}</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-receipt"></i> {{ t.redemptionHistory }}</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ redemptionRows }}" as="r" hint-placeholder-count="2">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:12px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <p style="color:#fff;font-size:12px;margin:0"><i class="ph {{ r.icon }}" style="color:var(--acc2)"></i> {{ r.name }}</p>
+              <p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">{{ r.date }} · {{ r.code }}</p>
+            </div>
+            <span class="mn" style="font-size:9px;font-weight:700;padding:3px 7px;background:{{ r.bg }};color:{{ r.fg }};white-space:nowrap"><i class="ph {{ r.statusIcon }}"></i> {{ r.status }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── STUDENT · PROFILE ───── -->
+    <sc-if value="{{ pgProfile }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Student · Profile">
+      <div style="position:relative;overflow:hidden;background:linear-gradient(135deg,#5c2a10,#1f110a);border:1px solid var(--bd);padding:22px;margin-bottom:14px;text-align:center">
+        <div aria-hidden="true" style="position:absolute;top:-40%;right:-30%;width:80%;height:180%;background:linear-gradient(to bottom left,rgba(255,122,41,.22),transparent 70%);animation:rake 8s ease-in-out infinite"></div>
+        <div data-om-pop="me" style="position:relative;width:66px;height:66px;border-radius:50%;background:rgba(0,0,0,.45);border:1px solid var(--acc);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+          <span class="dsp" style="font-size:30px;color:var(--acc)">{{ meInitial }}</span>
+        </div>
+        <h2 class="dsp" style="font-size:30px;text-transform:uppercase;margin:0;position:relative">{{ me.name }}</h2>
+        <p class="mn" style="color:#ffcfa8;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin:6px 0 0;position:relative">{{ gradeLine }}</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.profileDetails }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11.5px">
+          <sc-for list="{{ profileRows }}" as="r" hint-placeholder-count="4">
+            <p style="margin:0"><span style="color:var(--g5)">{{ r.k }}</span><br /><span style="color:var(--g2)">{{ r.v }}</span></p>
+          </sc-for>
+        </div>
+        <p style="color:var(--g5);font-size:10px;line-height:1.6;margin:12px 0 0;padding-top:10px;border-top:1px solid var(--bd2)"><i class="ph ph-lock-simple"></i> {{ t.lockedHint }}</p>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-cake"></i> {{ t.birthday }}</p>
+        <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ t.dob }}</label>
+        <input type="date" value="{{ bdayVal }}" onChange="{{ onBday }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px;outline:none;margin-bottom:10px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+        <button onClick="{{ saveBday }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:11px;border:0;cursor:pointer;transition:transform .16s">{{ t.saveBirthday }}</button>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.changePassword }}</p>
+        <sc-for list="{{ pwFields }}" as="f" hint-placeholder-count="3">
+          <div>
+            <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ f.label }}</label>
+            <input type="password" placeholder="••••••••" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px;outline:none;margin-bottom:10px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+          </div>
+        </sc-for>
+        <button onClick="{{ savePw }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:11px;border:0;cursor:pointer;transition:transform .16s">{{ t.updatePassword }}</button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── TEACHER · TODAY ───── -->
+    <sc-if value="{{ tgToday }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Teacher · Today">
+      <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;margin:0 0 6px">{{ todayLabel }}</p>
+      <h2 class="dsp" data-om-words="zoom" style="font-size:33px;text-transform:uppercase;margin:0 0 14px">{{ greeting }}</h2>
+
+      <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--acc);padding:16px;margin-bottom:14px">
+        <div aria-hidden="true" style="position:absolute;top:-40%;right:-30%;width:80%;height:190%;background:linear-gradient(to bottom left,rgba(255,122,41,.2),transparent 70%);animation:rake 8s ease-in-out infinite"></div>
+        <div style="position:relative">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:glowpulse 1.4s ease-in-out infinite"></span>
+            <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0">{{ t.nextClass }}</p>
+          </div>
+          <p class="dsp" style="font-size:32px;text-transform:uppercase;margin:0;line-height:.95">{{ nextClass.name }}</p>
+          <div class="mn" style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 14px;font-size:10.5px;color:var(--g4)">
+            <span><i class="ph ph-clock" style="color:var(--acc)"></i> {{ nextClass.time }}</span>
+            <span><i class="ph ph-map-pin" style="color:var(--acc)"></i> {{ nextClass.room }}</span>
+            <span><i class="ph ph-users-three" style="color:var(--acc)"></i> {{ nextClass.headcount }}</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px">
+            <p class="dsp" data-count="{{ nextClass.mins }}" style="color:var(--acc);font-size:42px;margin:0;line-height:1">{{ nextClass.mins }}</p>
+            <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;margin:0">{{ t.minsToGo }}</p>
+          </div>
+          <button data-fancy="1" onClick="{{ startMarking }}" class="mn" style="position:relative;overflow:hidden;width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--acc);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);transition:all .18s">{{ t.takeAttendance }}<i class="ph ph-clipboard-text" style="font-size:17px"></i></button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
+        <sc-for list="{{ todayTiles }}" as="x" hint-placeholder-count="3">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center">
+            <p class="dsp" data-count="{{ x.n }}" data-dec="{{ x.dec }}" style="color:var(--acc);font-size:26px;margin:0;line-height:1">{{ x.n }}</p>
+            <p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin:6px 0 0">{{ x.label }}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <p class="mn" data-om-words="sweep" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 10px">{{ t.weekAhead }}</p>
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ weekAhead }}" as="w" hint-placeholder-count="3">
+          <button data-row="1" onClick="{{ w.open }}" style="position:relative;overflow:hidden;width:100%;text-align:left;display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--bd);border-left:3px solid {{ w.edge }};padding:12px;cursor:pointer">
+            <span data-part="sweep" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent 25%,rgba(255,122,41,.22) 50%,transparent 75%)"></span>
+            <div data-part="num" style="text-align:center;width:34px;flex-shrink:0">
+              <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.1em;margin:0;text-transform:uppercase">{{ w.dow }}</p>
+              <p class="dsp" style="font-size:20px;margin:2px 0 0;line-height:1">{{ w.dd }}</p>
+            </div>
+            <div style="flex:1;min-width:0">
+              <p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">{{ w.name }}</p>
+              <p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">{{ w.meta }}</p>
+            </div>
+            <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 6px;background:{{ w.tagBg }};color:{{ w.tagFg }};white-space:nowrap">{{ w.tag }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── TEACHER · CLASSES / ROSTER ───── -->
+    <sc-if value="{{ tgRoster }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Teacher · Classes">
+      <h2 class="dsp" data-om-words="flip" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">{{ t.tabRoster }}</h2>
+      <p style="color:var(--g5);font-size:11px;margin:0 0 16px">{{ rosterLead }}</p>
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ myTeachClasses }}" as="c" hint-placeholder-count="3">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+              <div>
+                <p class="dsp" style="color:var(--acc2);font-size:23px;text-transform:uppercase;margin:0;line-height:1">{{ c.name }}</p>
+                <p class="mn" style="color:var(--g5);font-size:10px;margin:6px 0 0">{{ c.meta }}</p>
+              </div>
+              <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;padding:4px 7px;white-space:nowrap">{{ c.style }}</span>
+            </div>
+            <div style="display:flex;gap:5px;margin:12px 0 10px;flex-wrap:wrap">
+              <sc-for list="{{ c.avatars }}" as="a" hint-placeholder-count="6">
+                <span style="width:27px;height:27px;background:linear-gradient(150deg,{{ a.c1 }},{{ a.c2 }});display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">{{ a.initial }}</span>
+              </sc-for>
+              <span class="mn" style="height:27px;padding:0 8px;display:flex;align-items:center;border:1px dashed var(--bd);color:var(--g5);font-size:9.5px">{{ c.count }}</span>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ c.mark }}" class="mn" style="flex:1;background:var(--acc);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border:0;cursor:pointer;transition:transform .16s"><i class="ph ph-check-square" style="margin-right:6px"></i>{{ t.markAttendance }}</button>
+              <button onClick="{{ c.open }}" class="mn" style="flex:1;background:transparent;border:1px solid #a84715;color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;cursor:pointer;transition:all .2s"><i class="ph ph-users-three" style="margin-right:6px"></i>{{ t.roster }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── TEACHER · HOURS ───── -->
+    <sc-if value="{{ tgSalary }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Teacher · Salary">
+      <h2 class="dsp" data-om-words="drop" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">{{ t.mySalary }}</h2>
+      <p style="color:var(--g5);font-size:11px;margin:0 0 14px">{{ t.thisMonth }} · July 2026</p>
+
+      <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--acc);padding:18px;margin-bottom:14px">
+        <div aria-hidden="true" style="position:absolute;top:-40%;right:-30%;width:80%;height:190%;background:linear-gradient(to bottom left,rgba(255,122,41,.2),transparent 70%);animation:rake 9s ease-in-out infinite"></div>
+        <div style="position:relative">
+          <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 8px">{{ t.estPay }}</p>
+          <p class="dsp" data-count="{{ payTotal }}" data-pre="RM" style="font-size:52px;margin:0;line-height:.95">RM{{ payTotal }}</p>
+          <p class="mn" style="color:var(--g5);font-size:10px;margin:10px 0 0">{{ payFormula }}</p>
+          <span class="mn" style="display:inline-block;margin-top:12px;font-size:9px;font-weight:700;padding:4px 8px;background:rgba(255,122,41,.18);color:var(--acc2);letter-spacing:.1em;text-transform:uppercase">{{ payStatus }}</span>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.payBreakdown }}</p>
+        <sc-for list="{{ payRowsT }}" as="p" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--bd2)">
+            <div>
+              <p style="color:var(--g2);font-size:11.5px;font-weight:600;margin:0">{{ p.label }}</p>
+              <p class="mn" style="color:var(--g5);font-size:10px;margin:3px 0 0">{{ p.meta }}</p>
+            </div>
+            <p class="mn" style="color:#fff;font-size:12px;font-weight:600;margin:0">{{ p.amount }}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px">
+        <sc-for list="{{ hourTiles }}" as="h" hint-placeholder-count="4">
+          <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--bd);padding:14px">
+            <i class="ph {{ h.icon }}" style="position:absolute;right:8px;top:8px;font-size:26px;color:rgba(255,122,41,.16)"></i>
+            <p class="dsp" data-count="{{ h.n }}" data-dec="{{ h.dec }}" style="color:var(--acc);font-size:34px;margin:0;line-height:1">{{ h.n }}</p>
+            <p class="mn" style="color:var(--g5);font-size:8.5px;text-transform:uppercase;letter-spacing:.1em;margin:8px 0 0">{{ h.label }}</p>
+          </div>
+        </sc-for>
+      </div>
+
+      <p class="mn" data-om-words="sweep" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">{{ t.last6 }}</p>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:16px 14px;margin-bottom:18px">
+        <div style="display:flex;align-items:flex-end;gap:9px;height:104px">
+          <sc-for list="{{ weekBars }}" as="b" hint-placeholder-count="6">
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
+              <span class="mn" style="color:var(--g5);font-size:8.5px">{{ b.v }}</span>
+              <div data-om-grow="{{ b.h }}" style="width:100%;background:linear-gradient(180deg,var(--acc),#a84715);height:{{ b.h }}%"></div>
+              <span class="mn" style="color:var(--g5);font-size:8px;letter-spacing:.06em">{{ b.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">{{ t.hoursByStyle }}</p>
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ styleHours }}" as="sh" hint-placeholder-count="3">
+          <div>
+            <div class="mn" style="display:flex;justify-content:space-between;font-size:10px;color:var(--g4);margin-bottom:6px">
+              <span>{{ sh.style }}</span><span style="color:var(--acc)">{{ sh.hrs }}h</span>
+            </div>
+            <div style="height:6px;background:#000;border:1px solid var(--bd)">
+              <div data-om-bar="{{ sh.pct }}" style="height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:{{ sh.pct }}%"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ───── TEACHER · ATTENDANCE ───── -->
+    <sc-if value="{{ tgMark }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Teacher · Attendance">
+      <h2 class="dsp" data-om-words="flip" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">{{ t.markAttendance }}</h2>
+      <p style="color:var(--g5);font-size:11px;margin:0 0 14px">{{ markDateLine }}</p>
+
+      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto" class="bd-scroll">
+        <sc-for list="{{ markClassChips }}" as="ch" hint-placeholder-count="3">
+          <button onClick="{{ ch.go }}" class="mn" style="flex-shrink:0;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;cursor:pointer;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.fg }}">{{ ch.label }}</button>
+        </sc-for>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+        <div class="mn" style="display:flex;justify-content:space-between;font-size:10px;color:var(--g5);margin-bottom:6px">
+          <span>{{ t.marked }}</span><span style="color:var(--acc)">{{ markProgressLabel }}</span>
+        </div>
+        <div style="height:6px;background:#000;border:1px solid var(--bd)">
+          <div style="height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:{{ markPct }}%;transition:width .45s cubic-bezier(.16,.84,.34,1)"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onClick="{{ markAllPresent }}" class="mn" style="flex:1;background:transparent;border:1px solid #a84715;color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px;cursor:pointer"><i class="ph ph-checks" style="margin-right:6px"></i>{{ t.allPresent }}</button>
+          <button onClick="{{ resetMarks }}" class="mn" style="flex:0 0 auto;background:transparent;border:1px solid var(--bd);color:var(--g5);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;cursor:pointer"><i class="ph ph-arrow-counter-clockwise"></i></button>
+        </div>
+      </div>
+
+      <div data-om-stagger="{{ markClass }}" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ markRows }}" as="r" hint-placeholder-count="6">
+          <div style="background:var(--card);border:1px solid {{ r.edge }};padding:11px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:32px;height:32px;flex-shrink:0;background:linear-gradient(150deg,{{ r.c1 }},{{ r.c2 }});display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">{{ r.initial }}</span>
+              <div style="flex:1;min-width:0">
+                <p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">{{ r.name }}</p>
+                <p class="mn" style="color:var(--g5);font-size:9.5px;margin:3px 0 0">{{ r.sub }}</p>
+              </div>
+              <button onClick="{{ r.note }}" aria-label="Remark" style="background:none;border:1px solid var(--bd);color:{{ r.noteColor }};width:30px;height:30px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center"><i class="ph ph-note-pencil" style="font-size:14px"></i></button>
+            </div>
+            <div style="display:flex;gap:6px;margin-top:10px">
+              <sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="3">
+                <button onClick="{{ o.go }}" class="mn" style="flex:1;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:9px 2px;cursor:pointer;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }}"><i class="ph {{ o.icon }}" style="margin-right:5px"></i>{{ o.label }}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ r.editing }}" hint-placeholder-val="{{ false }}">
+              <div data-om-pop="{{ r.id }}" style="margin-top:10px">
+                <input value="{{ remarkText }}" onChange="{{ onRemark }}" placeholder="{{ t.addRemark }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12px;padding:10px;outline:none;font-family:Inter,sans-serif" />
+                <button onClick="{{ r.saveNote }}" class="mn" style="width:100%;margin-top:7px;background:var(--acc);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px;border:0;cursor:pointer">{{ t.saveRemark }}</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ r.remark }}" hint-placeholder-val="{{ false }}">
+              <p style="color:#6fa8ff;font-size:10.5px;margin:9px 0 0"><i class="ph ph-note-pencil"></i> {{ r.remark }}</p>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <button data-fancy="1" onClick="{{ saveMarks }}" class="mn" style="position:relative;overflow:hidden;width:100%;margin-top:14px;background:var(--acc);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember)">{{ t.saveRoster }}</button>
+    </div>
+    </sc-if>
+
+    <!-- ───── TEACHER · PUBLIC PROFILE ───── -->
+    <sc-if value="{{ tgMe }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Teacher · My Profile">
+      <h2 class="dsp" data-om-words="unfold" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">{{ t.myPublicProfile }}</h2>
+      <p style="color:var(--g5);font-size:11px;margin:0 0 16px">{{ t.shownOnIntro }}</p>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:13px">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(150deg,var(--acc),#7a2d0c);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span class="dsp" style="font-size:28px;color:rgba(0,0,0,.4)">Y</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0;line-height:1">Yuki Lim</p>
+          <p class="mn" style="color:var(--g5);font-size:10px;margin:5px 0 0">K-pop · Street Jazz</p>
+          <button onClick="{{ replacePhoto }}" class="mn" style="margin-top:8px;background:transparent;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 10px;cursor:pointer;transition:all .2s"><i class="ph ph-camera" style="margin-right:5px"></i>{{ t.replacePhoto }}</button>
+        </div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
+        <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">{{ t.quote }}</label>
+        <textarea value="{{ quoteVal }}" onChange="{{ onQuote }}" rows="3" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px;outline:none;resize:none;font-family:Inter,sans-serif;line-height:1.6;margin-bottom:12px" style-focus="border-color:var(--acc)"></textarea>
+        <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">{{ t.instagramHandle }}</label>
+        <div style="display:flex;align-items:center;border:1px solid #3d3a36;background:#000;margin-bottom:12px">
+          <span class="mn" style="padding:0 9px;color:var(--acc);font-size:15px"><i class="ph ph-instagram-logo"></i></span>
+          <input value="{{ igVal }}" onChange="{{ onIg }}" style="flex:1;background:transparent;border:0;color:#fff;font-size:12.5px;padding:10px 10px 10px 0;outline:none;font-family:'JetBrains Mono',monospace" />
+        </div>
+        <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">{{ t.showreelLink }}</label>
+        <div style="display:flex;align-items:center;border:1px solid #3d3a36;background:#000">
+          <span class="mn" style="padding:0 9px;color:var(--acc);font-size:15px"><i class="ph ph-video-camera"></i></span>
+          <input value="{{ videoVal }}" onChange="{{ onVideo }}" style="flex:1;background:transparent;border:0;color:#fff;font-size:12.5px;padding:10px 10px 10px 0;outline:none;font-family:'JetBrains Mono',monospace" />
+        </div>
+      </div>
+
+      <button onClick="{{ previewMe }}" class="mn" style="width:100%;background:transparent;border:1px solid #a84715;color:var(--acc2);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:12px;cursor:pointer;margin-bottom:9px;transition:all .2s"><i class="ph ph-eye" style="margin-right:6px"></i>{{ t.preview }}</button>
+      <button onClick="{{ saveProfile }}" class="mn" style="width:100%;background:var(--acc);color:var(--ink);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);transition:all .18s">{{ t.saveProfile }}</button>
+    </div>
+    </sc-if>
+
+  </main>
+
+  <!-- bottom nav -->
+  <nav style="flex-shrink:0;background:var(--card);border-top:2px solid var(--acc);display:flex;position:relative;padding-bottom:18px">
+    <div style="position:absolute;top:-2px;height:2px;background:#fff;transition:all .42s cubic-bezier(.16,.84,.34,1);width:{{ navW }};left:{{ navL }}"></div>
+    <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+      <button onClick="{{ tb.go }}" style="flex:1;padding:9px 2px 6px;background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s;color:{{ tb.color }}">
+        <span style="font-size:18px;line-height:1;transform:scale({{ tb.scale }});transition:transform .3s cubic-bezier(.16,.84,.34,1)"><i class="ph {{ tb.icon }}"></i></span>
+        <span class="mn" style="font-size:7.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.15">{{ tb.label }}</span>
+      </button>
+    </sc-for>
+  </nav>
+</div>
+</sc-if>
+
+<!-- ══════════ MENU DRAWER ══════════ -->
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ toggleMenu }}" style="position:absolute;inset:0;background:rgba(0,0,0,.8);z-index:190;padding-top:100px">
+  <div data-om-sheet="menu" onClick="{{ stop }}" style="background:var(--card);border-top:1px solid var(--bd);border-bottom:2px solid var(--acc);padding:14px">
+    <sc-for list="{{ menuRows }}" as="m" hint-placeholder-count="3">
+      <button onClick="{{ m.go }}" style="width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd2);padding:13px 8px;cursor:pointer;font-size:12.5px;transition:all .2s;color:{{ m.color }}"><i class="ph {{ m.icon }}" style="margin-right:8px"></i>{{ m.label }}</button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ REWARD CODE MODAL ══════════ -->
+<sc-if value="{{ codeModal }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeCode }}" style="position:absolute;inset:0;background:rgba(0,0,0,.88);z-index:230;display:flex;align-items:center;justify-content:center;padding:24px">
+  <div data-om-pop="{{ codeModal.code }}" onClick="{{ stop }}" style="background:var(--card);border:1px solid var(--acc);padding:24px;text-align:center;width:100%;max-width:280px">
+    <div style="font-size:34px;margin-bottom:8px;color:var(--acc)"><i class="ph {{ codeModal.icon }}"></i></div>
+    <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 6px">{{ t.yourCode }}</p>
+    <p style="color:#fff;font-size:13px;margin:0 0 14px">{{ codeModal.name }}</p>
+    <p class="mn sheen" style="color:var(--acc);font-size:28px;font-weight:600;letter-spacing:.22em;margin:0 0 14px;padding:10px;border:1px dashed var(--bd);background:#000">{{ codeModal.code }}</p>
+    <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 16px">{{ t.showCounter }}</p>
+    <button onClick="{{ closeCode }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:12px;border:0;cursor:pointer">{{ t.close }}</button>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:460,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ff7a29&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ff7a29&quot;,&quot;#ff4d2e&quot;,&quot;#ffa057&quot;,&quot;#e39b5a&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;streetBg&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;motion&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  state = {
+    lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
+    loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
+    eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
+    sheet: null, toast: null, reelPlaying: false, reelPct: 12,
+    marks: {}, markClass: 1, remarkFor: null, remarkText: '',
+    studentModal: null, points: 245, redeemed: [], showAll: {},
+    payFrom: '', payTo: '', attClass: null, editing: false, profile: { quote: 'Technique is the floor. Feeling is the ceiling.', ig: 'yukilim.dance', video: 'Showreel 2026' },
+  };
+
+  places = [
+    { id: 1, name: 'Adda Height', address: 'Adda Height, Johor Bahru' },
+    { id: 2, name: 'Horizon Square', address: 'Horizon Square, Johor Bahru' },
+    { id: 3, name: 'Tasek', address: 'Tasek, Ipoh, Perak' },
+    { id: 4, name: 'Kulai', address: 'Kulai, Johor' },
+  ];
+
+  teachers = [
+    { id: 1, name: 'Yuki Lim', specs: ['K-pop', 'Street Jazz'], quote: 'Technique is the floor. Feeling is the ceiling.', c1: '#ff7a29', c2: '#7a2d0c' },
+    { id: 2, name: 'Rayden Ooi', specs: ['Hip-hop', 'Popping'], quote: 'Count it out loud until your body stops needing the count.', c1: '#ff4d2e', c2: '#5c1a0a' },
+    { id: 3, name: 'Sherlyn Foo', specs: ['Waacking', 'Heels'], quote: 'Arms tell the story. Everything else is punctuation.', c1: '#ffa057', c2: '#8a3d12' },
+    { id: 4, name: 'Marcus Teh', specs: ['Hip-hop', 'Locking'], quote: 'Groove first. Choreography is just a container.', c1: '#e39b5a', c2: '#6b3a14' },
+    { id: 5, name: 'Nadia Rahim', specs: ['Dancehall', 'Afro'], quote: 'Weight down, chest open, breathe with the riddim.', c1: '#ff7a29', c2: '#3a2010' },
+    { id: 6, name: 'Jason Wong', specs: ['K-pop', 'Choreography'], quote: 'Clean beats hard. Every time.', c1: '#ffb277', c2: '#7a4520' },
+    { id: 7, name: 'Elle Chan', specs: ['Street Jazz', 'Contemporary'], quote: 'Land softly, leave loudly.', c1: '#ff6a3d', c2: '#4a1c08' },
+  ];
+
+  classes = [
+    { id: 1, name: 'K-pop Beginner', style: 'K-pop', day: 'Tuesday', start: '7:00 PM', end: '8:00 PM', room: 'Studio A', placeId: 1, teacherId: 1, max: 12 },
+    { id: 2, name: 'K-pop Intermediate', style: 'K-pop', day: 'Thursday', start: '8:00 PM', end: '9:00 PM', room: 'Studio A', placeId: 1, teacherId: 1, max: 12 },
+    { id: 3, name: 'Street Jazz Open', style: 'Street Jazz', day: 'Saturday', start: '11:00 AM', end: '12:00 PM', room: 'Studio B', placeId: 1, teacherId: 1, max: 10 },
+    { id: 4, name: 'Hip-hop Kids', style: 'Hip-hop', day: 'Wednesday', start: '5:00 PM', end: '6:00 PM', room: 'Studio B', placeId: 1, teacherId: 2, max: 14 },
+    { id: 5, name: 'Popping Lab', style: 'Popping', day: 'Friday', start: '8:00 PM', end: '9:00 PM', room: 'Studio C', placeId: 2, teacherId: 2, max: 10 },
+    { id: 6, name: 'Waacking Basics', style: 'Waacking', day: 'Saturday', start: '2:00 PM', end: '3:00 PM', room: 'Studio A', placeId: 2, teacherId: 3, max: 12 },
+    { id: 7, name: 'Heels Class', style: 'Heels', day: 'Sunday', start: '3:00 PM', end: '4:00 PM', room: 'Studio B', placeId: 2, teacherId: 3, max: 10 },
+    { id: 8, name: 'Hip-hop Teens', style: 'Hip-hop', day: 'Monday', start: '7:00 PM', end: '8:00 PM', room: 'Studio A', placeId: 3, teacherId: 4, max: 14 },
+    { id: 9, name: 'Dancehall Open', style: 'Dancehall', day: 'Thursday', start: '9:00 PM', end: '10:00 PM', room: 'Studio C', placeId: 3, teacherId: 5, max: 12 },
+    { id: 10, name: 'K-pop Cover Crew', style: 'K-pop', day: 'Sunday', start: '5:00 PM', end: '7:00 PM', room: 'Studio A', placeId: 4, teacherId: 6, max: 16 },
+  ];
+
+  roster = {
+    1: [
+      { id: 1, name: 'Chloe Tan', age: 14 }, { id: 2, name: 'Amira Yusof', age: 13 },
+      { id: 3, name: 'Ken Lau', age: 15 }, { id: 4, name: 'Peggy Ng', age: 14 },
+      { id: 5, name: 'Darren Sim', age: 16 }, { id: 6, name: 'Hui Xin', age: 13 },
+      { id: 7, name: 'Nur Aisyah', age: 15 }, { id: 8, name: 'Bryan Koh', age: 14 },
+      { id: 9, name: 'Zoe Cheng', age: 13 },
+    ],
+    2: [
+      { id: 1, name: 'Chloe Tan', age: 14 }, { id: 3, name: 'Ken Lau', age: 15 },
+      { id: 10, name: 'Vivian Loh', age: 17 }, { id: 11, name: 'Marcus Yap', age: 16 },
+      { id: 12, name: 'Sarah Lim', age: 15 }, { id: 5, name: 'Darren Sim', age: 16 },
+    ],
+    3: [
+      { id: 1, name: 'Chloe Tan', age: 14 }, { id: 4, name: 'Peggy Ng', age: 14 },
+      { id: 12, name: 'Sarah Lim', age: 15 }, { id: 13, name: 'Joey Tan', age: 18 },
+      { id: 6, name: 'Hui Xin', age: 13 },
+    ],
+  };
+
+  student = {
+    id: 1, name: 'Chloe Tan', age: 14, parent: 'Mr. Tan Wei Ming', phone: '+60 12-345 6789',
+    email: 'chloe.tan@email.com', fee: 180, credits: 3, join: '12 Jan 2026',
+    classIds: [1, 3], styleGrades: { 'K-pop': 3, 'Street Jazz': 2 }, birthday: '2012-08-14', tshirt: true,
+  };
+
+  payments = [
+    { id: 1, month: 'July', classId: 1, amount: 180, date: '02 Jul 2026', method: 'DuitNow', status: 'Paid' },
+    { id: 2, month: 'July', classId: 3, amount: 150, date: '', method: '', status: 'Unpaid' },
+    { id: 3, month: 'June', classId: 1, amount: 180, date: '03 Jun 2026', method: 'TNG', status: 'Paid' },
+    { id: 4, month: 'June', classId: 3, amount: 150, date: '03 Jun 2026', method: 'TNG', status: 'Paid' },
+    { id: 5, month: 'May', classId: 1, amount: 180, date: '04 May 2026', method: 'Bank', status: 'Paid' },
+    { id: 6, month: 'May', classId: 3, amount: 150, date: '04 May 2026', method: 'Bank', status: 'Paid' },
+    { id: 7, month: 'April', classId: 1, amount: 180, date: '02 Apr 2026', method: 'Cash', status: 'Paid' },
+  ];
+
+  attendance = [
+    { id: 1, classId: 1, date: '2026-07-28', status: 'present' },
+    { id: 2, classId: 1, date: '2026-07-21', status: 'present' },
+    { id: 3, classId: 1, date: '2026-07-14', status: 'absent', remark: 'Did a replacement on Sat Street Jazz' },
+    { id: 4, classId: 1, date: '2026-07-07', status: 'present' },
+    { id: 5, classId: 1, date: '2026-06-30', status: 'cancelled' },
+    { id: 6, classId: 1, date: '2026-06-23', status: 'present' },
+    { id: 7, classId: 3, date: '2026-07-26', status: 'present' },
+    { id: 8, classId: 3, date: '2026-07-19', status: 'present' },
+    { id: 9, classId: 3, date: '2026-07-12', status: 'absent', remark: 'Sick — MC shown at front desk' },
+    { id: 10, classId: 3, date: '2026-07-05', status: 'present' },
+  ];
+
+  rewards = [
+    { id: 'water', icon: 'ph-drop', cost: 30, name: 'Bottled Water', zh: '瓶装水' },
+    { id: 'drink', icon: 'ph-coffee', cost: 60, name: 'Drink Voucher', zh: '饮料券' },
+    { id: 'sticker', icon: 'ph-sparkle', cost: 100, name: 'Sticker Pack', zh: '贴纸包' },
+    { id: 'wristband', icon: 'ph-watch', cost: 180, name: 'Studio Wristband', zh: '舞室手环' },
+    { id: 'tote', icon: 'ph-handbag', cost: 250, name: 'Canvas Tote Bag', zh: '帆布袋' },
+    { id: 'freeclass', icon: 'ph-ticket', cost: 400, name: 'Free Single Class', zh: '免费单堂课' },
+    { id: 'tshirt', icon: 'ph-t-shirt', cost: 650, name: 'Studio T-Shirt', zh: '舞室T恤' },
+    { id: 'monthfree', icon: 'ph-trophy', cost: 1500, name: '1 Month Free', zh: '免费一个月' },
+  ];
+
+  shops = [
+    { name: 'Sneaker Lab', initial: 'S', c1: '#ff7a29', c2: '#5c2a10' },
+    { name: 'Bubble Co.', initial: 'B', c1: '#ff4d2e', c2: '#3a2010' },
+    { name: 'Kopi Tak', initial: 'K', c1: '#e39b5a', c2: '#6b3a14' },
+    { name: 'Print House', initial: 'P', c1: '#ffa057', c2: '#7a2d0c' },
+    { name: 'Move Physio', initial: 'M', c1: '#ff6a3d', c2: '#4a1c08' },
+    { name: 'Studio Nails', initial: 'N', c1: '#ffb277', c2: '#7a4520' },
+  ];
+
+  events = [
+    { badge: 'Vol 6', title: 'K-Night Vol 6', date: '9 Aug 2026 · Sunday', time: '12:00 PM – 8:00 PM', venue: 'Sutera Mall · Level 4', cats: 'KPOP Solo, KPOP Battle, Group Cover, Randomz' },
+    { badge: 'Open', title: 'Street Jam 03', date: '27 Sep 2026 · Saturday', time: '2:00 PM – 7:00 PM', venue: 'Adda Height · Studio A+B', cats: 'Hip-hop 1v1, Popping 1v1, Crew Battle' },
+  ];
+
+  TR = {
+    en: {
+      signIn: 'Sign In', fromTop: 'FROM THE TOP', back: 'Back', close: 'Close',
+      heroEyebrow: 'Hip-hop · K-pop · Street Jazz · Popping',
+      heroLine1: 'Move Like', heroLine2: 'You Mean It',
+      heroLead: 'Beginners through competition crews across 8 street styles — from your first count of 8 to your first time on stage. Four branches, one standard of teaching.',
+      findBtn: 'Find a Studio', meetBtn: 'Meet Instructors',
+      studioReel: 'Studio Reel', showreel: 'Showreel',
+      statBranches: 'Branches', statStyles: 'Styles', statInstructors: 'Instructors', statFounded: 'Founded',
+      eventsTitle: 'Upcoming Events', eventBtn: 'Sign in to register →',
+      shopsEyebrow: 'Collaborated Shops', shopsTitle: 'Perks For Our Students', shopOff: '10% OFF',
+      shopsLead: 'Show your student ID at any partner shop for 10% off. Tap a shop to see what they offer.',
+      aboutEyebrow: 'About Us', aboutTitle: 'Built By Dancers, Not A Branch Playbook',
+      aboutLead: 'B Dance Studio started as one Adda Height room teaching hip-hop fundamentals. Today four branches teach everything from beginner hip-hop to competition choreography — taught by instructors who still perform.',
+      instrEyebrow: 'Our Instructors', instrTitle: 'Learn From People Who Still Train',
+      instrLead: 'Resident instructors across four branches, each with real specialities rather than a little of everything.',
+      tapToView: 'Tap to view', showAllTeachers: 'Show all {n} instructors', showLess: 'Show fewer',
+      locEyebrow: 'Locations', locTitle: 'Four Branches, One Studio',
+      locLead: 'Same styles, same teaching standard, different neighbourhoods.',
+      ctaTitle: 'Ready To Start?', ctaLead: 'Enrolled students and teachers sign in above.', contactBtn: 'Contact Us →',
+      footTag: 'A dance studio run by people who still train. Four branches across Malaysia.',
+      footPhone: '+60 12-345 6789', footHours: 'Mon–Sun · 10:00 AM – 10:00 PM',
+      portal: 'Teacher & Student Portal', iAmA: 'I am a',
+      student: 'Student', studentSub: 'Fees, classes, attendance & rewards',
+      teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
+      studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
+      username: 'Username', password: 'Password', loggingIn: 'Signing in…',
+      demoHint: 'DEMO · TAP SIGN IN WITH ANY DETAILS', openInstagram: 'Open Instagram',
+      contactTitle: 'Contact Us', chooseNav: 'Open directions with',
+      contactShort: 'Contact', signInShort: 'Sign in', findShort: 'Studios', meetShort: 'Instructors',
+    },
+    zh: {
+      signIn: '登录', fromTop: '从头开始', back: '返回', close: '关闭',
+      heroEyebrow: 'Hip-hop · K-pop · Street Jazz · Popping',
+      heroLine1: '舞出', heroLine2: '真心态度',
+      heroLead: '从初学者到竞技团队，涵盖8种街舞风格——从第一个八拍到第一次登台。四家分店，同一套教学标准。',
+      findBtn: '寻找分店', meetBtn: '认识导师',
+      studioReel: '工作室短片', showreel: '精彩短片',
+      statBranches: '分店', statStyles: '风格', statInstructors: '导师', statFounded: '成立于',
+      eventsTitle: '近期活动', eventBtn: '登录报名 →',
+      shopsEyebrow: '合作商店', shopsTitle: '学员专属优惠', shopOff: '9 折',
+      shopsLead: '在合作商店出示学员证即享 9 折。点击商店查看优惠内容。',
+      aboutEyebrow: '关于我们', aboutTitle: '由舞者创立，而非连锁模板',
+      aboutLead: 'B Dance Studio 最初只是Adda Height的一间小舞室，教授hip-hop基本功。如今四家分店教授从初学hip-hop到竞技级编舞的一切——导师们至今仍在舞台上。',
+      instrEyebrow: '我们的导师', instrTitle: '向仍在训练的人学习',
+      instrLead: '驻店导师分布于四家分店，各有真正的专长，而非样样略懂。',
+      tapToView: '点击查看', showAllTeachers: '查看全部 {n} 位导师', showLess: '收起',
+      locEyebrow: '分店地点', locTitle: '四家分店，同一间舞室',
+      locLead: '相同的风格，相同的教学标准，不同的社区。',
+      ctaTitle: '准备好开始了吗？', ctaLead: '在籍学生与导师请在上方登录。', contactBtn: '联系我们 →',
+      footTag: '一间由仍在训练的人经营的舞室。马来西亚四家分店。',
+      footPhone: '+60 12-345 6789', footHours: '周一至周日 · 上午10点 – 晚上10点',
+      portal: '导师与学生入口', iAmA: '我是',
+      student: '学生', studentSub: '学费、课程、出席与奖励',
+      teacher: '导师', teacherSub: '学员名单、点名与课时',
+      studentLogin: '学生登录', teacherLogin: '导师登录',
+      username: '用户名', password: '密码', loggingIn: '登录中…',
+      demoHint: '演示 · 任意帐号即可登录', openInstagram: '打开 Instagram',
+      contactTitle: '联系我们', chooseNav: '选择导航应用',
+      contactShort: '联系', signInShort: '登录', findShort: '分店', meetShort: '导师',
+    },
+  };
+
+  APP_TR = {
+    en: {
+      studentRole: 'Student Portal', teacherRole: 'Teacher Portal',
+      howToPay: 'How to Pay', bankTransfer: 'Bank Transfer', scanToPay: 'Scan to pay',
+      payHint: 'After paying, show or send your receipt to the front desk so it can be recorded.',
+      bank: 'Bank', accName: 'Account Name', accNo: 'Account No.', duitnow: 'DuitNow',
+      monthlyFee: 'Monthly Fee', credits: 'Credits', unpaidCount: 'Unpaid',
+      outstanding: 'Outstanding', unpaid: 'Unpaid', paid: 'Paid', payHistory: 'Payment History',
+      myClasses: 'My Classes', myProfile: 'My Profile', allClasses: 'All Classes',
+      myAttendance: 'My Attendance', rewards: 'Rewards', profile: 'My Profile', logout: 'Log out',
+      age: 'Age', parent: 'Parent', phone: 'Phone', email: 'Email',
+      enrollHint: 'To change your class enrolment, speak to the studio admin or front desk.',
+      classmates: 'Classmates', enrolledSince: 'Enrolled since',
+      joinHint: 'Interested in joining a class? Speak to the studio admin to update your enrolment.',
+      allStyles: 'All', full: 'Full', open: 'open',
+      attHint: 'Attendance can only be marked by your teacher, the front desk, or the studio admin.',
+      viewOnly: 'View only', attended: 'classes attended this cycle',
+      cycleProgress: 'Cycle (4 = 1 month)', present: 'Present', absent: 'Absent', cancelled: 'Cancelled',
+      creditUsage: 'Credit Usage Record',
+      keepDancing: 'Keep dancing to level up your grade', points: 'Points',
+      earn: 'Earn {n} points for every class you attend, then redeem them below.',
+      freeTshirt: 'New Student Free T-Shirt', tshirtTitle: 'Free T-shirt for New Student',
+      tshirtDone: 'Collected — enjoy your free new-student t-shirt!', tshirtUntil: 'Available until 31 April 2027',
+      gradesByStyle: 'Grades by Dance Style', birthday: 'Birthday', bdayGift: '100 bonus points on your birthday',
+      daysUntil: '{n} days until your birthday',
+      redeemRewards: 'Redeem Rewards', redeem: 'Redeem', locked: 'Locked',
+      redemptionHistory: 'Redemption History', collected: 'Collected', showCode: 'Show code',
+      yourCode: 'Your redemption code', showCounter: 'Show this code at the counter to collect your reward.',
+      profileDetails: 'Profile Details', dob: 'Date of Birth', saveBirthday: 'Save Birthday',
+      lockedHint: 'These details can only be updated by the studio admin or front desk.',
+      changePassword: 'Change Password', currentPw: 'Current Password', newPw: 'New Password',
+      confirmPw: 'Confirm New Password', updatePassword: 'Update Password',
+      saved: 'Saved', redeemed: 'Redeemed',
+      tabFees: 'Fees', tabMine: 'My Classes', tabAll: 'All Classes', tabAtt: 'Attendance', tabRewards: 'Rewards',
+      tabSchedule: 'My Schedule', tabStudents: 'My Students', tabSalary: 'My Salary', tabAtt2: 'Attendance', tabProfile: 'My Profile',
+      mySalary: 'My Salary', estPay: 'Estimated pay', payBreakdown: 'Breakdown', hourlyRate: 'Hourly rate',
+      paidOut: 'Paid 5 Aug', pendingPay: 'Pending payout', perHour: '/hour',
+      goodEvening: 'Good evening', nextClass: 'Next class', now: 'Now', startingIn: 'starts in {n} min',
+      takeAttendance: 'Take Attendance →', weekAhead: 'The Week Ahead', noClassToday: 'No class today',
+      markAttendance: 'Mark Attendance', allPresent: 'All present', saveRoster: 'Save Attendance',
+      marked: 'marked', of: 'of', addRemark: 'Add remark', remarkFor: 'Remark for', saveRemark: 'Save remark',
+      studentsIn: 'students', tapStudent: 'Tap a student for details',
+      myHours: 'My Teaching Hours', thisMonth: 'This month', hours: 'Hours taught',
+      classesTaught: 'Classes taught', studentsTaught: 'Students', avgAtt: 'Avg attendance',
+      perWeek: 'Per week', hoursByStyle: 'Hours by style', last6: 'Last 6 weeks',
+      myPublicProfile: 'My Public Profile', shownOnIntro: 'This is what visitors see on the studio page',
+      quote: 'Quote', instagramHandle: 'Instagram handle', showreelLink: 'Showreel',
+      photo: 'Photo', replacePhoto: 'Replace photo', saveProfile: 'Save Profile', preview: 'Preview',
+      specialities: 'Specialities', gradeOf: 'Grade', roster: 'Roster', minsToGo: 'min to go',
+    },
+    zh: {
+      studentRole: '学生入口', teacherRole: '导师入口',
+      howToPay: '付款方式', bankTransfer: '银行转账', scanToPay: '扫码付款',
+      payHint: '付款后请向前台出示或发送收据，以便记录。',
+      bank: '银行', accName: '户名', accNo: '账号', duitnow: 'DuitNow',
+      monthlyFee: '月费', credits: '课时券', unpaidCount: '未付',
+      outstanding: '未付款项', unpaid: '未付', paid: '已付', payHistory: '付款记录',
+      myClasses: '我的课程', myProfile: '我的资料', allClasses: '全部课程',
+      myAttendance: '我的出席', rewards: '奖励', profile: '我的资料', logout: '退出登录',
+      age: '年龄', parent: '家长', phone: '电话', email: '邮箱',
+      enrollHint: '如需更改课程注册，请联系舞室管理员或前台。',
+      classmates: '同班同学', enrolledSince: '注册于',
+      joinHint: '有兴趣加入课程？请联系舞室管理员更新你的注册。',
+      allStyles: '全部', full: '已满', open: '空位',
+      attHint: '出席只能由你的导师、前台或管理员标记。',
+      viewOnly: '仅供查看', attended: '本周期已出席课程',
+      cycleProgress: '周期（4堂＝1个月）', present: '出席', absent: '缺席', cancelled: '已取消',
+      creditUsage: '课时券使用记录',
+      keepDancing: '继续跳舞，提升你的级别', points: '积分',
+      earn: '每出席一堂课可获得 {n} 积分，可在下方兑换。',
+      freeTshirt: '新生免费T恤', tshirtTitle: '新生免费T恤',
+      tshirtDone: '已领取 — 好好享受你的新生T恤！', tshirtUntil: '有效期至 2027年4月31日',
+      gradesByStyle: '各舞风级别', birthday: '生日', bdayGift: '生日当天赠送100积分',
+      daysUntil: '距离你的生日还有 {n} 天',
+      redeemRewards: '兑换奖励', redeem: '兑换', locked: '积分不足',
+      redemptionHistory: '兑换记录', collected: '已领取', showCode: '出示代码',
+      yourCode: '你的兑换代码', showCounter: '请向柜台出示此代码领取奖励。',
+      profileDetails: '个人资料', dob: '出生日期', saveBirthday: '保存生日',
+      lockedHint: '这些资料只能由舞室管理员或前台更新。',
+      changePassword: '修改密码', currentPw: '当前密码', newPw: '新密码',
+      confirmPw: '确认新密码', updatePassword: '更新密码',
+      saved: '已保存', redeemed: '已兑换',
+      tabFees: '学费', tabMine: '我的课', tabAll: '全部课', tabAtt: '出席', tabRewards: '奖励',
+      tabSchedule: '我的课表', tabStudents: '我的学员', tabSalary: '我的薪金', tabAtt2: '点名', tabProfile: '我的资料',
+      mySalary: '我的薪金', estPay: '预计薪金', payBreakdown: '明细', hourlyRate: '时薪',
+      paidOut: '8月5日发放', pendingPay: '待发放', perHour: '/小时',
+      goodEvening: '晚上好', nextClass: '下一堂课', now: '进行中', startingIn: '{n} 分钟后开始',
+      takeAttendance: '开始点名 →', weekAhead: '本周课表', noClassToday: '今天没有课',
+      markAttendance: '点名', allPresent: '全部出席', saveRoster: '保存点名',
+      marked: '已标记', of: '/', addRemark: '添加备注', remarkFor: '备注', saveRemark: '保存备注',
+      studentsIn: '位学员', tapStudent: '点击学员查看详情',
+      myHours: '我的课时', thisMonth: '本月', hours: '教学时数',
+      classesTaught: '已授课堂', studentsTaught: '学员', avgAtt: '平均出席率',
+      perWeek: '每周', hoursByStyle: '各舞风时数', last6: '最近六周',
+      myPublicProfile: '我的公开资料', shownOnIntro: '这是访客在舞室页面看到的内容',
+      quote: '格言', instagramHandle: 'Instagram 帐号', showreelLink: '精彩短片',
+      photo: '照片', replacePhoto: '更换照片', saveProfile: '保存资料', preview: '预览',
+      specialities: '专长', gradeOf: '级别', roster: '学员名单', minsToGo: '分钟后开始',
+    },
+  };
+
+  GRADES = { 1: { tier: 'Bronze', c: '#e39b5a', badge: 'ph-medal' }, 2: { tier: 'Silver', c: '#eef1f4', badge: 'ph-medal' }, 3: { tier: 'Gold', c: '#ffdf6e', badge: 'ph-medal' }, 4: { tier: 'Diamond', c: '#8fe9ff', badge: 'ph-diamond' }, 5: { tier: 'Crown', c: '#ffd75e', badge: 'ph-crown-simple' } };
+
+  fmtDate(d) {
+    const dt = new Date(d + 'T00:00:00');
+    return dt.toLocaleDateString('en-MY', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+  statusPill(st, t) {
+    if (st === 'present') return { label: t.present, bg: 'rgba(31,122,77,.22)', fg: '#7ee2ab' };
+    if (st === 'cancelled') return { label: t.cancelled, bg: 'rgba(255,122,41,.18)', fg: 'var(--acc2)' };
+    return { label: t.absent, bg: 'rgba(255,77,46,.18)', fg: '#ff8a78' };
+  }
+
+  appVals(t) {
+    const s = this.state, st = this.student, isT = s.role === 'teacher';
+    const cls = id => this.classes.find(c => c.id === id);
+    const tName = id => (this.teachers.find(x => x.id === id) || {}).name || '—';
+    const pName = id => (this.places.find(x => x.id === id) || {}).name || '—';
+    const myClasses = st.classIds.map(cls);
+    const topGrade = Math.max(...Object.values(st.styleGrades));
+    const gm = this.GRADES[topGrade];
+    const pts = s.points - s.redeemed.reduce((a, r) => a + r.cost, 0);
+    const pending = this.payments.filter(p => p.status === 'Unpaid');
+
+    const studentTabs = [
+      { key: 'fees', icon: 'ph-credit-card', label: t.tabFees }, { key: 'classes', icon: 'ph-graduation-cap', label: t.tabMine },
+      { key: 'all-classes', icon: 'ph-chalkboard-teacher', label: t.tabAll }, { key: 'attendance', icon: 'ph-check-square', label: t.tabAtt },
+      { key: 'rewards', icon: 'ph-gift', label: t.tabRewards },
+    ];
+    const teacherTabs = [
+      { key: 'today', icon: 'ph-calendar-blank', label: t.tabSchedule },
+      { key: 'roster', icon: 'ph-users-three', label: t.tabStudents },
+      { key: 'salary', icon: 'ph-wallet', label: t.tabSalary },
+      { key: 'mark', icon: 'ph-check-square', label: t.tabAtt2 },
+      { key: 'me', icon: 'ph-user', label: t.tabProfile },
+    ];
+    const tabsSrc = isT ? teacherTabs : studentTabs;
+    const cur = isT ? s.tpage : s.page;
+    const idx = Math.max(0, tabsSrc.findIndex(x => x.key === cur));
+    const unit = 100 / tabsSrc.length;
+
+    return {
+      me: st, meInitial: st.name.slice(0, 1), points: pts,
+      whoLine: isT ? t.teacherRole + ' · Yuki Lim' : t.studentRole + ' · ' + st.name,
+      menuOpen: s.menuOpen, menuIcon: s.menuOpen ? 'ph-x' : 'ph-list',
+      toggleMenu: () => this.setState(p => ({ menuOpen: !p.menuOpen })),
+      menuRows: (isT
+        ? [{ label: t.myPublicProfile, icon: 'ph-user-circle', go: () => this.setState({ tpage: 'me', menuOpen: false }) }]
+        : [{ label: t.profile, icon: 'ph-user-circle', go: () => this.setState({ page: 'profile', menuOpen: false }) }]
+      ).concat([{ label: t.logout, icon: 'ph-sign-out', color: '#ff8a78', go: () => this.setState({ view: 'intro', menuOpen: false, page: 'fees', tpage: 'today', user: '', pw: '', stuck: false, showTop: false, introMenu: false }) }])
+        .map(r => ({ ...r, color: r.color || '#fff' })),
+
+      tabs: tabsSrc.map(x => ({
+        ...x, color: cur === x.key ? 'var(--acc)' : 'var(--g5)', scale: cur === x.key ? 1.18 : 1,
+        go: () => this.setState(isT ? { tpage: x.key, menuOpen: false } : { page: x.key, menuOpen: false }),
+      })),
+      navW: unit + '%', navL: idx * unit + '%',
+
+      pgFees: !isT && s.page === 'fees', pgClasses: !isT && s.page === 'classes',
+      pgAll: !isT && s.page === 'all-classes', pgAtt: !isT && s.page === 'attendance',
+      pgRewards: !isT && s.page === 'rewards', pgProfile: !isT && s.page === 'profile',
+
+      bankRows: [
+        { k: t.bank, v: 'Maybank' }, { k: t.accName, v: 'B Dance Studio' },
+        { k: t.accNo, v: '5124 8899 0176' }, { k: t.duitnow, v: '+60 12-345 6789' },
+      ],
+      feeSubline: t.monthlyFee + ': RM' + st.fee + ' · ' + myClasses.map(c => c.name).join(', '),
+      feeTiles: [
+        { label: t.monthlyFee, n: st.fee, pre: 'RM', c: '#fff' },
+        { label: t.credits, n: st.credits, pre: '', c: '#7ee2ab' },
+        { label: t.unpaidCount, n: pending.length, pre: '', c: '#ff8a78' },
+      ],
+      hasOutstanding: pending.length > 0,
+      outstanding: pending.map(p => ({ ...p, title: p.month + ' 2026 · ' + (cls(p.classId) || {}).name })),
+      payRows: this.payments.filter(p => p.status === 'Paid').map(p => ({
+        ...p, cls: (cls(p.classId) || {}).name, meta: p.date + (p.method ? ' · ' + p.method : ''),
+        badge: t.paid, badgeIcon: 'ph-check', badgeBg: 'rgba(31,122,77,.22)', badgeFg: '#7ee2ab',
+      })),
+
+      enrolledLine: t.enrolledSince + ' ' + st.join + ' · ' + myClasses.length + ' ' + t.myClasses.toLowerCase(),
+      profileRows: [
+        { k: t.age, v: st.age }, { k: t.parent, v: st.parent },
+        { k: t.phone, v: st.phone }, { k: t.email, v: st.email },
+      ],
+      myClassCards: myClasses.map(c => {
+        const mates = (this.roster[c.id] || []).filter(m => m.id !== st.id);
+        return {
+          ...c, when: c.day + ' · ' + c.start + '–' + c.end, where: c.room + ' · ' + pName(c.placeId),
+          teacher: tName(c.teacherId), matesLabel: t.classmates + ' (' + mates.length + ')',
+          mates: mates.map(m => ({ ...m, initial: m.name.slice(0, 1), ageLabel: t.age + ' ' + m.age })),
+        };
+      }),
+
+      allClassesLine: this.classes.length + ' ' + t.allClasses.toLowerCase(),
+      styleFilter: s.styleFilter || 'all',
+      styleChips: ['all', ...Array.from(new Set(this.classes.map(c => c.style)))].map(x => {
+        const active = (s.styleFilter || 'all') === x;
+        return {
+          label: x === 'all' ? t.allStyles : x, bd: active ? 'var(--acc)' : 'var(--bd)',
+          bg: active ? 'var(--acc)' : 'var(--card)', fg: active ? '#000' : 'var(--g4)',
+          go: () => this.setState({ styleFilter: x }),
+        };
+      }),
+      allClassRows: this.classes.filter(c => !s.styleFilter || s.styleFilter === 'all' || c.style === s.styleFilter).map(c => {
+        const enrolled = (this.roster[c.id] || []).length || Math.max(4, c.max - 3);
+        const full = enrolled >= c.max;
+        return {
+          ...c, place: pName(c.placeId), teacher: tName(c.teacherId), when: c.day + ' · ' + c.start,
+          cap: full ? t.full : (c.max - enrolled) + ' ' + t.open,
+          capBg: full ? 'rgba(255,77,46,.18)' : 'rgba(31,122,77,.22)', capFg: full ? '#ff8a78' : '#7ee2ab',
+        };
+      }),
+
+      attSubline: t.viewOnly + ' · ' + this.attendance.filter(a => a.status === 'present').length + ' ' + t.attended,
+      attCards: myClasses.map(c => {
+        const recs = this.attendance.filter(a => a.classId === c.id);
+        const n = k => recs.filter(r => r.status === k).length;
+        const pills = [{ label: n('present') + ' ' + t.present, bg: 'rgba(31,122,77,.22)', fg: '#7ee2ab' }];
+        if (n('absent')) pills.push({ label: n('absent') + ' ' + t.absent, bg: 'rgba(255,77,46,.18)', fg: '#ff8a78' });
+        if (n('cancelled')) pills.push({ label: n('cancelled') + ' ' + t.cancelled, bg: 'rgba(255,122,41,.18)', fg: 'var(--acc2)' });
+        const prog = Math.min(4, n('present'));
+        return {
+          ...c, meta: c.day + ' · ' + c.start + ' · ' + tName(c.teacherId), pills,
+          cycleLabel: prog + '/4', cyclePct: prog / 4 * 100,
+          records: recs.map(r => ({ ...this.statusPill(r.status, t), date: this.fmtDate(r.date), remark: r.remark || '' })),
+        };
+      }),
+      creditRows: [
+        { title: 'Street Jazz Open · One-hour extra', meta: this.fmtDate('2026-07-19') + ' · Yuki Lim', cost: '−1' },
+        { title: 'K-pop Beginner · Half-hour extra', meta: this.fmtDate('2026-07-05') + ' · Yuki Lim', cost: '−0.5' },
+      ],
+
+      gradeLine: t.gradeOf + ' ' + topGrade + ' · ' + gm.tier,
+      earnLine: t.earn.replace('{n}', ({ 1: 2, 2: 5, 3: 10, 4: 10, 5: 10 })[topGrade] || 1),
+      gradeCards: Object.entries(st.styleGrades).map(([style, g]) => ({
+        style, badge: this.GRADES[g].badge, c: this.GRADES[g].c, tier: t.gradeOf + ' ' + g + ' · ' + this.GRADES[g].tier,
+        bd: g === topGrade ? this.GRADES[g].c : 'var(--bd)',
+      })),
+      bdayLine: t.daysUntil.replace('{n}', 14),
+      rewardCards: this.rewards.map(r => {
+        const can = pts >= r.cost;
+        return {
+          ...r, name: s.lang === 'zh' ? r.zh : r.name,
+          bg: can ? 'var(--acc)' : '#242220', fg: can ? '#000' : '#4a4640',
+          label: can ? t.redeem : t.locked, cursor: can ? 'pointer' : 'not-allowed',
+          redeem: () => {
+            if (!can) return;
+            const code = 'BD' + Math.random().toString(36).slice(2, 6).toUpperCase();
+            this.setState(p => ({ redeemed: [{ ...r, code, date: '31 Jul 2026', collected: false }, ...p.redeemed], codeModal: { ...r, code, name: s.lang === 'zh' ? r.zh : r.name } }));
+            this.flash(t.redeemed);
+          },
+        };
+      }),
+      redemptionRows: [...s.redeemed, { icon: 'ph-coffee', name: s.lang === 'zh' ? '饮料券' : 'Drink Voucher', cost: 60, code: 'BD7K2M', date: '14 Jul 2026', collected: true }].map(r => ({
+        ...r, status: r.collected ? t.collected : t.showCode, statusIcon: r.collected ? 'ph-check' : 'ph-lock-simple',
+        bg: r.collected ? 'rgba(31,122,77,.22)' : 'rgba(255,122,41,.18)', fg: r.collected ? '#7ee2ab' : 'var(--acc2)',
+      })),
+      codeModal: s.codeModal || null, closeCode: () => this.setState({ codeModal: null }),
+
+      bdayVal: st.birthday, onBday: () => {}, saveBday: () => this.flash(t.saved),
+      pwFields: [{ label: t.currentPw }, { label: t.newPw }, { label: t.confirmPw }],
+      savePw: () => this.flash(t.saved),
+      lockedHint: t.lockedHint,
+
+      // ── sticky intro nav ──
+      stuckOpacity: s.stuck ? 1 : 0,
+      stuckTransform: s.stuck ? 'translateY(0) scale(1)' : 'translateY(-190%) scale(.7)',
+      stuckEvents: s.stuck ? 'auto' : 'none',
+      heroBarOpacity: s.stuck ? 0 : 1,
+      heroBarTransform: s.stuck ? 'translateY(-14px)' : 'none',
+      heroBarEvents: s.stuck ? 'none' : 'auto',
+      introMenu: !!s.introMenu,
+      toggleIntroMenu: () => this.setState(p => ({ introMenu: !p.introMenu })),
+      barTop: s.introMenu ? 'translateY(5.5px) rotate(45deg)' : 'none',
+      barBot: s.introMenu ? 'translateY(-5.5px) rotate(-45deg)' : 'none',
+      barMidOp: s.introMenu ? 0 : 1,
+
+      // ── teacher ──
+      tgToday: isT && s.tpage === 'today', tgRoster: isT && s.tpage === 'roster',
+      tgSalary: isT && s.tpage === 'salary', tgMark: isT && s.tpage === 'mark', tgMe: isT && s.tpage === 'me',
+      payTotal: 1845, payFormula: '41 ' + t.hours.toLowerCase() + ' × RM45' + t.perHour, payStatus: t.pendingPay,
+      payRowsT: [
+        { label: 'K-pop Beginner + Intermediate', meta: '26 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM1,170' },
+        { label: 'Street Jazz Open', meta: '11 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM495' },
+        { label: 'Choreo lab', meta: '4 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM180' },
+      ],
+      todayLabel: 'Tuesday · 4 Aug 2026', greeting: t.goodEvening + ', Yuki',
+      nextClass: { name: 'K-pop Beginner', time: '7:00 PM – 8:00 PM', room: 'Studio A · Adda Height', headcount: '9 ' + t.studentsIn, mins: 25 },
+      todayTiles: [
+        { n: 2, label: t.classesTaught, dec: '0' }, { n: 15, label: t.studentsTaught, dec: '0' },
+        { n: 3, label: t.hours, dec: '0' },
+      ],
+      weekAhead: this.classes.filter(c => c.teacherId === 1).map((c, i) => ({
+        name: c.name, dow: c.day.slice(0, 3).toUpperCase(), dd: 4 + i * 2,
+        meta: c.start + ' · ' + c.room + ' · ' + (this.roster[c.id] || []).length + ' ' + t.studentsIn,
+        edge: i === 0 ? 'var(--acc)' : 'var(--bd)',
+        tag: i === 0 ? t.now : c.style, tagBg: i === 0 ? 'rgba(255,122,41,.18)' : 'rgba(255,255,255,.05)',
+        tagFg: i === 0 ? 'var(--acc2)' : 'var(--g5)',
+        open: () => this.setState({ tpage: 'mark', markClass: 1 }),
+      })),
+      startMarking: () => this.setState({ tpage: 'mark', markClass: 1 }),
+      rosterLead: this.classes.filter(c => c.teacherId === 1).length + ' ' + t.myClasses.toLowerCase() + ' · ' + t.tapStudent,
+      myTeachClasses: this.classes.filter(c => c.teacherId === 1).map(c => ({
+        ...c, meta: c.day + ' · ' + c.start + '–' + c.end + ' · ' + c.room,
+        count: '+' + Math.max(0, (this.roster[c.id] || []).length - 5),
+        avatars: (this.roster[c.id] || []).slice(0, 5).map((m, i) => ({
+          initial: m.name.slice(0, 1), c1: ['#ff7a29', '#ff4d2e', '#ffa057', '#e39b5a', '#ff6a3d'][i % 5], c2: '#3a2010',
+        })),
+        mark: () => this.setState({ tpage: 'mark', markClass: c.id, remarkFor: null }),
+        open: () => this.flash(t.roster + ' · ' + c.name),
+      })),
+      hourTiles: [
+        { n: 41, label: t.hours, icon: 'ph-clock', dec: '0' },
+        { n: 34, label: t.classesTaught, icon: 'ph-chalkboard-teacher', dec: '0' },
+        { n: 20, label: t.studentsTaught, icon: 'ph-users-three', dec: '0' },
+        { n: 92, label: t.avgAtt + ' %', icon: 'ph-chart-line-up', dec: '0' },
+      ],
+      weekBars: [[6, 55], [7, 64], [5, 45], [8, 73], [9, 82], [11, 100]].map(([v, h], i) => ({ v, h, label: 'W' + (i + 1) })),
+      styleHours: [{ style: 'K-pop', hrs: 26, pct: 100 }, { style: 'Street Jazz', hrs: 11, pct: 42 }, { style: 'Choreo lab', hrs: 4, pct: 15 }],
+      markClass: s.markClass,
+      markDateLine: 'Tuesday · 4 Aug 2026 · ' + (this.classes.find(c => c.id === s.markClass) || {}).name,
+      markClassChips: this.classes.filter(c => c.teacherId === 1).map(c => {
+        const on2 = s.markClass === c.id;
+        return { label: c.name, bd: on2 ? 'var(--acc)' : 'var(--bd)', bg: on2 ? 'var(--acc)' : 'var(--card)', fg: on2 ? '#1a1006' : 'var(--g4)', go: () => this.setState({ markClass: c.id, remarkFor: null }) };
+      }),
+      markRows: (this.roster[s.markClass] || []).map((m, i) => {
+        const key = s.markClass + ':' + m.id, cur = (s.marks[key] || {}).status || '';
+        const edge = cur === 'present' ? '#1f7a4d' : cur === 'absent' ? '#7a2a22' : cur === 'cancelled' ? '#a84715' : 'var(--bd)';
+        const opt = (k, label, icon, bg, fg) => ({
+          label, icon, bd: cur === k ? bg : 'var(--bd)', bg: cur === k ? bg : 'transparent', fg: cur === k ? fg : 'var(--g5)',
+          go: () => this.setState(p => ({ marks: { ...p.marks, [key]: { ...(p.marks[key] || {}), status: k } } })),
+        });
+        return {
+          id: key, name: m.name, initial: m.name.slice(0, 1), sub: t.age + ' ' + m.age,
+          c1: ['#ff7a29', '#ff4d2e', '#ffa057', '#e39b5a', '#ff6a3d'][i % 5], c2: '#3a2010', edge,
+          remark: (s.marks[key] || {}).remark || '', editing: s.remarkFor === key,
+          noteColor: (s.marks[key] || {}).remark ? 'var(--acc)' : 'var(--g5)',
+          note: () => this.setState({ remarkFor: s.remarkFor === key ? null : key, remarkText: (s.marks[key] || {}).remark || '' }),
+          saveNote: () => { this.setState(p => ({ marks: { ...p.marks, [key]: { ...(p.marks[key] || {}), remark: p.remarkText } }, remarkFor: null })); this.flash(t.saved); },
+          opts: [
+            opt('present', t.present, 'ph-check', '#1f7a4d', '#dffaeb'),
+            opt('absent', t.absent, 'ph-x', '#a8281a', '#ffe4df'),
+            opt('cancelled', t.cancelled, 'ph-prohibit', '#a84715', '#ffe9d8'),
+          ],
+        };
+      }),
+      markProgressLabel: (() => {
+        const list = this.roster[s.markClass] || [];
+        return list.filter(m => (s.marks[s.markClass + ':' + m.id] || {}).status).length + ' ' + t.of + ' ' + list.length;
+      })(),
+      markPct: (() => {
+        const list = this.roster[s.markClass] || [];
+        if (!list.length) return 0;
+        return list.filter(m => (s.marks[s.markClass + ':' + m.id] || {}).status).length / list.length * 100;
+      })(),
+      remarkText: s.remarkText, onRemark: e => this.setState({ remarkText: e.target.value }),
+      markAllPresent: () => {
+        const next = { ...s.marks };
+        (this.roster[s.markClass] || []).forEach(m => {
+          const k = s.markClass + ':' + m.id;
+          next[k] = { ...(next[k] || {}), status: 'present' };
+        });
+        this.setState({ marks: next });
+        this.flash(t.allPresent);
+      },
+      resetMarks: () => {
+        const next = { ...s.marks };
+        (this.roster[s.markClass] || []).forEach(m => { delete next[s.markClass + ':' + m.id]; });
+        this.setState({ marks: next, remarkFor: null });
+      },
+      saveMarks: () => this.flash(t.saved),
+      quoteVal: s.profile.quote, igVal: s.profile.ig, videoVal: s.profile.video,
+      onQuote: e => this.setState({ profile: { ...s.profile, quote: e.target.value } }),
+      onIg: e => this.setState({ profile: { ...s.profile, ig: e.target.value } }),
+      onVideo: e => this.setState({ profile: { ...s.profile, video: e.target.value } }),
+      replacePhoto: () => this.flash(t.replacePhoto), previewMe: () => this.setState({ teacherModal: 1, tmSlide: 0 }),
+      saveProfile: () => this.flash(t.saved),
+    };
+  }
+
+  componentDidMount() {
+    if (this.props.accent) document.documentElement.style.setProperty('--acc', this.props.accent);
+    this.evTimer = setInterval(() => {
+      if (this.state.view === 'intro') this.setState(s => ({ eventSlide: (s.eventSlide + 1) % this.events.length }));
+    }, 6500);
+    this.reelTimer = setInterval(() => {
+      if (this.state.reelPlaying) this.setState(s => ({ reelPct: s.reelPct >= 100 ? 0 : s.reelPct + 1.6 }));
+    }, 90);
+    this.onScroll = (e) => {
+      const box = e.target;
+      if (!box || !box.classList || !box.classList.contains('bd-scroll')) return;
+      this.scrollBox = box;
+      const bar = document.getElementById('intro-topbar');
+      const show = box.scrollTop > 360;
+      const stuck = bar ? bar.getBoundingClientRect().bottom < 54 : box.scrollTop > 110;
+      if (stuck !== this.state.stuck) this.setState({ stuck, introMenu: stuck ? this.state.introMenu : false });
+      if (show !== this.state.showTop) {
+        if (show) this.setState({ showTop: true });
+        else {
+          const Mo = window.Motion, el = document.querySelector('[data-mo-top]');
+          if (!Mo || !el || this.M <= 0) this.setState({ showTop: false });
+          else Mo.animate(el, { opacity: [1, 0], scale: [1, 0.4], y: [0, 22], rotate: [0, 40] }, { duration: 0.3, ease: 'easeIn' })
+            .finished.then(() => this.setState({ showTop: false })).catch(() => {});
+        }
+      }
+    };
+    document.addEventListener('scroll', this.onScroll, true);
+    this.waitAnime();
+  }
+  componentWillUnmount() {
+    clearInterval(this.evTimer); clearInterval(this.reelTimer);
+    document.removeEventListener('scroll', this.onScroll, true);
+  }
+  componentDidUpdate() { this.runAnims(); }
+
+  // Each heading gets its own entrance, cycled in document order.
+  WORD_VARIANTS = ['rise', 'flip', 'drop', 'zoom', 'sweep', 'skew', 'unfold'];
+
+  wordMotion(v, M, anime) {
+    const st = n => anime.stagger(n * M);
+    if (v === 'flip') return { rotateX: [-96, 0], translateY: [18, 0], duration: 820 * M, delay: st(70), easing: 'easeOutExpo' };
+    if (v === 'drop') return { translateY: [-46, 0], rotate: [-7, 0], duration: 760 * M, delay: st(64), easing: 'easeOutBounce' };
+    if (v === 'zoom') return { scale: [0.32, 1], filter: ['blur(9px)', 'blur(0px)'], duration: 880 * M, delay: st(76), easing: 'spring(1, 78, 11, 0)' };
+    if (v === 'sweep') return { translateX: [-52, 0], skewX: [-16, 0], duration: 700 * M, delay: st(58), easing: 'easeOutQuint' };
+    if (v === 'skew') return { skewY: [14, 0], translateY: [30, 0], duration: 780 * M, delay: st(66), easing: 'easeOutQuart' };
+    if (v === 'unfold') return { rotateY: [88, 0], translateX: [24, 0], duration: 860 * M, delay: st(80), easing: 'easeOutExpo' };
+    return { translateY: [36, 0], rotate: [8, 0], scale: [0.92, 1], duration: 860 * M, delay: st(62), easing: 'easeOutExpo' };
+  }
+
+  // Replayable reveals: run `enter` every time the element scrolls into view, `exit` resets it.
+  watch(el, enter, exit) {
+    if (el.__omio) { el.__omEnter = enter; el.__omExit = exit; return; }
+    el.__omEnter = enter; el.__omExit = exit;
+    const root = el.closest('.bd-scroll') || null;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { if (!el.__omVis) { el.__omVis = true; el.__omEnter(); } }
+        else if (el.__omVis) { el.__omVis = false; el.__omExit && el.__omExit(); }
+      });
+    }, { root, threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    el.__omio = io; io.observe(el);
+  }
+
+  // Animated dismissal — plays the exit, then unmounts.
+  dismiss(sel, done) {
+    const anime = window.anime, M = this.M;
+    const el = document.querySelector(sel);
+    if (!anime || !el || M <= 0) { done(); return; }
+    const back = el.parentElement;
+    anime.remove(el); anime.remove(back);
+    anime({ targets: el, scale: [1, 0.82], opacity: [1, 0], translateY: [0, 30], rotate: [0, -2.5], duration: 360 * M, easing: 'easeInCubic' });
+    anime({ targets: back, opacity: [1, 0], duration: 400 * M, easing: 'linear', complete: done });
+  }
+
+  dismissSheet(sel, done) {
+    const anime = window.anime, M = this.M;
+    const el = document.querySelector(sel);
+    if (!anime || !el || M <= 0) { done(); return; }
+    const back = el.parentElement;
+    anime.remove(el); anime.remove(back);
+    anime({ targets: el, translateY: ['0%', '100%'], duration: 380 * M, easing: 'easeInCubic' });
+    anime({ targets: back, opacity: [1, 0], duration: 420 * M, easing: 'linear', complete: done });
+  }
+
+  waitAnime() { if (window.anime) this.runAnims(); else this.animPoll = setTimeout(() => this.waitAnime(), 90); }
+
+  get M() { const m = this.props.motion; return typeof m === 'number' ? m : 1; }
+
+  // motion.dev press feedback, delegated once so every control keeps it across re-renders.
+  wireGestures() {
+    const Mo = window.Motion;
+    if (!Mo || !Mo.animate || this.pressWired) return;
+    this.pressWired = true;
+    const animate = Mo.animate;
+    const settle = (el) => { el.style.transform = ''; };
+
+    document.addEventListener('pointerdown', (e) => {
+      if (this.M <= 0) return;
+      const el = e.target.closest('button,a[href],[data-row]');
+      if (!el) return;
+      const row = el.matches('[data-row]') ? el : el.closest('[data-row]');
+      if (row) {
+        const num = row.querySelector('[data-part="num"]');
+        const arrow = row.querySelector('[data-part="arrow"]');
+        const sweep = row.querySelector('[data-part="sweep"]');
+        animate(row, { scale: [1, 0.97, 1], borderColor: ['#3a2010', '#ff7a29', '#3a2010'], backgroundColor: ['#171412', '#241c17', '#171412'] },
+          { duration: 0.5, ease: [0.16, 0.84, 0.34, 1] }).finished.then(() => settle(row));
+        if (num) animate(num, { scale: [1, 1.16, 1] }, { duration: 0.42, ease: [0.16, 0.84, 0.34, 1] }).finished.then(() => settle(num));
+        if (arrow) animate(arrow, { x: [0, 10, 0] }, { duration: 0.45, ease: 'easeOut' }).finished.then(() => settle(arrow));
+        if (sweep) animate(sweep, { opacity: [0, 1, 0], x: ['-60%', '60%'] }, { duration: 0.6, ease: 'easeInOut' });
+        return;
+      }
+      if (el.hasAttribute('data-fancy')) {
+        const A = window.anime;
+        const r = el.getBoundingClientRect();
+        const decor = (styles, props) => {
+          if (!A) return;
+          const sp = document.createElement('span');
+          Object.assign(sp.style, { position: 'absolute', pointerEvents: 'none' }, styles);
+          el.appendChild(sp);
+          A(Object.assign({ targets: sp }, props));
+          setTimeout(() => sp.remove(), (props.duration || 600) + 90);
+        };
+        const size = Math.max(r.width, r.height) * 2.3;
+        decor({
+          left: (e.clientX - r.left - size / 2) + 'px', top: (e.clientY - r.top - size / 2) + 'px',
+          width: size + 'px', height: size + 'px', borderRadius: '50%',
+          background: 'radial-gradient(circle,rgba(255,255,255,.6),rgba(255,255,255,0) 62%)',
+        }, { scale: [0, 1], opacity: [0.95, 0], duration: 640, easing: 'easeOutQuad' });
+        decor({
+          inset: '0', background: 'linear-gradient(100deg,transparent 32%,rgba(255,255,255,.5) 50%,transparent 68%)',
+        }, { translateX: ['-120%', '120%'], opacity: [0, 1, 0], duration: 620, easing: 'easeInOutQuad' });
+        decor({
+          inset: '-2px', borderRadius: 'inherit', border: '1.5px solid rgba(255,255,255,.85)',
+        }, { scale: [1, 1.28], opacity: [0.85, 0], duration: 620, easing: 'easeOutCubic' });
+
+        animate(el, { scale: [1, 0.9, 1.06, 1], rotate: [0, -1.4, 0.8, 0] }, { duration: 0.62, ease: [0.16, 0.9, 0.28, 1] })
+          .finished.then(() => settle(el)).catch(() => {});
+        const ico = el.querySelectorAll('i');
+        if (ico.length && A) A({ targets: ico, scale: [1, 1.4, 1], rotate: [0, -16, 0], duration: 560, easing: 'easeOutBack' });
+        return;
+      }
+
+      const css = el.getAttribute('style') || '';
+      const offset = css.includes('var(--ember)');
+      const tiny = el.offsetWidth < 46 && el.offsetHeight < 46;
+      const anim = offset
+        ? animate(el, { x: [0, 4, 0], y: [0, 4, 0] }, { duration: 0.34, ease: [0.16, 0.84, 0.34, 1] })
+        : tiny
+          ? animate(el, { scale: [1, 0.82, 1.1, 1], rotate: [0, -8, 4, 0] }, { duration: 0.44, ease: [0.16, 0.9, 0.3, 1] })
+          : animate(el, { scale: [1, 0.93, 1.03, 1] }, { duration: 0.42, ease: [0.16, 0.9, 0.3, 1] });
+      anim.finished.then(() => settle(el)).catch(() => {});
+    }, true);
+  }
+
+  runAnims() {
+    this.wireGestures();
+    const anime = window.anime; if (!anime) return;
+    const M = this.M; if (M <= 0) return;
+    const q = s => Array.from(document.querySelectorAll(s));
+
+    q('[data-om-words]').forEach((el, wi) => {
+      if (!el.hasAttribute('data-split')) {
+        el.setAttribute('data-split', '1');
+        const words = (el.textContent || '').trim().split(/\s+/);
+        if (!words.length) return;
+        el.style.perspective = '700px';
+        el.innerHTML = words.map(w => '<span style="display:inline-block;white-space:pre;transform-origin:bottom left;opacity:0">' + w + ' </span>').join('');
+      }
+      const named = el.getAttribute('data-om-words');
+      const variant = (named && named !== '1') ? named : this.WORD_VARIANTS[wi % this.WORD_VARIANTS.length];
+      this.watch(el, () => {
+        const sp = el.querySelectorAll('span');
+        anime.remove(sp);
+        anime(Object.assign({ targets: sp, opacity: [0, 1] }, this.wordMotion(variant, M, anime)));
+      }, () => { anime.remove(el.querySelectorAll('span')); el.querySelectorAll('span').forEach(x => { x.style.opacity = 0; }); });
+    });
+
+    q('[data-om-video]').forEach(el => {
+      const curtain = el.querySelector('[data-part="curtain"]');
+      const play = el.querySelector('[data-part="play"]');
+      this.watch(el, () => {
+        anime.remove(el);
+        anime({ targets: el, scale: [0.94, 1], opacity: [0, 1], duration: 720 * M, easing: 'easeOutExpo' });
+        if (curtain) {
+          anime.remove(curtain);
+          anime({ targets: curtain, scaleX: [1, 0], duration: 820 * M, delay: 120 * M, easing: 'cubicBezier(.16,.84,.34,1)' });
+        }
+        if (play) {
+          anime.remove(play);
+          anime({ targets: play, scale: [0, 1], rotate: [-120, 0], duration: 900 * M, delay: 420 * M, easing: 'spring(1, 72, 11, 0)' });
+        }
+      }, () => {
+        anime.remove(el); el.style.opacity = 0;
+        if (curtain) { anime.remove(curtain); curtain.style.transform = 'scaleX(1)'; }
+        if (play) { anime.remove(play); play.style.transform = 'scale(0)'; }
+      });
+    });
+
+    q('[data-om-fade]').forEach(el => {
+      this.watch(el, () => {
+        anime.remove(el);
+        anime({ targets: el, translateY: [16, 0], opacity: [0, 1], duration: 720 * M, delay: 160 * M, easing: 'easeOutCubic' });
+      }, () => { anime.remove(el); el.style.opacity = 0; });
+    });
+
+    q('[data-count]').forEach((el, i) => {
+      const to = parseFloat(el.getAttribute('data-count')); if (isNaN(to)) return;
+      const dec = (el.getAttribute('data-dec') || '0') === '1';
+      const pre = el.getAttribute('data-pre') || '';
+      const d = 80 * (i % 4) * M;
+      el.style.display = 'inline-block';
+      this.watch(el, () => {
+        const o = { v: 0 };
+        anime.remove(el);
+        anime({ targets: el, scale: [0.3, 1.16, 1], opacity: [0, 1], translateY: [18, 0], duration: 950 * M, delay: d, easing: 'easeOutElastic(1, .6)' });
+        anime({ targets: o, v: to, duration: 1450 * M, delay: d, easing: 'easeOutExpo', round: dec ? 10 : 1,
+          update: () => { el.textContent = pre + (dec ? o.v.toFixed(1) : Math.round(o.v)); } });
+      }, () => { anime.remove(el); el.style.opacity = 0; el.textContent = pre + '0'; });
+    });
+
+    // Typewriter: retypes whenever its key flips back on (slide shown again).
+    q('[data-om-type]').forEach(el => {
+      const key = el.getAttribute('data-om-type') || '';
+      if (el.__omFull === undefined || (el.textContent && el.textContent.length > (el.__omFull || '').length)) {
+        el.__omFull = (el.textContent || '').trim();
+      }
+      if (el.__omType === key) return;
+      el.__omType = key;
+      const full = el.__omFull || '';
+      anime.remove(el);
+      if (key === 'off' || !full) { el.textContent = full; el.style.borderRight = '0'; return; }
+      const order = parseInt(el.getAttribute('data-om-order') || '0', 10);
+      const o = { i: 0 };
+      el.textContent = '';
+      el.style.borderRight = '2px solid var(--acc)';
+      el.style.paddingRight = '2px';
+      anime({
+        targets: o, i: full.length, round: 1,
+        duration: Math.min(1500, 16 * full.length) * M, delay: (140 + order * 220) * M, easing: 'linear',
+        update: () => { el.textContent = full.slice(0, o.i); },
+        complete: () => { el.textContent = full; anime({ targets: el, borderRightColor: ['rgba(255,122,41,1)', 'rgba(255,122,41,0)'], duration: 700 * M, easing: 'steps(6)', complete: () => { el.style.borderRight = '0'; } }); },
+      });
+    });
+
+    q('[data-om-keyed]').forEach(el => {
+      const k = el.getAttribute('data-om-keyed');
+      if (el.__omk === k) return;
+      const first = el.__omk === undefined; el.__omk = k;
+      const kind = el.getAttribute('data-om-kind') || 'slide';
+      if (kind === 'slide') {
+        const back = el.getAttribute('data-om-dir') === 'prev';
+        anime.remove(el);
+        anime({ targets: el, opacity: [0, 1], scale: [0.78, 1], rotateY: [back ? -52 : 52, 0],
+          translateX: [back ? -58 : 58, 0], filter: ['blur(10px)', 'blur(0px)'],
+          duration: 780 * M, easing: 'cubicBezier(.16,.9,.28,1)' });
+      } else if (kind === 'flash') {
+        if (first) return;
+        anime.remove(el);
+        el.style.opacity = 0;
+        anime({ targets: el, opacity: [0, .85, 0], translateX: ['-110%', '120%'], duration: 720 * M, easing: 'easeInOutQuad' });
+      } else if (kind === 'dots') {
+        anime.remove(el.children);
+        anime({ targets: el.children, scale: [0.7, 1], duration: 480 * M, delay: anime.stagger(50 * M), easing: 'easeOutBack' });
+      }
+    });
+
+    q('[data-om-stagger]').forEach(el => {
+      this.watch(el, () => {
+        anime.remove(el.children);
+        anime({ targets: el.children, translateY: [26, 0], opacity: [0, 1], scale: [.97, 1], duration: 660 * M, delay: anime.stagger(70 * M), easing: 'easeOutQuad' });
+      }, () => { anime.remove(el.children); Array.from(el.children).forEach(c => { c.style.opacity = 0; }); });
+    });
+
+    q('[data-om-pop]').forEach(el => {
+      const k = el.getAttribute('data-om-pop');
+      if (el.__omPop === k) return;
+      el.__omPop = k;
+      anime.remove(el);
+      anime({ targets: el, scale: [0.86, 1], opacity: [0, 1], translateY: [18, 0], duration: 620 * M, easing: 'spring(1, 82, 12, 0)' });
+      const kids = el.children;
+      if (kids.length > 1) {
+        anime.remove(kids);
+        anime({ targets: kids, translateY: [14, 0], opacity: [0, 1], duration: 480 * M, delay: anime.stagger(75 * M, { start: 90 * M }), easing: 'easeOutQuad' });
+      }
+    });
+
+    q('[data-om-sheet]:not([data-adone])').forEach(el => {
+      el.setAttribute('data-adone', '1');
+      anime({ targets: el, translateY: ['100%', '0%'], duration: 520 * M, easing: 'cubicBezier(.16,.84,.34,1)' });
+    });
+
+    q('[data-om-toast]:not([data-adone])').forEach(el => {
+      el.setAttribute('data-adone', '1');
+      anime({ targets: el, translateY: [26, 0], opacity: [0, 1], duration: 420 * M, easing: 'easeOutBack' });
+    });
+
+    q('[data-om-logo]:not([data-adone])').forEach(el => {
+      el.setAttribute('data-adone', '1');
+      anime({ targets: el, rotate: [-14, 0], scale: [0.6, 1], opacity: [0, 1], duration: 900 * M, easing: 'spring(1, 70, 10, 0)' });
+    });
+
+    q('[data-om-mark]:not([data-adone])').forEach(el => {
+      el.setAttribute('data-adone', '1');
+      anime({ targets: el, scale: [0.6, 1.12, 1], duration: 460 * M, easing: 'easeOutBack' });
+    });
+
+    const Mo = window.Motion;
+    if (Mo && Mo.animate) {
+      q('[data-mo-top]').forEach(el => {
+        if (el.__moTop) return;
+        el.__moTop = 1;
+        const btn = el.firstElementChild;
+        Mo.animate(el, { opacity: [0, 1], scale: [0.4, 1], y: [26, 0], rotate: [-45, 0] },
+          { type: 'spring', stiffness: 420, damping: 16 });
+        if (btn) Mo.animate(btn, { boxShadow: ['0 0 0 0 rgba(255,122,41,.55)', '0 0 0 14px rgba(255,122,41,0)'] },
+          { duration: 0.85, ease: 'easeOut' });
+      });
+    }
+
+    q('[data-om-grow]').forEach(el => {
+      this.watch(el, () => {
+        const h = el.getAttribute('data-om-grow');
+        anime.remove(el);
+        anime({ targets: el, height: ['0%', h + '%'], duration: 900 * M, easing: 'easeOutExpo', delay: 120 * M });
+      }, () => { anime.remove(el); el.style.height = '0%'; });
+    });
+
+    q('[data-om-bar]:not([data-adone])').forEach(el => {
+      el.setAttribute('data-adone', '1');
+      const w = el.getAttribute('data-om-bar');
+      anime({ targets: el, width: ['0%', w + '%'], duration: 1100 * M, easing: 'easeOutExpo', delay: 160 * M });
+    });
+  }
+
+  flash(msg) { this.setState({ toast: msg }); clearTimeout(this.toastT); this.toastT = setTimeout(() => this.setState({ toast: null }), 1800); }
+  scrollTo(id) {
+    const el = document.getElementById(id); if (!el) return;
+    const box = el.parentElement, anime = window.anime, M = this.M;
+    const target = Math.max(0, el.offsetTop - 8);
+    if (!anime || M <= 0) { box.scrollTop = target; return; }
+    anime.remove(box);
+    anime({ targets: box, scrollTop: target, duration: 1400 * M, easing: 'spring(1, 74, 13, 0)' });
+    anime.remove(el);
+    anime({ targets: el, scale: [1, 1.014, 1], duration: 900 * M, delay: 260 * M, easing: 'easeOutQuad' });
+    const glow = el.querySelector('[data-om-glow]');
+    if (glow) { anime.remove(glow); anime({ targets: glow, opacity: [0, .5, 0], duration: 1100 * M, delay: 320 * M, easing: 'easeOutQuad' }); }
+  }
+
+  renderVals() {
+    const s = this.state;
+    const t = Object.assign({}, this.TR[s.lang], this.APP_TR[s.lang]);
+    const on = { background: 'var(--acc)', color: '#000' }, off = { background: 'transparent', color: 'var(--g4)' };
+    const teachersShown = s.showAllTeachers ? this.teachers : this.teachers.slice(0, 4);
+    const dec = (o) => ({ ...o, specLine: o.specs.join(' · '), initial: o.name.slice(0, 1) });
+    const mt = this.teachers.find(x => x.id === s.teacherModal);
+    const mtSlides = ['photo', 'quote', 'video'];
+    const tmIdx = s.tmSlide % 3;
+
+    return {
+      ...this.appVals(t),
+      t, lang: s.lang, loading: s.loading, toast: s.toast,
+      isIntro: s.view === 'intro', isAuth: s.view === 'auth', isApp: s.view === 'app',
+      role: s.role, page: s.page, tpage: s.tpage,
+      setEn: () => this.setState({ lang: 'en' }), setZh: () => this.setState({ lang: 'zh' }),
+      enBg: s.lang === 'en' ? on.background : off.background, enFg: s.lang === 'en' ? on.color : off.color,
+      zhBg: s.lang === 'zh' ? on.background : off.background, zhFg: s.lang === 'zh' ? on.color : off.color,
+      goAuth: () => this.setState({ view: 'auth', introMenu: false, stuck: false, showTop: false }), goIntro: () => this.setState({ view: 'intro', introMenu: false, stuck: false, showTop: false }),
+      goLocations: () => this.scrollTo('intro-locations'), goInstructors: () => this.scrollTo('intro-instructors'),
+      stop: (e) => e.stopPropagation(),
+
+      streetBg: (this.props.streetBg ?? true) && s.view === 'intro',
+      showTop: !!s.showTop && (s.view === 'intro' || s.view === 'app'),
+      topOpacity: s.showTop ? 1 : 0,
+      topTransform: s.showTop ? 'translateY(0) scale(1)' : 'translateY(22px) scale(.6)',
+      topBottom: s.view === 'app' ? '92px' : '26px',
+      hideTop: () => {
+        const Mo = window.Motion, el = document.querySelector('[data-mo-top]');
+        if (!Mo || !el || this.M <= 0) { this.setState({ showTop: false }); return; }
+        Mo.animate(el, { opacity: [1, 0], scale: [1, 0.4], y: [0, 22], rotate: [0, 40] }, { duration: 0.3, ease: 'easeIn' })
+          .finished.then(() => this.setState({ showTop: false })).catch(() => {});
+      },
+      goTop: () => {
+        const box = this.scrollBox || document.querySelector('.bd-scroll');
+        const anime = window.anime;
+        if (!box) return;
+        if (!anime || this.M <= 0) { box.scrollTop = 0; this.setState({ showTop: false }); return; }
+        anime.remove(box);
+        anime({ targets: box, scrollTop: 0, duration: 1250 * this.M, easing: 'spring(1, 76, 14, 0)' });
+      },
+
+      stats: [
+        { val: 4, label: t.statBranches }, { val: 8, label: t.statStyles },
+        { val: this.teachers.length, label: t.statInstructors }, { val: 2026, label: t.statFounded },
+      ],
+
+      reelIcon: s.reelPlaying ? 'ph-pause' : 'ph-play', reelPct: s.reelPct,
+      toggleReel: () => this.setState(p => ({ reelPlaying: !p.reelPlaying })),
+
+      events: this.events.map((e, i) => ({ ...e, lead: s.lang === 'zh' ? '我们规模最大的舞蹈盛会 —— 个人赛、对战、团体翻跳与随机舞。来参赛，或来为你的队伍加油！' : 'Our biggest showcase yet — solo, battle, group cover and random play dance. Come compete, or come cheer your crew on.', catList: e.cats.split(',').map(c => c.trim()), typeKey: (i === s.eventSlide ? 'on' + i : 'off') })),
+      evTransform: 'translateX(calc(-' + (s.eventSlide * 100) + '% + ' + (s.evDrag || 0) + 'px))',
+      evTransition: s.evDragging ? 'none' : 'transform .55s cubic-bezier(.16,.84,.34,1)',
+      evCursor: s.evDragging ? 'grabbing' : 'grab',
+      evStart: (e) => {
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        this.dragX0 = x; this.setState({ evDragging: true, evDrag: 0 });
+      },
+      evMove: (e) => {
+        if (!s.evDragging || this.dragX0 == null) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        this.setState({ evDrag: x - this.dragX0 });
+      },
+      evEnd: () => {
+        if (!s.evDragging) return;
+        const dx = s.evDrag || 0, n = this.events.length;
+        this.dragX0 = null;
+        let next = s.eventSlide;
+        if (Math.abs(dx) > 45) next = (s.eventSlide + (dx < 0 ? 1 : -1) + n) % n;
+        this.setState({ evDragging: false, evDrag: 0, eventSlide: next });
+      },
+      eventDots: this.events.map((_, i) => ({ w: i === s.eventSlide ? '22px' : '6px', bg: i === s.eventSlide ? 'var(--acc)' : '#3d3a36', go: () => this.setState({ eventSlide: i }) })),
+
+      waHref: 'https://wa.me/60123456789', telHref: 'tel:+60123456789',
+      shopLoop: [...this.shops, ...this.shops].map((sh, i) => ({ ...sh, open: () => this.setState({ sheet: { kind: 'shop', shop: sh } }) })),
+
+      introTeachers: teachersShown.map(tc => ({ ...dec(tc), open: () => this.setState({ teacherModal: tc.id, tmSlide: 0 }) })),
+      teacherToggleLabel: s.showAllTeachers ? t.showLess : t.showAllTeachers.replace('{n}', this.teachers.length),
+      toggleAllTeachers: () => {
+        const anime = window.anime, M = this.M, KEEP = 4;
+        const box = document.getElementById('teacher-list');
+        if (!anime || !box || M <= 0) { this.setState(p => ({ showAllTeachers: !p.showAllTeachers })); return; }
+        if (!s.showAllTeachers) {
+          this.setState({ showAllTeachers: true }, () => {
+            const extra = Array.from(box.children).slice(KEEP);
+            anime.remove(extra);
+            anime({ targets: extra, translateY: [-22, 0], opacity: [0, 1], scale: [0.9, 1], duration: 640 * M, delay: anime.stagger(85 * M), easing: 'easeOutBack' });
+          });
+        } else {
+          const extra = Array.from(box.children).slice(KEEP).reverse();
+          anime.remove(extra);
+          anime({
+            targets: extra, translateY: [0, -18], opacity: [1, 0], scale: [1, 0.9],
+            duration: 300 * M, delay: anime.stagger(55 * M), easing: 'easeInQuad',
+            complete: () => { this.setState({ showAllTeachers: false }); this.scrollTo('intro-instructors'); },
+          });
+        }
+      },
+
+      introPlaces: this.places.map((pl, i) => ({ ...pl, n: '0' + (i + 1), open: () => this.setState({ sheet: { kind: 'dir', place: pl } }) })),
+
+      openContact: () => this.setState({ sheet: { kind: 'contact' }, introMenu: false }),
+
+      teacherModalOpen: !!mt, modalTeacher: mt ? dec(mt) : { name: '', specLine: '', initial: '', quote: '', c1: '#ff7a29', c2: '#3a2010', id: 0 },
+      tmIsPhoto: tmIdx === 0, tmIsQuote: tmIdx === 1, tmIsVideo: tmIdx === 2,
+      tmDots: mtSlides.map((_, i) => ({ bg: i === tmIdx ? 'var(--acc)' : '#3d3a36' })),
+      tmSlide: tmIdx, tmDir: s.tmDir || 'next',
+      tmPrev: (e) => { e.stopPropagation(); this.setState(p => ({ tmSlide: (p.tmSlide + 2) % 3, tmDir: 'prev' })); },
+      tmNext: (e) => { e.stopPropagation(); this.setState(p => ({ tmSlide: (p.tmSlide + 1) % 3, tmDir: 'next' })); },
+      closeTeacher: () => this.dismiss('[data-tmodal]', () => this.setState({ teacherModal: null, tmSlide: 0, tmDir: 'next' })),
+
+      sheetOpen: !!s.sheet, sheetKey: s.sheet ? s.sheet.kind : '',
+      sheetTitle: s.sheet ? (s.sheet.kind === 'shop' ? s.sheet.shop.name : s.sheet.kind === 'dir' ? s.sheet.place.name : t.contactTitle) : '',
+      sheetSub: s.sheet ? (s.sheet.kind === 'shop' ? t.shopsTitle + ' · ' + t.shopOff : s.sheet.kind === 'dir' ? t.chooseNav : t.ctaLead) : '',
+      sheetRows: s.sheet ? (s.sheet.kind === 'shop'
+        ? [{ label: t.shopOff + ' — walk-in', icon: 'ph-shopping-bag', href: '#' }, { label: 'Visit shop', icon: 'ph-link-simple', href: '#' }]
+        : s.sheet.kind === 'dir'
+          ? [{ label: 'Waze', icon: 'ph-car', href: 'https://waze.com/ul?q=' + encodeURIComponent(s.sheet.place.address) + '&navigate=yes' }, { label: 'Google Maps', icon: 'ph-map-trifold', href: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.sheet.place.address) }]
+          : this.places.map((p, i) => ({ label: p.name, icon: 'ph-whatsapp-logo', href: 'https://wa.me/6012345678' + i + '?text=' + encodeURIComponent('Hi B Dance Studio ' + p.name + ', I would like to ask about classes.') }))) : [],
+      closeSheet: () => this.dismissSheet('[data-om-sheet]', () => this.setState({ sheet: null })),
+
+      loginRole: s.loginRole,
+      pickStudent: () => this.setState({ loginRole: 'student' }), pickTeacher: () => this.setState({ loginRole: 'teacher' }),
+      stuBd: s.loginRole === 'student' ? 'var(--acc)' : 'var(--bd)', stuBg: s.loginRole === 'student' ? 'rgba(255,122,41,.12)' : 'var(--card)', stuFg: s.loginRole === 'student' ? 'var(--acc)' : '#fff',
+      tchBd: s.loginRole === 'teacher' ? 'var(--acc)' : 'var(--bd)', tchBg: s.loginRole === 'teacher' ? 'rgba(255,122,41,.12)' : 'var(--card)', tchFg: s.loginRole === 'teacher' ? 'var(--acc)' : '#fff',
+      loginHeading: s.loginRole === 'student' ? t.studentLogin : t.teacherLogin,
+      loginCta: s.loginRole === 'student' ? t.student + ' →' : t.teacher + ' →',
+      userPlaceholder: s.loginRole === 'student' ? 'chloe.tan' : 'yuki.lim',
+      userVal: s.user, pwVal: s.pw, onUser: e => this.setState({ user: e.target.value }), onPw: e => this.setState({ pw: e.target.value }),
+      pwType: s.showPw ? 'text' : 'password', pwEye: s.showPw ? 'ph-eye-slash' : 'ph-eye', togglePw: () => this.setState(p => ({ showPw: !p.showPw })),
+      doLogin: () => {
+        this.setState({ loading: true });
+        setTimeout(() => this.setState({
+          loading: false, view: 'app', role: s.loginRole,
+          page: 'fees', tpage: 'today', stuck: false, showTop: false, introMenu: false,
+        }), 1150);
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>
