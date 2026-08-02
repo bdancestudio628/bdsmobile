@@ -1620,7 +1620,17 @@ async function boot() {
     }
 }
 
-  boot();
+window.onerror = function (msg, url, line, col, err) {
+  document.body.innerHTML =
+    "<pre style='color:red;padding:20px;white-space:pre-wrap'>" +
+    msg + "\n\nLine: " + line +
+    "\n\n" + (err && err.stack ? err.stack : "") +
+    "</pre>";
+};
+
+boot();
+
+
 </script>
 </body>
 </html>
