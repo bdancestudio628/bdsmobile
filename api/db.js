@@ -148,6 +148,20 @@ function stripEmbeddedImage(v) {
   if (typeof v !== 'string') return v;
   return v.startsWith('data:') ? '' : v;
 }
+function deepStripEmbeddedImages(node) {
+  // Belt-and-suspenders on top of the field-specific stripping above: walks the
+  // whole result and blanks any string anywhere that's a base64 data: URI, no
+  // matter what field it's under. Catches anything (branch photos, a field
+  // added later, anything) without needing to know every field name up front.
+  if (typeof node === 'string') return node.startsWith('data:') ? '' : node;
+  if (Array.isArray(node)) return node.map(deepStripEmbeddedImages);
+  if (node && typeof node === 'object') {
+    const out = {};
+    for (const k of Object.keys(node)) out[k] = deepStripEmbeddedImages(node[k]);
+    return out;
+  }
+  return node;
+}
 function publicSlice(db) {
   const d = db && typeof db === 'object' ? db : {};
   const teachers = Array.isArray(d.teachers) ? d.teachers.map(t => ({
@@ -169,12 +183,12 @@ function publicSlice(db) {
   if (Array.isArray(introSrc.shops)) {
     intro.shops = introSrc.shops.map(s => ({ ...s, photo: stripEmbeddedImage(s && s.photo) }));
   }
-  return {
+  return deepStripEmbeddedImages({
     intro,        // headings, event slider, collaborated shops, video, footer
     places: Array.isArray(d.places) ? d.places : [],  // branch names/addresses — public by design
     teachers,
     classes,
-  };
+  });
 }
 // Pulls the session token out of the Authorization header.
 // (Node/Vercel lowercases incoming header names, unlike Netlify's `event.headers`.)
