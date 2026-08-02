@@ -19,13 +19,6 @@ setTimeout(function(){
 </script>
 <link rel="icon" type="image/png" href="assets/icon-192.png">
 <link rel="apple-touch-icon" href="assets/icon-192.png">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<link rel="preload" as="style" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-</noscript>
 <style>
 :root{--acc:#ff7a29;--acc2:#ffa057;--bd:#3a2010;--bd2:rgba(58,32,16,.45);--card:#171412;--card2:#0c0c0c;--ink:#1a1006;--g5:#8a857d;--g4:#b9b5ad;--g2:#e8e4dc;--ember:#ff4d2e}
 *{box-sizing:border-box}
@@ -1586,51 +1579,10 @@ async function saveTeacherProfileMobile(){
   }catch(e){ btn.disabled=false; btn.style.opacity='1'; toast(tr('markFailed')); }
 }
 
-async function boot() {
-    window.__bootStarted = true;
-
-    try {
-        await Promise.race([
-            cloudLoadPublic(),
-            new Promise((_, rej) =>
-                setTimeout(() => rej(new Error("Timeout")), 12000)
-            )
-        ]);
-
-        console.log("1 OK");
-
-        renderIntro();
-        console.log("2 OK");
-
-        renderAuthLabels();
-        console.log("3 OK");
-
-        setLang("en");
-        console.log("4 OK");
-
-        document.getElementById("loading-screen").classList.remove("active");
-        console.log("5 OK");
-
-        goIntro();
-        console.log("6 OK");
-
-    } catch (e) {
-        alert(e.stack || e.message || JSON.stringify(e));
-        console.error(e);
-    }
-}
-
-window.onerror = function (msg, url, line, col, err) {
-  document.body.innerHTML =
-    "<pre style='color:red;padding:20px;white-space:pre-wrap'>" +
-    msg + "\n\nLine: " + line +
-    "\n\n" + (err && err.stack ? err.stack : "") +
-    "</pre>";
-};
-
 boot();
-
-
 </script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 </body>
 </html>
