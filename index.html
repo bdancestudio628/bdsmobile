@@ -1586,7 +1586,39 @@ async function saveTeacherProfileMobile(){
   }catch(e){ btn.disabled=false; btn.style.opacity='1'; toast(tr('markFailed')); }
 }
 
-boot();
+async function boot() {
+    window.__bootStarted = true;
+
+    try {
+        await Promise.race([
+            cloudLoadPublic(),
+            new Promise((_, rej) =>
+                setTimeout(() => rej(new Error("Timeout")), 12000)
+            )
+        ]);
+
+        console.log("1 OK");
+
+        renderIntro();
+        console.log("2 OK");
+
+        renderAuthLabels();
+        console.log("3 OK");
+
+        setLang("en");
+        console.log("4 OK");
+
+        document.getElementById("loading-screen").classList.remove("active");
+        console.log("5 OK");
+
+        goIntro();
+        console.log("6 OK");
+
+    } catch (e) {
+        alert(e.stack || e.message || JSON.stringify(e));
+        console.error(e);
+    }
+}
 </script>
 </body>
 </html>
