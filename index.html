@@ -784,12 +784,25 @@ function doLogout(){
 }
 
 async function boot(){
-  await cloudLoadPublic();
-  renderIntro();
-  renderAuthLabels();
-  setLang('en');
-  document.getElementById('loading-screen').classList.remove('active');
-  goIntro();
+  try{
+    await Promise.race([
+      cloudLoadPublic(),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timed out loading the studio site. Check your connection.')),12000))
+    ]);
+    renderIntro();
+    renderAuthLabels();
+    setLang('en');
+    document.getElementById('loading-screen').classList.remove('active');
+    goIntro();
+  }catch(e){
+    const ls=document.getElementById('loading-screen');
+    ls.innerHTML=`<div style="text-align:center;padding:0 24px">
+      <p class="dsp" style="color:#ff6b5a;font-size:22px;text-transform:uppercase;margin:0 0 10px">Something went wrong</p>
+      <p style="color:var(--g5);font-size:12px;line-height:1.6;margin:0 0 18px">${H(e&&e.message||'Unknown error')}</p>
+      <button onclick="location.reload()" class="mn" style="background:var(--acc);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;border:0;cursor:pointer">Reload</button>
+    </div>`;
+    if(window.console&&console.error) console.error('boot() failed:',e);
+  }
 }
 
 const fmt=n=>'RM '+Number(n||0).toLocaleString();
