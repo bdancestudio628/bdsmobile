@@ -2279,10 +2279,11 @@ class Component extends DCLogic {
     // Dismissing with "Maybe later" only closes it for this page load, not forever.
     try {
       const ua = navigator.userAgent || '';
-      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      const isIOSTouchMac = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+      const isIOS = (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) || isIOSTouchMac;
       const isAndroid = /Android/.test(ua);
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-      this.setState({ debugInfo: 'ua=' + ua + ' | iOS=' + isIOS + ' Android=' + isAndroid + ' standalone=' + isStandalone });
+      this.setState({ debugInfo: 'iOS=' + isIOS + ' (touchMac=' + isIOSTouchMac + ') Android=' + isAndroid + ' standalone=' + isStandalone + ' | platform=' + navigator.platform + ' touchPts=' + navigator.maxTouchPoints });
       if ((isIOS || isAndroid) && !isStandalone) {
         this.setState({ installPlatform: isIOS ? 'ios' : 'android', installTab: isIOS ? 'ios' : 'android' });
       }
