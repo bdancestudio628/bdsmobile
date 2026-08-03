@@ -389,6 +389,11 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     <h3 class="dsp" style="font-size:20px;text-transform:uppercase;margin:0 0 8px">{{ t.installTitle }}</h3>
     <p style="color:var(--g4);font-size:12px;line-height:1.6;margin:0 0 18px">{{ t.installLead }}</p>
 
+    <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);margin:0 auto 16px;max-width:220px">
+      <button onClick="{{ setIosTab }}" class="mn" style="flex:1;padding:9px 0;border:0;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.06em;transition:all .2s;background:{{ iosTabOn ? 'var(--acc)' : 'transparent' }};color:{{ iosTabOn ? '#000' : 'var(--g4)' }}"><i class="ph ph-apple-logo"></i> iOS</button>
+      <button onClick="{{ setAndroidTab }}" class="mn" style="flex:1;padding:9px 0;border:0;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.06em;transition:all .2s;background:{{ androidTabOn ? 'var(--acc)' : 'transparent' }};color:{{ androidTabOn ? '#000' : 'var(--g4)' }}"><i class="ph ph-android-logo"></i> Android</button>
+    </div>
+
     <sc-if value="{{ installIsIos }}" hint-placeholder-val="{{ false }}">
     <div style="text-align:left;background:#000;border:1px solid var(--bd);padding:14px 16px;margin-bottom:16px">
       <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0 0 10px"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">1</span> <i class="ph ph-export" style="color:var(--acc);font-size:16px"></i> {{ t.installIosStep1 }}</p>
@@ -1218,7 +1223,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false,
+    installPlatform: null, canNativeInstall: false, installTab: 'ios',
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -2278,7 +2283,7 @@ class Component extends DCLogic {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
       const dismissed = localStorage.getItem('bdance_install_dismissed') === '1';
       if ((isIOS || isAndroid) && !isStandalone && !dismissed) {
-        this.setState({ installPlatform: isIOS ? 'ios' : 'android' });
+        this.setState({ installPlatform: isIOS ? 'ios' : 'android', installTab: isIOS ? 'ios' : 'android' });
       }
     } catch (e) {}
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -2711,7 +2716,9 @@ class Component extends DCLogic {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
       showInstallHint: s.view === 'intro' && !s.introLoading && !!s.installPlatform,
-      installIsIos: s.installPlatform === 'ios', installIsAndroid: s.installPlatform === 'android',
+      installTab: s.installTab, installIsIos: s.installTab === 'ios', installIsAndroid: s.installTab === 'android',
+      iosTabOn: s.installTab === 'ios', androidTabOn: s.installTab === 'android',
+      setIosTab: () => this.setState({ installTab: 'ios' }), setAndroidTab: () => this.setState({ installTab: 'android' }),
       canNativeInstall: s.canNativeInstall,
       dismissInstallHint: () => this.dismissInstallHint(),
       installNow: () => this.installNow(),
