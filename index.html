@@ -76,6 +76,8 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
 <div class="bd-scroll" data-screen-label="Intro" style="position:absolute;inset:0;overflow-y:auto;padding-top:52px;z-index:1">
 
+  <div style="background:#ff0;color:#000;font-size:10px;font-family:monospace;padding:8px;word-break:break-all;position:relative;z-index:999">DEBUG: {{ debugInfo }}</div>
+
   <div id="intro-topbar" style="display:flex;justify-content:space-between;align-items:center;padding:6px 18px 0;gap:8px;transition:opacity .3s,transform .35s cubic-bezier(.16,.84,.34,1);opacity:{{ heroBarOpacity }};transform:{{ heroBarTransform }};pointer-events:{{ heroBarEvents }}">
     <button onClick="{{ goAuth }}" class="mn" style="display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px -8px rgba(255,122,41,.85),inset 0 1px 0 rgba(255,255,255,.32);transition:transform .2s"><i class="ph ph-sign-in" style="font-size:15px"></i>{{ t.signIn }}</button>
     <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card);font-size:10.5px;font-weight:700">
@@ -1223,7 +1225,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false, installTab: 'ios',
+    installPlatform: null, canNativeInstall: false, installTab: 'ios', debugInfo: '',
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -2280,10 +2282,11 @@ class Component extends DCLogic {
       const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
       const isAndroid = /Android/.test(ua);
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      this.setState({ debugInfo: 'ua=' + ua + ' | iOS=' + isIOS + ' Android=' + isAndroid + ' standalone=' + isStandalone });
       if ((isIOS || isAndroid) && !isStandalone) {
         this.setState({ installPlatform: isIOS ? 'ios' : 'android', installTab: isIOS ? 'ios' : 'android' });
       }
-    } catch (e) {}
+    } catch (e) { this.setState({ debugInfo: 'ERROR: ' + (e && e.message) }); }
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;
@@ -2723,7 +2726,7 @@ class Component extends DCLogic {
     return {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
-      showInstallHint,
+      showInstallHint, debugInfo: s.debugInfo,
       installTab: s.installTab, installIsIos: s.installTab === 'ios', installIsAndroid: s.installTab === 'android',
       iosTabOn: s.installTab === 'ios', androidTabOn: s.installTab === 'android',
       setIosTab: () => this.setState({ installTab: 'ios' }), setAndroidTab: () => this.setState({ installTab: 'android' }),
