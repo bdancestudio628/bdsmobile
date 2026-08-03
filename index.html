@@ -76,8 +76,6 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
 <div class="bd-scroll" data-screen-label="Intro" style="position:absolute;inset:0;overflow-y:auto;padding-top:52px;z-index:1">
 
-  <div style="background:#ff0;color:#000;font-size:10px;font-family:monospace;padding:8px;word-break:break-all;position:relative;z-index:999">DEBUG: {{ debugInfo }}</div>
-
   <div id="intro-topbar" style="display:flex;justify-content:space-between;align-items:center;padding:6px 18px 0;gap:8px;transition:opacity .3s,transform .35s cubic-bezier(.16,.84,.34,1);opacity:{{ heroBarOpacity }};transform:{{ heroBarTransform }};pointer-events:{{ heroBarEvents }}">
     <button onClick="{{ goAuth }}" class="mn" style="display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px -8px rgba(255,122,41,.85),inset 0 1px 0 rgba(255,255,255,.32);transition:transform .2s"><i class="ph ph-sign-in" style="font-size:15px"></i>{{ t.signIn }}</button>
     <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card);font-size:10.5px;font-weight:700">
@@ -397,9 +395,28 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     </div>
 
     <sc-if value="{{ installIsIos }}" hint-placeholder-val="{{ false }}">
-    <div style="text-align:left;background:#000;border:1px solid var(--bd);padding:14px 16px;margin-bottom:16px">
-      <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0 0 10px"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">1</span> <i class="ph ph-export" style="color:var(--acc);font-size:16px"></i> {{ t.installIosStep1 }}</p>
-      <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">2</span> <i class="ph ph-plus-square" style="color:var(--acc);font-size:16px"></i> {{ t.installIosStep2 }}</p>
+    <div style="text-align:left;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">1</span>
+        <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installIosStep1 }}</p>
+      </div>
+      <div style="background:#1c1c1e;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <i class="ph ph-arrow-left" style="color:#8e8e93;font-size:14px"></i>
+        <span class="mn" style="color:#8e8e93;font-size:9.5px">bdancestudio.com.my</span>
+        <span style="position:relative;display:inline-flex">
+          <span style="position:absolute;inset:-9px;border:2px solid var(--acc);border-radius:50%;animation:ringpop 1.6s ease-out infinite"></span>
+          <i class="ph ph-export" style="color:var(--acc);font-size:17px;position:relative"></i>
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">2</span>
+        <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installIosStep2 }}</p>
+      </div>
+      <div style="background:#2c2c2e;border-radius:12px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;color:#8e8e93;font-size:11.5px;border-bottom:1px solid #3a3a3c"><i class="ph ph-copy" style="font-size:15px"></i> Copy</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,122,41,.15);border:1.5px solid var(--acc);border-radius:8px;margin:3px;color:#fff;font-size:11.5px;font-weight:600"><i class="ph ph-plus-square" style="color:var(--acc);font-size:15px"></i> Add to Home Screen</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;color:#8e8e93;font-size:11.5px;border-top:1px solid #3a3a3c"><i class="ph ph-bookmark-simple" style="font-size:15px"></i> Add Bookmark</div>
+      </div>
     </div>
     </sc-if>
 
@@ -408,9 +425,27 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <button onClick="{{ installNow }}" class="mn sheen" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);margin-bottom:10px">{{ t.installBtn }}</button>
       </sc-if>
       <sc-if value="{{ !canNativeInstall }}" hint-placeholder-val="{{ true }}">
-      <div style="text-align:left;background:#000;border:1px solid var(--bd);padding:14px 16px;margin-bottom:16px">
-        <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0 0 10px"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">1</span> <i class="ph ph-dots-three-vertical" style="color:var(--acc);font-size:16px"></i> {{ t.installAndroidStep1 }}</p>
-        <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">2</span> <i class="ph ph-plus-square" style="color:var(--acc);font-size:16px"></i> {{ t.installAndroidStep2 }}</p>
+      <div style="text-align:left;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">1</span>
+          <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installAndroidStep1 }}</p>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <span class="mn" style="color:#5f6368;font-size:9.5px"><i class="ph ph-lock-simple"></i> bdancestudio.com.my</span>
+          <span style="position:relative;display:inline-flex">
+            <span style="position:absolute;inset:-9px;border:2px solid var(--acc);border-radius:50%;animation:ringpop 1.6s ease-out infinite"></span>
+            <i class="ph ph-dots-three-vertical" style="color:#5f6368;font-size:17px;position:relative"></i>
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">2</span>
+          <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installAndroidStep2 }}</p>
+        </div>
+        <div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.25)">
+          <div style="padding:9px 14px;color:#3c4043;font-size:11.5px;border-bottom:1px solid #eee">New tab</div>
+          <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(255,122,41,.12);border:1.5px solid var(--acc);border-radius:8px;margin:3px;color:#000;font-size:11.5px;font-weight:600"><i class="ph ph-download-simple" style="color:var(--acc);font-size:15px"></i> Install app</div>
+          <div style="padding:9px 14px;color:#3c4043;font-size:11.5px;border-top:1px solid #eee">Share…</div>
+        </div>
       </div>
       </sc-if>
     </sc-if>
@@ -1225,7 +1260,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false, installTab: 'ios', debugInfo: '',
+    installPlatform: null, canNativeInstall: false, installTab: 'ios',
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -2279,15 +2314,17 @@ class Component extends DCLogic {
     // Dismissing with "Maybe later" only closes it for this page load, not forever.
     try {
       const ua = navigator.userAgent || '';
+      // iPadOS Safari can disguise itself as desktop Mac Safari in its user-agent (Apple's default
+      // since iOS 13, or if "Request Desktop Website" was ever toggled for this domain) — real Macs
+      // never report touch points, so this catches iPads even when the UA string says "Macintosh".
       const isIOSTouchMac = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
       const isIOS = (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) || isIOSTouchMac;
       const isAndroid = /Android/.test(ua);
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-      this.setState({ debugInfo: 'iOS=' + isIOS + ' (touchMac=' + isIOSTouchMac + ') Android=' + isAndroid + ' standalone=' + isStandalone + ' | platform=' + navigator.platform + ' touchPts=' + navigator.maxTouchPoints });
       if ((isIOS || isAndroid) && !isStandalone) {
         this.setState({ installPlatform: isIOS ? 'ios' : 'android', installTab: isIOS ? 'ios' : 'android' });
       }
-    } catch (e) { this.setState({ debugInfo: 'ERROR: ' + (e && e.message) }); }
+    } catch (e) {}
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;
@@ -2727,7 +2764,7 @@ class Component extends DCLogic {
     return {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
-      showInstallHint, debugInfo: s.debugInfo,
+      showInstallHint,
       installTab: s.installTab, installIsIos: s.installTab === 'ios', installIsAndroid: s.installTab === 'android',
       iosTabOn: s.installTab === 'ios', androidTabOn: s.installTab === 'android',
       setIosTab: () => this.setState({ installTab: 'ios' }), setAndroidTab: () => this.setState({ installTab: 'android' }),
