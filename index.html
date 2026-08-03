@@ -78,9 +78,12 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 
   <div id="intro-topbar" style="display:flex;justify-content:space-between;align-items:center;padding:6px 18px 0;gap:8px;transition:opacity .3s,transform .35s cubic-bezier(.16,.84,.34,1);opacity:{{ heroBarOpacity }};transform:{{ heroBarTransform }};pointer-events:{{ heroBarEvents }}">
     <button onClick="{{ goAuth }}" class="mn" style="display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(100deg,#ff8b3d,var(--acc) 55%,#e8611a);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px -8px rgba(255,122,41,.85),inset 0 1px 0 rgba(255,255,255,.32);transition:transform .2s"><i class="ph ph-sign-in" style="font-size:15px"></i>{{ t.signIn }}</button>
-    <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card);font-size:10.5px;font-weight:700">
-      <button onClick="{{ setEn }}" style="padding:7px 13px;border:0;cursor:pointer;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
-      <button onClick="{{ setZh }}" style="padding:7px 13px;border:0;cursor:pointer;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中文</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onClick="{{ refreshNow }}" style="background:var(--card);border:1px solid var(--bd);color:var(--acc);width:34px;height:34px;border-radius:999px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-arrows-clockwise" style="animation:{{ refreshSpin }}"></i></button>
+      <div style="display:flex;border-radius:999px;overflow:hidden;border:1px solid var(--bd);background:var(--card);font-size:10.5px;font-weight:700">
+        <button onClick="{{ setEn }}" style="padding:7px 13px;border:0;cursor:pointer;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
+        <button onClick="{{ setZh }}" style="padding:7px 13px;border:0;cursor:pointer;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中文</button>
+      </div>
     </div>
   </div>
 
@@ -602,6 +605,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
           <button onClick="{{ setEn }}" style="padding:5px 8px;border:0;cursor:pointer;transition:all .25s;background:{{ enBg }};color:{{ enFg }}">EN</button>
           <button onClick="{{ setZh }}" style="padding:5px 8px;border:0;cursor:pointer;transition:all .25s;background:{{ zhBg }};color:{{ zhFg }}">中</button>
         </div>
+        <button onClick="{{ refreshNow }}" style="background:none;border:1px solid var(--bd);color:var(--acc);width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s"><i class="ph ph-arrows-clockwise" style="animation:{{ refreshSpin }}"></i></button>
         <button onClick="{{ toggleMenu }}" style="background:none;border:1px solid var(--bd);color:var(--acc);width:32px;height:32px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s"><i class="ph {{ menuIcon }}"></i></button>
       </div>
     </div>
@@ -1262,7 +1266,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false, installTab: 'ios',
+    installPlatform: null, canNativeInstall: false, installTab: 'ios', refreshing: false,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -1431,6 +1435,19 @@ class Component extends DCLogic {
     }
   }
 
+  async refreshNow() {
+    if (this.state.refreshing) return;
+    this.setState({ refreshing: true });
+    try {
+      if (this.state.sessionToken) await this.loadCloudData(this.state.sessionToken);
+      await this.loadPublicData();
+    } finally {
+      const t = Object.assign({}, this.TR[this.state.lang], this.APP_TR[this.state.lang]);
+      this.setState({ refreshing: false });
+      this.flash(t.refreshed);
+    }
+  }
+
   // Single source of truth for which events are showing — used by render() AND the auto-advance
   // timer below, so they never get out of sync with each other.
   getIntroEvents() {
@@ -1585,7 +1602,7 @@ class Component extends DCLogic {
       student: 'Student', studentSub: 'Fees, classes, attendance & rewards',
       teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
-      username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…',
+      username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…', refreshed: 'Refreshed',
       installTitle: 'Install This App', installLead: 'Add B Dance Studio to your home screen for quick access, just like a real app.',
       installIosStep1: 'Tap the Share button', installIosStep2: 'Then tap "Add to Home Screen"',
       installAndroidStep1: 'Tap the ⋮ menu in your browser', installAndroidStep2: 'Then tap "Add to Home Screen" or "Install App"',
@@ -1624,7 +1641,7 @@ class Component extends DCLogic {
       student: '学生', studentSub: '学费、课程、出席与奖励',
       teacher: '导师', teacherSub: '学员名单、点名与课时',
       studentLogin: '学生登录', teacherLogin: '导师登录',
-      username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…',
+      username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…', refreshed: '已刷新',
       installTitle: '安装此应用', installLead: '将 B Dance Studio 添加到主屏幕，像真正的App一样快速打开。',
       installIosStep1: '点击分享按钮', installIosStep2: '然后点击"添加到主屏幕"',
       installAndroidStep1: '点击浏览器右上角的 ⋮ 菜单', installAndroidStep2: '然后点击"添加到主屏幕"或"安装应用"',
@@ -2774,6 +2791,8 @@ class Component extends DCLogic {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
       showInstallHint,
+      refreshing: s.refreshing, refreshSpin: s.refreshing ? 'spinl 0.8s linear infinite' : 'none',
+      refreshNow: () => this.refreshNow(),
       installTab: s.installTab, installIsIos: s.installTab === 'ios', installIsAndroid: s.installTab === 'android',
       iosTabOn: s.installTab === 'ios', androidTabOn: s.installTab === 'android',
       setIosTab: () => this.setState({ installTab: 'ios' }), setAndroidTab: () => this.setState({ installTab: 'android' }),
