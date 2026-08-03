@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff7a29">
 <link rel="apple-touch-icon" href="assets/icon-192.png">
@@ -21,13 +21,14 @@
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.6/dist/motion.js"></script>
 <style>
 :root{--acc:#ff7a29;--acc2:#ffa057;--bd:#3a2010;--bd2:rgba(58,32,16,.45);--card:#171412;--card2:#0c0c0c;--ink:#1a1006;--g5:#8a857d;--g4:#b9b5ad;--g2:#e8e4dc;--ember:#ff4d2e}
-body{margin:0;background:#0a0a0a;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html{overflow-x:hidden;touch-action:pan-y}
+body{margin:0;background:#0a0a0a;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;touch-action:pan-y}
 a{color:var(--acc);text-decoration:none}a:hover{color:var(--acc2)}
 *{box-sizing:border-box}
 i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 .dsp{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:-.5px}
 .mn{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
-.bd-scroll{-ms-overflow-style:none;scrollbar-width:none}
+.bd-scroll{-ms-overflow-style:none;scrollbar-width:none;touch-action:pan-y}
 .bd-scroll::-webkit-scrollbar{display:none}
 @keyframes rake{0%{transform:translateX(-14%) skewX(-12deg)}50%{transform:translateX(10%) skewX(-12deg)}100%{transform:translateX(-14%) skewX(-12deg)}}
 @keyframes ctick{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -1181,12 +1182,17 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <p style="color:var(--g5);font-size:11px;margin:0 0 16px">{{ t.shownOnIntro }}</p>
 
       <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:13px">
+        <sc-if value="{{ hasMeCardPhoto }}" hint-placeholder-val="{{ false }}">
+        <img data-lazysrc="{{ meCardPhoto }}" alt="{{ meCardName }}" style="width:64px;height:64px;border-radius:50%;flex-shrink:0;object-fit:cover" />
+        </sc-if>
+        <sc-if value="{{ !hasMeCardPhoto }}" hint-placeholder-val="{{ true }}">
         <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(150deg,var(--acc),#7a2d0c);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <span class="dsp" style="font-size:28px;color:rgba(0,0,0,.4)">Y</span>
+          <span class="dsp" style="font-size:28px;color:rgba(0,0,0,.4)">{{ meCardInitial }}</span>
         </div>
+        </sc-if>
         <div style="flex:1;min-width:0">
-          <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0;line-height:1">Yuki Lim</p>
-          <p class="mn" style="color:var(--g5);font-size:10px;margin:5px 0 0">K-pop · Street Jazz</p>
+          <p class="dsp" style="font-size:24px;text-transform:uppercase;margin:0;line-height:1">{{ meCardName }}</p>
+          <p class="mn" style="color:var(--g5);font-size:10px;margin:5px 0 0">{{ meCardSpecs }}</p>
           <button onClick="{{ replacePhoto }}" class="mn" style="margin-top:8px;background:transparent;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:7px 10px;cursor:pointer;transition:all .2s"><i class="ph ph-camera" style="margin-right:5px"></i>{{ t.replacePhoto }}</button>
         </div>
       </div>
@@ -1413,7 +1419,14 @@ class Component extends DCLogic {
       const j = await r.json().catch(() => null);
       if (j && j.data) {
         const parsed = JSON.parse(j.data);
-        this.setState({ cloudDB: (parsed && parsed.db) || {}, cloudLoading: false });
+        const db = (parsed && parsed.db) || {};
+        const patch = { cloudDB: db, cloudLoading: false };
+        const acct = this.state.account;
+        if (acct && acct.role === 'teacher' && Array.isArray(db.teachers)) {
+          const me = db.teachers.find(x => x.id === acct.ref);
+          if (me) patch.profile = { quote: me.quote || '', ig: me.instagram || '', video: me.video || '' };
+        }
+        this.setState(patch);
       } else {
         this.setState({ cloudLoading: false });
       }
@@ -1541,6 +1554,39 @@ class Component extends DCLogic {
       const saveJ = await saveR.json().catch(() => null);
       if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
       this.setState({ cloudDB: freshDb, cloudLoading: false, marks: {} });
+      this.flash(t.saved);
+    } catch (e) {
+      this.setState({ cloudLoading: false });
+      this.flash(t.saveFailed);
+    }
+  }
+
+  // Saves this teacher's own public-profile fields (quote/instagram/video). Same fetch-fresh-then-
+  // patch-then-save approach as saveAttendanceMarks — see that method's comment for the tradeoffs.
+  async saveTeacherProfile(t) {
+    if (!this.state.sessionToken || !this.state.account) { this.flash(t.saveFailed); return; }
+    const myId = this.state.account.ref;
+    const profile = this.state.profile;
+    this.setState({ cloudLoading: true });
+    try {
+      const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + this.state.sessionToken } });
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || !j.data) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      const parsed = JSON.parse(j.data);
+      const freshDb = (parsed && parsed.db) || {};
+      const teachersArr = Array.isArray(freshDb.teachers)
+        ? freshDb.teachers.map(x => (x.id === myId ? { ...x, quote: profile.quote, instagram: profile.ig, video: profile.video } : x))
+        : [];
+      freshDb.teachers = teachersArr;
+      parsed.db = freshDb;
+      const saveR = await cloudFetchWithTimeout({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.sessionToken },
+        body: JSON.stringify({ data: parsed }),
+      });
+      const saveJ = await saveR.json().catch(() => null);
+      if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      this.setState({ cloudDB: freshDb, cloudLoading: false });
       this.flash(t.saved);
     } catch (e) {
       this.setState({ cloudLoading: false });
@@ -2322,8 +2368,10 @@ class Component extends DCLogic {
       onQuote: e => this.setState({ profile: { ...s.profile, quote: e.target.value } }),
       onIg: e => this.setState({ profile: { ...s.profile, ig: e.target.value } }),
       onVideo: e => this.setState({ profile: { ...s.profile, video: e.target.value } }),
-      replacePhoto: () => this.flash(t.replacePhoto), previewMe: () => this.setState({ teacherModal: 1, tmSlide: 0 }),
-      saveProfile: () => this.flash(t.saved),
+      replacePhoto: () => this.flash(t.replacePhoto), previewMe: () => this.setState({ teacherModal: myTeacherId, tmSlide: 0 }),
+      saveProfile: () => this.saveTeacherProfile(t),
+      meCardInitial: meTeacher ? meTeacher.name.slice(0, 1) : 'Y', meCardName: meTeacher ? meTeacher.name : 'Yuki Lim',
+      meCardSpecs: meTeacher && meTeacher.specs ? meTeacher.specs.join(' · ') : '', meCardPhoto: meTeacher ? meTeacher.photo : '', hasMeCardPhoto: !!(meTeacher && meTeacher.photo),
     };
   }
 
