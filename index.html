@@ -400,14 +400,15 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">1</span>
         <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installIosStep1 }}</p>
       </div>
-      <div style="background:#1c1c1e;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="background:#1c1c1e;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <i class="ph ph-arrow-left" style="color:#8e8e93;font-size:14px"></i>
         <span class="mn" style="color:#8e8e93;font-size:9.5px">bdancestudio.com.my</span>
-        <button onClick="{{ shareNow }}" style="position:relative;display:inline-flex;background:none;border:0;padding:9px;margin:-9px;cursor:pointer">
+        <span style="position:relative;display:inline-flex">
           <span style="position:absolute;inset:-9px;border:2px solid var(--acc);border-radius:50%;animation:ringpop 1.6s ease-out infinite"></span>
           <i class="ph ph-export" style="color:var(--acc);font-size:17px;position:relative"></i>
-        </button>
+        </span>
       </div>
+      <p class="mn" style="color:var(--g5);font-size:9.5px;text-align:right;margin:0 0 14px">{{ t.installFindIcon }}</p>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
         <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">2</span>
         <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installIosStep2 }}</p>
@@ -1462,14 +1463,6 @@ class Component extends DCLogic {
       this.setState({ canNativeInstall: false });
     }
     this.dismissInstallHint();
-  }
-
-  async shareNow() {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'B Dance Studio', text: 'B Dance Studio — Teacher & Student Portal', url: window.location.href });
-      } catch (e) { /* user cancelled, or share unsupported for this content — the illustrated steps below still work as a fallback */ }
-    }
   }
 
   // There is no Web API on any browser that lets a page open its own browser's menu — this only
@@ -2786,7 +2779,7 @@ class Component extends DCLogic {
       setIosTab: () => this.setState({ installTab: 'ios' }), setAndroidTab: () => this.setState({ installTab: 'android' }),
       canNativeInstall: s.canNativeInstall,
       dismissInstallHint: () => this.dismissInstallHint(),
-      installNow: () => this.installNow(), shareNow: () => this.shareNow(), tryNativeInstall: () => this.tryNativeInstall(),
+      installNow: () => this.installNow(), tryNativeInstall: () => this.tryNativeInstall(),
       isIntro: s.view === 'intro', isAuth: s.view === 'auth', isApp: s.view === 'app',
       role: s.role, page: s.page, tpage: s.tpage,
       setEn: () => this.setState({ lang: 'en' }), setZh: () => this.setState({ lang: 'zh' }),
