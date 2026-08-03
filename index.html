@@ -307,8 +307,11 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         <input type="{{ pwType }}" value="{{ pwVal }}" onChange="{{ onPw }}" placeholder="••••••••" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px 42px 12px 12px;outline:none;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
         <button onClick="{{ togglePw }}" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;font-size:14px"><i class="ph {{ pwEye }}" style="color:var(--g5);font-size:16px"></i></button>
       </div>
+      <sc-if value="{{ hasLoginError }}" hint-placeholder-val="{{ false }}">
+      <p class="mn" style="color:#ff8a78;background:rgba(255,77,46,.1);border:1px solid rgba(255,77,46,.3);font-size:10.5px;padding:9px 11px;margin:0 0 12px;line-height:1.4">{{ loginErrorMsg }}</p>
+      </sc-if>
       <button data-fancy="1" onClick="{{ doLogin }}" class="mn" style="position:relative;overflow:hidden;width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);transition:all .16s">{{ loginCta }}</button>
-      <p class="mn" style="color:#4a4640;font-size:9px;text-align:center;margin:14px 0 0;letter-spacing:.06em">{{ t.demoHint }}</p>
+      <p class="mn" style="color:#4a4640;font-size:9px;text-align:center;margin:14px 0 0;letter-spacing:.06em;line-height:1.5">{{ t.demoHint }}</p>
     </div>
 
     <div style="display:flex;border:1px solid var(--bd);background:var(--card);font-size:11px;font-weight:700;overflow:hidden;width:max-content;margin:22px auto 0">
@@ -725,6 +728,9 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <div style="background:var(--card);border:1px solid var(--bd);padding:16px;margin-bottom:20px;text-align:center">
         <p class="dsp" style="color:var(--acc2);font-size:26px;margin:0">{{ bdayLine }}</p>
         <p style="color:var(--g5);font-size:10.5px;margin:6px 0 0">{{ t.bdayGift }}</p>
+        <sc-if value="{{ showClaimBday }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ claimBirthday }}" class="mn" style="width:100%;margin-top:12px;background:var(--acc);color:#000;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:11px;border:0;cursor:pointer">{{ t.claimBirthday }}</button>
+        </sc-if>
       </div>
 
       <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-gift"></i> {{ t.redeemRewards }}</p>
@@ -1090,10 +1096,22 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:460,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ff7a29&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ff7a29&quot;,&quot;#ff4d2e&quot;,&quot;#ffa057&quot;,&quot;#e39b5a&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;streetBg&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;motion&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:2,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+// Shared backend — same Supabase-backed API the desktop site uses. CORS is open on that
+// endpoint, so this app calls it directly cross-origin; no separate backend for mobile.
+const CLOUD_URL = 'https://bdancestudio.com.my/api/db';
+const SESSION_KEY = 'bdance_mobile_session';
+const CLOUD_TIMEOUT_MS = 10000;
+function cloudFetchWithTimeout(opts) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), CLOUD_TIMEOUT_MS);
+  return fetch(CLOUD_URL, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(timer));
+}
+
 class Component extends DCLogic {
   state = {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
+    sessionToken: null, account: null, cloudDB: null, loginError: '', cloudLoading: false,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -1205,6 +1223,135 @@ class Component extends DCLogic {
     { badge: 'Open', title: 'Street Jam 03', date: '27 Sep 2026 · Saturday', time: '2:00 PM – 7:00 PM', venue: 'Adda Height · Studio A+B', cats: 'Hip-hop 1v1, Popping 1v1, Crew Battle' },
   ];
 
+  // ── Real backend: session restore + cloud data ──────────────────────
+  componentDidMount() {
+    this.restoreSession();
+  }
+
+  async restoreSession() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { saved = null; }
+    if (!saved || !saved.token) return;
+    try {
+      const r = await cloudFetchWithTimeout({
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'session', token: saved.token }),
+      });
+      const j = await r.json().catch(() => null);
+      if (j && j.ok && j.account) {
+        this.setState({
+          sessionToken: saved.token, account: j.account, view: 'app', role: j.account.role,
+          page: j.account.role === 'teacher' ? 'today' : 'fees', tpage: 'today',
+        });
+        this.loadCloudData(saved.token);
+      } else {
+        localStorage.removeItem(SESSION_KEY);
+      }
+    } catch (e) { /* offline or backend unreachable — quietly stay on whatever screen is showing */ }
+  }
+
+  async loadCloudData(token) {
+    this.setState({ cloudLoading: true });
+    try {
+      const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + token } });
+      const j = await r.json().catch(() => null);
+      if (j && j.data) {
+        const parsed = JSON.parse(j.data);
+        this.setState({ cloudDB: (parsed && parsed.db) || {}, cloudLoading: false });
+      } else {
+        this.setState({ cloudLoading: false });
+      }
+    } catch (e) {
+      this.setState({ cloudLoading: false });
+    }
+  }
+
+  logoutCloud() {
+    try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+    this.setState({
+      view: 'intro', menuOpen: false, page: 'fees', tpage: 'today', user: '', pw: '',
+      stuck: false, showTop: false, introMenu: false, sessionToken: null, account: null, cloudDB: null, loginError: '',
+    });
+  }
+
+  // Writes attendance for one class, "today", for whichever students have a status set. Deliberately
+  // narrower than the desktop's version: it does NOT run the auto-billing / credit-refund side effects
+  // that the desktop's markAttendance() triggers (checkAttendanceBilling / reconcileAutoBills) — those
+  // are non-trivial billing rules, and getting them wrong risks corrupting real payment records. This
+  // only ever adds/updates attendance rows, never anything financial.
+  async saveAttendanceMarks(classId, roster, marks, t) {
+    if (!this.state.cloudDB || !this.state.sessionToken) { this.flash(t.saved); return; }
+    const entries = roster
+      .map(m => ({ studentId: m.id, mark: marks[classId + ':' + m.id] }))
+      .filter(x => x.mark && x.mark.status);
+    if (!entries.length) { this.flash(t.saved); return; }
+    const dateStr = new Date().toISOString().slice(0, 10);
+    this.setState({ cloudLoading: true });
+    try {
+      // Fetch fresh immediately before writing — this narrows the window in which a concurrent edit
+      // from the desktop app could be overwritten, though it's not the full 3-way merge the desktop
+      // itself uses. Fine for an occasional "mark today's class" action; worth revisiting if this
+      // starts colliding with simultaneous desktop edits in practice.
+      const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + this.state.sessionToken } });
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || !j.data) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      const parsed = JSON.parse(j.data);
+      const freshDb = (parsed && parsed.db) || {};
+      const attendanceArr = Array.isArray(freshDb.attendance) ? [...freshDb.attendance] : [];
+      let nextId = (parsed.nid && parsed.nid.attendance) || (attendanceArr.reduce((m, a) => Math.max(m, a.id || 0), 0) + 1);
+      entries.forEach(({ studentId, mark }) => {
+        const idx = attendanceArr.findIndex(a => a.classId === classId && a.date === dateStr && a.studentId === studentId && !a.extra);
+        if (idx >= 0) {
+          const updated = { ...attendanceArr[idx], status: mark.status };
+          if (mark.status === 'absent' && mark.remark) updated.remark = mark.remark; else delete updated.remark;
+          attendanceArr[idx] = updated;
+        } else {
+          const rec = { id: nextId++, classId, date: dateStr, studentId, status: mark.status };
+          if (mark.status === 'absent' && mark.remark) rec.remark = mark.remark;
+          attendanceArr.push(rec);
+        }
+      });
+      freshDb.attendance = attendanceArr;
+      parsed.db = freshDb;
+      if (parsed.nid) parsed.nid.attendance = nextId;
+      const saveR = await cloudFetchWithTimeout({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.sessionToken },
+        body: JSON.stringify({ data: parsed }),
+      });
+      const saveJ = await saveR.json().catch(() => null);
+      if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      this.setState({ cloudDB: freshDb, cloudLoading: false, marks: {} });
+      this.flash(t.saved);
+    } catch (e) {
+      this.setState({ cloudLoading: false });
+      this.flash(t.saveFailed);
+    }
+  }
+
+  // Writes go through the same student-safe path the desktop app uses: the server only lets an
+  // account patch its OWN record (enforced there, not just here), never the whole database.
+  async updateStudentRecord(id, patch) {
+    if (!this.state.sessionToken) return false;
+    try {
+      const r = await cloudFetchWithTimeout({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.sessionToken },
+        body: JSON.stringify({ action: 'update-student', id: String(id), patch }),
+      });
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || j.error || j.ok === false) return false;
+      // Optimistic local patch so the screen reflects the change immediately, without waiting on
+      // a full refetch of the shared database.
+      this.setState(p => {
+        if (!p.cloudDB || !Array.isArray(p.cloudDB.students)) return {};
+        const students = p.cloudDB.students.map(x => (x.id === id ? { ...x, ...patch } : x));
+        return { cloudDB: { ...p.cloudDB, students } };
+      });
+      return true;
+    } catch (e) { return false; }
+  }
+
   TR = {
     en: {
       signIn: 'Sign In', fromTop: 'FROM THE TOP', back: 'Back', close: 'Close',
@@ -1232,7 +1379,11 @@ class Component extends DCLogic {
       teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
       username: 'Username', password: 'Password', loggingIn: 'Signing in…',
-      demoHint: 'DEMO · TAP SIGN IN WITH ANY DETAILS', openInstagram: 'Open Instagram',
+      demoHint: 'Use the username & password given to you by the studio', openInstagram: 'Open Instagram',
+      loginMissing: 'Please enter your username and password.',
+      loginBad: 'Invalid username or password.',
+      loginOffline: 'Could not reach the studio server — check your connection and try again.',
+      saveFailed: 'Could not save — check your connection and try again.',
       contactTitle: 'Contact Us', chooseNav: 'Open directions with',
       contactShort: 'Contact', signInShort: 'Sign in', findShort: 'Studios', meetShort: 'Instructors',
     },
@@ -1262,7 +1413,11 @@ class Component extends DCLogic {
       teacher: '导师', teacherSub: '学员名单、点名与课时',
       studentLogin: '学生登录', teacherLogin: '导师登录',
       username: '用户名', password: '密码', loggingIn: '登录中…',
-      demoHint: '演示 · 任意帐号即可登录', openInstagram: '打开 Instagram',
+      demoHint: '请使用舞室提供给你的用户名与密码登录', openInstagram: '打开 Instagram',
+      loginMissing: '请输入用户名和密码。',
+      loginBad: '用户名或密码不正确。',
+      loginOffline: '无法连接舞室服务器 —— 请检查网络连接后重试。',
+      saveFailed: '保存失败 —— 请检查网络连接后重试。',
       contactTitle: '联系我们', chooseNav: '选择导航应用',
       contactShort: '联系', signInShort: '登录', findShort: '分店', meetShort: '导师',
     },
@@ -1292,6 +1447,8 @@ class Component extends DCLogic {
       freeTshirt: 'New Student Free T-Shirt', tshirtTitle: 'Free T-shirt for New Student',
       tshirtDone: 'Collected — enjoy your free new-student t-shirt!', tshirtUntil: 'Available until 31 April 2027',
       gradesByStyle: 'Grades by Dance Style', birthday: 'Birthday', bdayGift: '100 bonus points on your birthday',
+      claimBirthday: 'Claim Birthday Reward', birthdayToday: '🎉 Happy Birthday!', birthdayClaimed: 'Birthday reward claimed', noGradesYet: 'No grades set yet',
+      birthdayNone: 'No birthday on file — ask the front desk to add it.',
       daysUntil: '{n} days until your birthday',
       redeemRewards: 'Redeem Rewards', redeem: 'Redeem', locked: 'Locked',
       redemptionHistory: 'Redemption History', collected: 'Collected', showCode: 'Show code',
@@ -1305,6 +1462,9 @@ class Component extends DCLogic {
       tabSchedule: 'My Schedule', tabStudents: 'My Students', tabSalary: 'My Salary', tabAtt2: 'Attendance', tabProfile: 'My Profile',
       mySalary: 'My Salary', estPay: 'Estimated pay', payBreakdown: 'Breakdown', hourlyRate: 'Hourly rate',
       paidOut: 'Paid 5 Aug', pendingPay: 'Pending payout', perHour: '/hour',
+      salaryFormula: 'All-time commission total — tiered rate per class, see breakdown below',
+      salarySingleRate: 'Monthly · single-class rate', salaryMultiRate: 'Monthly · multi-class rate',
+      salarySingleClass: 'Single/credit/bonus classes', salaryDanceShow: 'Dance Show', salaryPrivate: 'Private Classes',
       goodEvening: 'Good evening', nextClass: 'Next class', now: 'Now', startingIn: 'starts in {n} min',
       takeAttendance: 'Take Attendance →', weekAhead: 'The Week Ahead', noClassToday: 'No class today',
       markAttendance: 'Mark Attendance', allPresent: 'All present', saveRoster: 'Save Attendance',
@@ -1341,6 +1501,8 @@ class Component extends DCLogic {
       freeTshirt: '新生免费T恤', tshirtTitle: '新生免费T恤',
       tshirtDone: '已领取 — 好好享受你的新生T恤！', tshirtUntil: '有效期至 2027年4月31日',
       gradesByStyle: '各舞风级别', birthday: '生日', bdayGift: '生日当天赠送100积分',
+      claimBirthday: '领取生日奖励', birthdayToday: '🎉 生日快乐！', birthdayClaimed: '生日奖励已领取', noGradesYet: '尚未设置级别',
+      birthdayNone: '尚未登记生日 —— 请前台帮忙添加。',
       daysUntil: '距离你的生日还有 {n} 天',
       redeemRewards: '兑换奖励', redeem: '兑换', locked: '积分不足',
       redemptionHistory: '兑换记录', collected: '已领取', showCode: '出示代码',
@@ -1354,6 +1516,9 @@ class Component extends DCLogic {
       tabSchedule: '我的课表', tabStudents: '我的学员', tabSalary: '我的薪金', tabAtt2: '点名', tabProfile: '我的资料',
       mySalary: '我的薪金', estPay: '预计薪金', payBreakdown: '明细', hourlyRate: '时薪',
       paidOut: '8月5日发放', pendingPay: '待发放', perHour: '/小时',
+      salaryFormula: '历史累计薪资总额 —— 按阶梯课时费率计算，详见下方明细',
+      salarySingleRate: '月费 · 单课时费率', salaryMultiRate: '月费 · 多课时费率',
+      salarySingleClass: '单堂/课时/赠送课', salaryDanceShow: '舞蹈表演', salaryPrivate: '私教课',
       goodEvening: '晚上好', nextClass: '下一堂课', now: '进行中', startingIn: '{n} 分钟后开始',
       takeAttendance: '开始点名 →', weekAhead: '本周课表', noClassToday: '今天没有课',
       markAttendance: '点名', allPresent: '全部出席', saveRoster: '保存点名',
@@ -1381,16 +1546,260 @@ class Component extends DCLogic {
     return { label: t.absent, bg: 'rgba(255,77,46,.18)', fg: '#ff8a78' };
   }
 
+  birthdayInfo(s) {
+    if (!s || !s.birthday) return null;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const bd = new Date(s.birthday + 'T00:00:00');
+    if (isNaN(bd)) return null;
+    const isToday = today.getMonth() === bd.getMonth() && today.getDate() === bd.getDate();
+    let next = new Date(today.getFullYear(), bd.getMonth(), bd.getDate());
+    if (next < today) next = new Date(today.getFullYear() + 1, bd.getMonth(), bd.getDate());
+    const days = Math.round((next - today) / 86400000);
+    const claimedThisYear = (s.bdayClaims || []).includes(today.getFullYear());
+    return { isToday, days, claimedThisYear };
+  }
+
+  salaryRateForHeadcount(n) {
+    const tiers = [{ max: 20, rate: 70 }, { max: 40, rate: 75 }, { max: Infinity, rate: 80 }];
+    return (tiers.find(x => n <= x.max) || tiers[tiers.length - 1]).rate;
+  }
+
+  monthNameFromDate(dateStr) {
+    const MONTHS_EN = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const d = new Date(String(dateStr || '') + 'T00:00:00');
+    return isNaN(d) ? '' : MONTHS_EN[d.getMonth()];
+  }
+
+  parseTimeToMinutes(str) {
+    const m = /^(\d{1,2}):(\d{2})\s*([AP]M)$/i.exec(String(str || '').trim());
+    if (!m) return null;
+    let h = parseInt(m[1], 10) % 12;
+    if (/pm/i.test(m[3])) h += 12;
+    return h * 60 + parseInt(m[2], 10);
+  }
+
+  classDurationHours(c) {
+    const a = this.parseTimeToMinutes(c && c.start), b = this.parseTimeToMinutes(c && c.end);
+    if (a == null || b == null) return 1;
+    const diff = b - a;
+    return diff > 0 ? diff / 60 : 1;
+  }
+
+  // Faithful port of the desktop's renderTeacherSalary() — commission model, NOT hourly. See the
+  // desktop source for the full rationale of each category; this mirrors the math exactly:
+  // - Monthly-fee class-contributions earn a TIERED per-class rate (RM70/75/80) based on this
+  //   teacher's total monthly-fee class-contributions in the month the class was actually attended
+  //   (earnedDate), not the month it was billed.
+  // - Single-class drop-ins, credit-paid classes, and free "bonus" classes each earn a flat RM25.
+  //   Credit-paid and bonus classes create no payment row at all — they're reconstructed here from
+  //   the attendance records, exactly as the desktop does.
+  // - Private lessons and dance shows use whatever teacherEarn amount was entered at booking time —
+  //   there's no formula to derive those from.
+  // This computes the ALL-TIME total; the desktop also offers a per-month filter that this mobile
+  // view doesn't expose (yet).
+  teacherSalary(teacherId, cdb) {
+    const SALARY_PER_SINGLE = 25;
+    const classesArr = Array.isArray(cdb.classes) ? cdb.classes : [];
+    const paymentsArr = Array.isArray(cdb.payments) ? cdb.payments : [];
+    const attendanceArr = Array.isArray(cdb.attendance) ? cdb.attendance : [];
+    const studentsArr = Array.isArray(cdb.students) ? cdb.students : [];
+    const myClassIds = new Set(classesArr.filter(c => c.teacherId === teacherId).map(c => c.id));
+
+    const payStudentOf = p => {
+      const typed = p.trialName || p.privateName;
+      if (typed) return { name: typed, id: null, classIds: [] };
+      return studentsArr.find(x => x.id === p.studentId) || null;
+    };
+    const isSingle = p => ((p.month || '') + ' ' + (p.notes || '')).toLowerCase().includes('single class');
+    const isTrial = p => ((p.month || '') + ' ' + (p.notes || '')).toLowerCase().includes('trial class');
+    const isCreditUse = p => p.kind === 'credit-use';
+    const isBonus = p => p.kind === 'bonus-class';
+    const earnedMonthOf = p => (p.earnedDate ? this.monthNameFromDate(p.earnedDate) : p.month);
+
+    const virtualCreditUses = attendanceArr
+      .filter(a => a.paidByCredit && !a.extra && a.status === 'present' && myClassIds.has(a.classId))
+      .map(a => ({ kind: 'credit-use', studentId: a.studentId, classId: a.classId, month: 'Credit', amount: 0, status: 'Paid', date: a.date, earnedDate: a.date }));
+    const virtualBonusClasses = attendanceArr
+      .filter(a => a.bonus && a.status === 'present' && myClassIds.has(a.classId))
+      .map(a => ({ kind: 'bonus-class', studentId: a.studentId, classId: a.classId, month: 'Bonus', amount: 0, status: 'Paid', date: a.date, earnedDate: a.date }));
+    const myDanceShows = paymentsArr.filter(p => p.kind === 'danceshow' && p.status === 'Paid' && p.teacherId === teacherId);
+    const myPrivates = paymentsArr.filter(p => p.kind === 'private' && p.status === 'Paid' && p.teacherId === teacherId);
+    const allPaid = paymentsArr.filter(p => p.status === 'Paid' && p.classId && myClassIds.has(p.classId) && !isCreditUse(p))
+      .concat(virtualCreditUses, virtualBonusClasses, myDanceShows, myPrivates);
+
+    let monthlySingleRateEarn = 0, monthlyMultiRateEarn = 0, singleClassEarn = 0, danceShowEarn = 0, privateEarn = 0;
+    let monthlySingleRateQty = 0, monthlyMultiRateClassQty = 0, singleClassQty = 0, danceShowQty = 0, privateQty = 0;
+    const rows = [];
+    const monthlyClassCountByMonth = {};
+    const monthlyPayRows = [];
+
+    allPaid.forEach(p => {
+      const earnedMonth = earnedMonthOf(p);
+      if (p.kind === 'danceshow') {
+        const earn = (typeof p.teacherEarn === 'number') ? p.teacherEarn : 0;
+        danceShowEarn += earn; danceShowQty++;
+        rows.push({ name: 'Dance Show', type: 'Dance Show', amount: p.amount, earn, earnedMonth, date: p.earnedDate || p.date });
+        return;
+      }
+      if (p.kind === 'private') {
+        const earn = (typeof p.teacherEarn === 'number') ? p.teacherEarn : 0;
+        privateEarn += earn; privateQty++;
+        const st = payStudentOf(p);
+        rows.push({ name: (st && st.name) || '—', type: 'Private Class', amount: p.amount, earn, earnedMonth, date: p.earnedDate || p.date });
+        return;
+      }
+      const st = payStudentOf(p);
+      if (!st) return;
+      if (isCreditUse(p)) {
+        singleClassEarn += SALARY_PER_SINGLE; singleClassQty++;
+        rows.push({ name: st.name, type: 'Credit Class', amount: 0, earn: SALARY_PER_SINGLE, earnedMonth, date: p.earnedDate || p.date });
+      } else if (isBonus(p)) {
+        singleClassEarn += SALARY_PER_SINGLE; singleClassQty++;
+        rows.push({ name: st.name, type: 'Bonus Class', amount: 0, earn: SALARY_PER_SINGLE, earnedMonth, date: p.earnedDate || p.date });
+      } else if (isSingle(p)) {
+        singleClassEarn += SALARY_PER_SINGLE; singleClassQty++;
+        rows.push({ name: st.name, type: 'Single Class', amount: p.amount, earn: SALARY_PER_SINGLE, earnedMonth, date: p.earnedDate || p.date });
+      } else if (isTrial(p)) {
+        singleClassEarn += SALARY_PER_SINGLE; singleClassQty++;
+        rows.push({ name: st.name, type: 'Trial Class', amount: p.amount, earn: SALARY_PER_SINGLE, earnedMonth, date: p.earnedDate || p.date });
+      } else {
+        const totalClasses = (st.classIds || []).length;
+        monthlyPayRows.push({ p, student: st, earnedMonth, isSingleRate: totalClasses <= 1 });
+        monthlyClassCountByMonth[earnedMonth] = (monthlyClassCountByMonth[earnedMonth] || 0) + 1;
+      }
+    });
+
+    monthlyPayRows.forEach(({ p, student, earnedMonth, isSingleRate }) => {
+      const rate = this.salaryRateForHeadcount(monthlyClassCountByMonth[earnedMonth]);
+      if (isSingleRate) {
+        monthlySingleRateEarn += rate; monthlySingleRateQty++;
+        rows.push({ name: student.name, type: 'Monthly (single-class rate)', amount: p.amount, earn: rate, earnedMonth, date: p.earnedDate || p.date });
+      } else {
+        monthlyMultiRateEarn += rate; monthlyMultiRateClassQty++;
+        rows.push({ name: student.name, type: 'Monthly (multi-class rate)', amount: p.amount, earn: rate, earnedMonth, date: p.earnedDate || p.date });
+      }
+    });
+
+    const total = monthlySingleRateEarn + monthlyMultiRateEarn + singleClassEarn + danceShowEarn + privateEarn;
+    rows.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    return {
+      total, rows,
+      monthlySingleRateEarn, monthlySingleRateQty,
+      monthlyMultiRateEarn, monthlyMultiRateClassQty,
+      singleClassEarn, singleClassQty,
+      danceShowEarn, danceShowQty,
+      privateEarn, privateQty,
+    };
+  }
+
   appVals(t) {
-    const s = this.state, st = this.student, isT = s.role === 'teacher';
-    const cls = id => this.classes.find(c => c.id === id);
-    const tName = id => (this.teachers.find(x => x.id === id) || {}).name || '—';
-    const pName = id => (this.places.find(x => x.id === id) || {}).name || '—';
-    const myClasses = st.classIds.map(cls);
-    const topGrade = Math.max(...Object.values(st.styleGrades));
-    const gm = this.GRADES[topGrade];
-    const pts = s.points - s.redeemed.reduce((a, r) => a + r.cost, 0);
-    const pending = this.payments.filter(p => p.status === 'Unpaid');
+    const s = this.state, isT = s.role === 'teacher';
+    const cdb = s.cloudDB;
+    // usingCloud is true once we're logged in AND the shared database has actually loaded — briefly
+    // false right after login while loadCloudData() is still in flight, so the mock data underneath
+    // is only ever seen for that one short window instead of an empty/broken screen.
+    const usingCloud = !!(cdb && s.account);
+    const classesData = usingCloud && Array.isArray(cdb.classes) ? cdb.classes : this.classes;
+    const teachersData = usingCloud && Array.isArray(cdb.teachers) ? cdb.teachers : this.teachers;
+    const placesData = usingCloud && Array.isArray(cdb.places) ? cdb.places : this.places;
+    const paymentsData = usingCloud && Array.isArray(cdb.payments) ? cdb.payments : this.payments;
+    const attendanceData = usingCloud && Array.isArray(cdb.attendance) ? cdb.attendance : this.attendance;
+    const rewardsData = usingCloud && Array.isArray(cdb.rewards) && cdb.rewards.length ? cdb.rewards : this.rewards;
+
+    const st = (usingCloud && !isT)
+      ? ((cdb.students || []).find(x => x.id === s.account.ref) || this.student)
+      : this.student;
+    // Mock attendance/payments have no studentId (they're implicitly "mine" already); real ones do
+    // and cover every student, so they need filtering down to this account's own records.
+    const myPayments = usingCloud ? paymentsData.filter(p => p.studentId === st.id) : paymentsData;
+    const myAttendanceRecs = usingCloud ? attendanceData.filter(a => a.studentId === st.id) : attendanceData;
+    const creditsExpired = !!(st.creditExpiry && st.creditExpiry < new Date().toISOString().slice(0, 10));
+    const myCredits = creditsExpired ? 0 : (st.credits || 0);
+
+    const cls = id => classesData.find(c => c.id === id);
+    const tName = id => (teachersData.find(x => x.id === id) || {}).name || '—';
+    const pName = id => (placesData.find(x => x.id === id) || {}).name || '—';
+    const rosterFor = classId => usingCloud
+      ? (cdb.students || []).filter(x => Array.isArray(x.classIds) && x.classIds.includes(classId)).map(x => ({ id: x.id, name: x.name, age: x.age }))
+      : (this.roster[classId] || []);
+    const myTeacherId = (usingCloud && isT) ? s.account.ref : 1;
+    const meTeacher = (usingCloud && isT) ? ((teachersData.find(x => x.id === myTeacherId)) || null) : null;
+    const myTeachingClasses = classesData.filter(c => c.teacherId === myTeacherId);
+    const effMarkClass = myTeachingClasses.some(c => c.id === s.markClass) ? s.markClass : ((myTeachingClasses[0] || {}).id ?? s.markClass);
+
+    // ── Teacher activity + salary (real, once cloud data is loaded) ──
+    const salary = (usingCloud && isT) ? this.teacherSalary(myTeacherId, cdb) : null;
+    const myClassIdSet = new Set(myTeachingClasses.map(c => c.id));
+    const myTaughtAttendance = (usingCloud && isT) ? attendanceData.filter(a => myClassIdSet.has(a.classId)) : [];
+    const presentTaught = myTaughtAttendance.filter(a => a.status === 'present');
+    const absentTaughtCount = myTaughtAttendance.filter(a => a.status === 'absent').length;
+    const sessionMap = new Map(); // "classId_date" → classId, one entry per class actually taught
+    presentTaught.forEach(a => sessionMap.set(a.classId + '_' + a.date, a.classId));
+    let totalHoursAllTime = 0;
+    const hoursByStyle = {};
+    sessionMap.forEach(classId => {
+      const c = myTeachingClasses.find(x => x.id === classId);
+      if (!c) return;
+      const hrs = this.classDurationHours(c);
+      totalHoursAllTime += hrs;
+      hoursByStyle[c.style] = (hoursByStyle[c.style] || 0) + hrs;
+    });
+    const distinctStudentsAllTime = new Set(presentTaught.map(a => a.studentId)).size;
+    const avgAttPct = (presentTaught.length + absentTaughtCount) ? Math.round(presentTaught.length / (presentTaught.length + absentTaughtCount) * 100) : 0;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const todaysSessionClassIds = new Set(presentTaught.filter(a => a.date === todayStr).map(a => a.classId));
+    let todaysHours = 0; todaysSessionClassIds.forEach(cid => { const c = myTeachingClasses.find(x => x.id === cid); if (c) todaysHours += this.classDurationHours(c); });
+    const todaysStudentsCount = new Set(presentTaught.filter(a => a.date === todayStr).map(a => a.studentId)).size;
+    // Next class: real weekday + real current time, not a hardcoded "Tuesday" like before.
+    const todayWeekday = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const nowMinutes = (() => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); })();
+    const todaysScheduled = myTeachingClasses.filter(c => c.day === todayWeekday)
+      .map(c => ({ ...c, startMin: this.parseTimeToMinutes(c.start) }))
+      .sort((a, b) => (a.startMin || 0) - (b.startMin || 0));
+    const upcomingToday = todaysScheduled.find(c => c.startMin != null && c.startMin >= nowMinutes) || todaysScheduled[0] || null;
+    // Last 6 weeks of sessions taught (Monday-based buckets), real when cloud data is available.
+    const weekBuckets = {};
+    sessionMap.forEach((classId, key) => {
+      const dateStr = key.split('_')[1];
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d)) return;
+      const dow = (d.getDay() + 6) % 7;
+      const monday = new Date(d); monday.setDate(d.getDate() - dow);
+      const wk = monday.toISOString().slice(0, 10);
+      weekBuckets[wk] = (weekBuckets[wk] || 0) + 1;
+    });
+    const weekKeysSorted = Object.keys(weekBuckets).sort().slice(-6);
+    const weekBarsReal = weekKeysSorted.length ? (() => {
+      const maxV = Math.max(1, ...weekKeysSorted.map(w => weekBuckets[w]));
+      return weekKeysSorted.map((w, i) => ({ v: weekBuckets[w], h: Math.round(weekBuckets[w] / maxV * 100), label: 'W' + (i + 1) }));
+    })() : null;
+    const styleHoursReal = Object.keys(hoursByStyle).length ? (() => {
+      const maxHrs = Math.max(1, ...Object.values(hoursByStyle));
+      return Object.entries(hoursByStyle).map(([style, hrs]) => ({ style, hrs: Math.round(hrs * 10) / 10, pct: Math.round(hrs / maxHrs * 100) }));
+    })() : null;
+    const myClasses = (st.classIds || []).map(cls).filter(Boolean);
+    const styleGradesObj = st.styleGrades || {};
+    const gradeVals = Object.values(styleGradesObj);
+    const topGrade = gradeVals.length ? Math.max(...gradeVals) : 0;
+    const gm = this.GRADES[topGrade] || { tier: '—', c: 'var(--g5)', badge: 'ph-medal' };
+    const hasAnyGrade = gradeVals.some(v => v > 0);
+    const gradePoints = g => ({ 0: 1, 1: 2, 2: 5, 3: 10, 4: 10, 5: 10 })[g] || 1;
+    const earnRate = gradePoints(hasAnyGrade ? topGrade : 0);
+    // Mirrors the real backend's formula exactly: earned (present classes × grade rate) + birthday
+    // bonus (100 per claimed year) + manual counter adjustment − points from CLAIMED redemptions only
+    // (a redeemed-but-uncollected code puts points on hold, it doesn't spend them yet).
+    const myRedemptions = usingCloud ? (st.redemptions || []) : s.redeemed;
+    const earnedPoints = usingCloud ? myAttendanceRecs.filter(a => a.status === 'present').length * earnRate : s.points;
+    const bonusPoints = usingCloud ? (st.bdayClaims || []).length * 100 : 0;
+    const adjustPoints = usingCloud ? (Number(st.pointsAdjust) || 0) : 0;
+    const claimedPoints = usingCloud
+      ? (typeof st.spentPoints === 'number' ? st.spentPoints : myRedemptions.filter(r => r.collected).reduce((n, r) => n + (r.cost || 0), 0))
+      : s.redeemed.reduce((a, r) => a + r.cost, 0);
+    const pendingPoints = usingCloud ? myRedemptions.filter(r => !r.collected).reduce((n, r) => n + (r.cost || 0), 0) : 0;
+    const pts = (earnedPoints + bonusPoints + adjustPoints - claimedPoints) - pendingPoints;
+    const rewardName = r => (r && r.name) ? r.name : (r && r.key) ? (t[r.key] || r.key) : ((r && r.id) || '');
+    const bday = usingCloud ? this.birthdayInfo(st) : null;
+    const pending = myPayments.filter(p => p.status === 'Unpaid');
 
     const studentTabs = [
       { key: 'fees', icon: 'ph-credit-card', label: t.tabFees }, { key: 'classes', icon: 'ph-graduation-cap', label: t.tabMine },
@@ -1411,13 +1820,13 @@ class Component extends DCLogic {
 
     return {
       me: st, meInitial: st.name.slice(0, 1), points: pts,
-      whoLine: isT ? t.teacherRole + ' · Yuki Lim' : t.studentRole + ' · ' + st.name,
+      whoLine: isT ? t.teacherRole + ' · ' + (meTeacher ? meTeacher.name : 'Yuki Lim') : t.studentRole + ' · ' + st.name,
       menuOpen: s.menuOpen, menuIcon: s.menuOpen ? 'ph-x' : 'ph-list',
       toggleMenu: () => this.setState(p => ({ menuOpen: !p.menuOpen })),
       menuRows: (isT
         ? [{ label: t.myPublicProfile, icon: 'ph-user-circle', go: () => this.setState({ tpage: 'me', menuOpen: false }) }]
         : [{ label: t.profile, icon: 'ph-user-circle', go: () => this.setState({ page: 'profile', menuOpen: false }) }]
-      ).concat([{ label: t.logout, icon: 'ph-sign-out', color: '#ff8a78', go: () => this.setState({ view: 'intro', menuOpen: false, page: 'fees', tpage: 'today', user: '', pw: '', stuck: false, showTop: false, introMenu: false }) }])
+      ).concat([{ label: t.logout, icon: 'ph-sign-out', color: '#ff8a78', go: () => this.logoutCloud() }])
         .map(r => ({ ...r, color: r.color || '#fff' })),
 
       tabs: tabsSrc.map(x => ({
@@ -1437,12 +1846,12 @@ class Component extends DCLogic {
       feeSubline: t.monthlyFee + ': RM' + st.fee + ' · ' + myClasses.map(c => c.name).join(', '),
       feeTiles: [
         { label: t.monthlyFee, n: st.fee, pre: 'RM', c: '#fff' },
-        { label: t.credits, n: st.credits, pre: '', c: '#7ee2ab' },
+        { label: t.credits, n: myCredits, pre: '', c: '#7ee2ab' },
         { label: t.unpaidCount, n: pending.length, pre: '', c: '#ff8a78' },
       ],
       hasOutstanding: pending.length > 0,
       outstanding: pending.map(p => ({ ...p, title: p.month + ' 2026 · ' + (cls(p.classId) || {}).name })),
-      payRows: this.payments.filter(p => p.status === 'Paid').map(p => ({
+      payRows: myPayments.filter(p => p.status === 'Paid').map(p => ({
         ...p, cls: (cls(p.classId) || {}).name, meta: p.date + (p.method ? ' · ' + p.method : ''),
         badge: t.paid, badgeIcon: 'ph-check', badgeBg: 'rgba(31,122,77,.22)', badgeFg: '#7ee2ab',
       })),
@@ -1453,7 +1862,7 @@ class Component extends DCLogic {
         { k: t.phone, v: st.phone }, { k: t.email, v: st.email },
       ],
       myClassCards: myClasses.map(c => {
-        const mates = (this.roster[c.id] || []).filter(m => m.id !== st.id);
+        const mates = rosterFor(c.id).filter(m => m.id !== st.id);
         return {
           ...c, when: c.day + ' · ' + c.start + '–' + c.end, where: c.room + ' · ' + pName(c.placeId),
           teacher: tName(c.teacherId), matesLabel: t.classmates + ' (' + mates.length + ')',
@@ -1461,9 +1870,9 @@ class Component extends DCLogic {
         };
       }),
 
-      allClassesLine: this.classes.length + ' ' + t.allClasses.toLowerCase(),
+      allClassesLine: classesData.length + ' ' + t.allClasses.toLowerCase(),
       styleFilter: s.styleFilter || 'all',
-      styleChips: ['all', ...Array.from(new Set(this.classes.map(c => c.style)))].map(x => {
+      styleChips: ['all', ...Array.from(new Set(classesData.map(c => c.style)))].map(x => {
         const active = (s.styleFilter || 'all') === x;
         return {
           label: x === 'all' ? t.allStyles : x, bd: active ? 'var(--acc)' : 'var(--bd)',
@@ -1471,8 +1880,8 @@ class Component extends DCLogic {
           go: () => this.setState({ styleFilter: x }),
         };
       }),
-      allClassRows: this.classes.filter(c => !s.styleFilter || s.styleFilter === 'all' || c.style === s.styleFilter).map(c => {
-        const enrolled = (this.roster[c.id] || []).length || Math.max(4, c.max - 3);
+      allClassRows: classesData.filter(c => !s.styleFilter || s.styleFilter === 'all' || c.style === s.styleFilter).map(c => {
+        const enrolled = usingCloud ? rosterFor(c.id).length : ((this.roster[c.id] || []).length || Math.max(4, c.max - 3));
         const full = enrolled >= c.max;
         return {
           ...c, place: pName(c.placeId), teacher: tName(c.teacherId), when: c.day + ' · ' + c.start,
@@ -1481,9 +1890,9 @@ class Component extends DCLogic {
         };
       }),
 
-      attSubline: t.viewOnly + ' · ' + this.attendance.filter(a => a.status === 'present').length + ' ' + t.attended,
+      attSubline: t.viewOnly + ' · ' + myAttendanceRecs.filter(a => a.status === 'present').length + ' ' + t.attended,
       attCards: myClasses.map(c => {
-        const recs = this.attendance.filter(a => a.classId === c.id);
+        const recs = myAttendanceRecs.filter(a => a.classId === c.id);
         const n = k => recs.filter(r => r.status === k).length;
         const pills = [{ label: n('present') + ' ' + t.present, bg: 'rgba(31,122,77,.22)', fg: '#7ee2ab' }];
         if (n('absent')) pills.push({ label: n('absent') + ' ' + t.absent, bg: 'rgba(255,77,46,.18)', fg: '#ff8a78' });
@@ -1500,28 +1909,48 @@ class Component extends DCLogic {
         { title: 'K-pop Beginner · Half-hour extra', meta: this.fmtDate('2026-07-05') + ' · Yuki Lim', cost: '−0.5' },
       ],
 
-      gradeLine: t.gradeOf + ' ' + topGrade + ' · ' + gm.tier,
-      earnLine: t.earn.replace('{n}', ({ 1: 2, 2: 5, 3: 10, 4: 10, 5: 10 })[topGrade] || 1),
-      gradeCards: Object.entries(st.styleGrades).map(([style, g]) => ({
-        style, badge: this.GRADES[g].badge, c: this.GRADES[g].c, tier: t.gradeOf + ' ' + g + ' · ' + this.GRADES[g].tier,
-        bd: g === topGrade ? this.GRADES[g].c : 'var(--bd)',
+      gradeLine: hasAnyGrade ? (t.gradeOf + ' ' + topGrade + ' · ' + gm.tier) : t.noGradesYet,
+      earnLine: t.earn.replace('{n}', earnRate),
+      gradeCards: Object.entries(styleGradesObj).map(([style, g]) => ({
+        style, badge: (this.GRADES[g] || {}).badge, c: (this.GRADES[g] || {}).c, tier: t.gradeOf + ' ' + g + ' · ' + (this.GRADES[g] || {}).tier,
+        bd: g === topGrade ? (this.GRADES[g] || {}).c : 'var(--bd)',
       })),
-      bdayLine: t.daysUntil.replace('{n}', 14),
-      rewardCards: this.rewards.map(r => {
+      bdayLine: !usingCloud ? t.daysUntil.replace('{n}', 14)
+        : !bday ? t.birthdayNone
+        : !bday.isToday ? t.daysUntil.replace('{n}', bday.days)
+        : bday.claimedThisYear ? t.birthdayClaimed
+        : t.birthdayToday,
+      showClaimBday: usingCloud && !!bday && bday.isToday && !bday.claimedThisYear,
+      claimBirthday: async () => {
+        if (!bday || !bday.isToday || bday.claimedThisYear) return;
+        const claims = [...(st.bdayClaims || []), new Date().getFullYear()];
+        const okSave = await this.updateStudentRecord(st.id, { bdayClaims: claims });
+        this.flash(okSave ? t.birthdayToday : t.saveFailed);
+      },
+      rewardCards: rewardsData.map(r => {
         const can = pts >= r.cost;
+        const nm = rewardName(r);
         return {
-          ...r, name: s.lang === 'zh' ? r.zh : r.name,
+          ...r, name: nm,
           bg: can ? 'var(--acc)' : '#242220', fg: can ? '#000' : '#4a4640',
           label: can ? t.redeem : t.locked, cursor: can ? 'pointer' : 'not-allowed',
-          redeem: () => {
+          redeem: async () => {
             if (!can) return;
             const code = 'BD' + Math.random().toString(36).slice(2, 6).toUpperCase();
-            this.setState(p => ({ redeemed: [{ ...r, code, date: '31 Jul 2026', collected: false }, ...p.redeemed], codeModal: { ...r, code, name: s.lang === 'zh' ? r.zh : r.name } }));
-            this.flash(t.redeemed);
+            const entry = { id: 'rd' + Date.now(), rewardId: r.id, name: nm, icon: r.icon, cost: r.cost, date: new Date().toISOString().slice(0, 10), code, collected: false };
+            if (!usingCloud) {
+              this.setState(p => ({ redeemed: [{ ...r, code, date: '31 Jul 2026', collected: false }, ...p.redeemed], codeModal: { ...r, code, name: nm } }));
+              this.flash(t.redeemed);
+              return;
+            }
+            const newList = [entry, ...myRedemptions];
+            const okSave = await this.updateStudentRecord(st.id, { redemptions: newList });
+            if (okSave) { this.setState({ codeModal: { ...r, code, name: nm } }); this.flash(t.redeemed); }
+            else this.flash(t.saveFailed);
           },
         };
       }),
-      redemptionRows: [...s.redeemed, { icon: 'ph-coffee', name: s.lang === 'zh' ? '饮料券' : 'Drink Voucher', cost: 60, code: 'BD7K2M', date: '14 Jul 2026', collected: true }].map(r => ({
+      redemptionRows: (usingCloud ? myRedemptions : [...s.redeemed, { icon: 'ph-coffee', name: s.lang === 'zh' ? '饮料券' : 'Drink Voucher', cost: 60, code: 'BD7K2M', date: '14 Jul 2026', collected: true }]).map(r => ({
         ...r, status: r.collected ? t.collected : t.showCode, statusIcon: r.collected ? 'ph-check' : 'ph-lock-simple',
         bg: r.collected ? 'rgba(31,122,77,.22)' : 'rgba(255,122,41,.18)', fg: r.collected ? '#7ee2ab' : 'var(--acc2)',
       })),
@@ -1548,53 +1977,74 @@ class Component extends DCLogic {
       // ── teacher ──
       tgToday: isT && s.tpage === 'today', tgRoster: isT && s.tpage === 'roster',
       tgSalary: isT && s.tpage === 'salary', tgMark: isT && s.tpage === 'mark', tgMe: isT && s.tpage === 'me',
-      payTotal: 1845, payFormula: '41 ' + t.hours.toLowerCase() + ' × RM45' + t.perHour, payStatus: t.pendingPay,
-      payRowsT: [
+      payTotal: salary ? Math.round(salary.total) : 1845,
+      payFormula: salary ? t.salaryFormula : ('41 ' + t.hours.toLowerCase() + ' × RM45' + t.perHour),
+      payStatus: t.pendingPay,
+      payRowsT: salary ? [
+        salary.monthlySingleRateQty ? { label: t.salarySingleRate, meta: salary.monthlySingleRateQty + ' × ~RM' + Math.round(salary.monthlySingleRateEarn / salary.monthlySingleRateQty), amount: 'RM' + Math.round(salary.monthlySingleRateEarn) } : null,
+        salary.monthlyMultiRateClassQty ? { label: t.salaryMultiRate, meta: salary.monthlyMultiRateClassQty + ' × ~RM' + Math.round(salary.monthlyMultiRateEarn / salary.monthlyMultiRateClassQty), amount: 'RM' + Math.round(salary.monthlyMultiRateEarn) } : null,
+        salary.singleClassQty ? { label: t.salarySingleClass, meta: salary.singleClassQty + ' × RM25', amount: 'RM' + Math.round(salary.singleClassEarn) } : null,
+        salary.danceShowQty ? { label: t.salaryDanceShow, meta: salary.danceShowQty + ' ' + t.classesTaught.toLowerCase(), amount: 'RM' + Math.round(salary.danceShowEarn) } : null,
+        salary.privateQty ? { label: t.salaryPrivate, meta: salary.privateQty + ' ' + t.classesTaught.toLowerCase(), amount: 'RM' + Math.round(salary.privateEarn) } : null,
+      ].filter(Boolean) : [
         { label: 'K-pop Beginner + Intermediate', meta: '26 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM1,170' },
         { label: 'Street Jazz Open', meta: '11 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM495' },
         { label: 'Choreo lab', meta: '4 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM180' },
       ],
-      todayLabel: 'Tuesday · 4 Aug 2026', greeting: t.goodEvening + ', Yuki',
-      nextClass: { name: 'K-pop Beginner', time: '7:00 PM – 8:00 PM', room: 'Studio A · Adda Height', headcount: '9 ' + t.studentsIn, mins: 25 },
-      todayTiles: [
+      todayLabel: this.fmtDate(new Date().toISOString().slice(0, 10)), greeting: t.goodEvening + ', ' + (meTeacher ? meTeacher.name.split(' ')[0] : 'Yuki'),
+      nextClass: upcomingToday ? {
+        name: upcomingToday.name, time: upcomingToday.start + ' – ' + upcomingToday.end,
+        room: upcomingToday.room + ' · ' + pName(upcomingToday.placeId),
+        headcount: rosterFor(upcomingToday.id).length + ' ' + t.studentsIn,
+        mins: Math.max(0, (upcomingToday.startMin || 0) - nowMinutes),
+      } : (usingCloud ? { name: t.noClassToday, time: '—', room: '—', headcount: '—', mins: 0 } : { name: 'K-pop Beginner', time: '7:00 PM – 8:00 PM', room: 'Studio A · Adda Height', headcount: '9 ' + t.studentsIn, mins: 25 }),
+      todayTiles: usingCloud ? [
+        { n: todaysSessionClassIds.size, label: t.classesTaught, dec: '0' }, { n: todaysStudentsCount, label: t.studentsTaught, dec: '0' },
+        { n: Math.round(todaysHours * 10) / 10, label: t.hours, dec: (todaysHours % 1) ? '1' : '0' },
+      ] : [
         { n: 2, label: t.classesTaught, dec: '0' }, { n: 15, label: t.studentsTaught, dec: '0' },
         { n: 3, label: t.hours, dec: '0' },
       ],
-      weekAhead: this.classes.filter(c => c.teacherId === 1).map((c, i) => ({
+      weekAhead: myTeachingClasses.map((c, i) => ({
         name: c.name, dow: c.day.slice(0, 3).toUpperCase(), dd: 4 + i * 2,
-        meta: c.start + ' · ' + c.room + ' · ' + (this.roster[c.id] || []).length + ' ' + t.studentsIn,
+        meta: c.start + ' · ' + c.room + ' · ' + rosterFor(c.id).length + ' ' + t.studentsIn,
         edge: i === 0 ? 'var(--acc)' : 'var(--bd)',
         tag: i === 0 ? t.now : c.style, tagBg: i === 0 ? 'rgba(255,122,41,.18)' : 'rgba(255,255,255,.05)',
         tagFg: i === 0 ? 'var(--acc2)' : 'var(--g5)',
-        open: () => this.setState({ tpage: 'mark', markClass: 1 }),
+        open: () => this.setState({ tpage: 'mark', markClass: c.id }),
       })),
-      startMarking: () => this.setState({ tpage: 'mark', markClass: 1 }),
-      rosterLead: this.classes.filter(c => c.teacherId === 1).length + ' ' + t.myClasses.toLowerCase() + ' · ' + t.tapStudent,
-      myTeachClasses: this.classes.filter(c => c.teacherId === 1).map(c => ({
+      startMarking: () => this.setState({ tpage: 'mark', markClass: (myTeachingClasses[0] || {}).id || null }),
+      rosterLead: myTeachingClasses.length + ' ' + t.myClasses.toLowerCase() + ' · ' + t.tapStudent,
+      myTeachClasses: myTeachingClasses.map(c => ({
         ...c, meta: c.day + ' · ' + c.start + '–' + c.end + ' · ' + c.room,
-        count: '+' + Math.max(0, (this.roster[c.id] || []).length - 5),
-        avatars: (this.roster[c.id] || []).slice(0, 5).map((m, i) => ({
+        count: '+' + Math.max(0, rosterFor(c.id).length - 5),
+        avatars: rosterFor(c.id).slice(0, 5).map((m, i) => ({
           initial: m.name.slice(0, 1), c1: ['#ff7a29', '#ff4d2e', '#ffa057', '#e39b5a', '#ff6a3d'][i % 5], c2: '#3a2010',
         })),
         mark: () => this.setState({ tpage: 'mark', markClass: c.id, remarkFor: null }),
         open: () => this.flash(t.roster + ' · ' + c.name),
       })),
-      hourTiles: [
+      hourTiles: usingCloud ? [
+        { n: Math.round(totalHoursAllTime * 10) / 10, label: t.hours, icon: 'ph-clock', dec: (totalHoursAllTime % 1) ? '1' : '0' },
+        { n: sessionMap.size, label: t.classesTaught, icon: 'ph-chalkboard-teacher', dec: '0' },
+        { n: distinctStudentsAllTime, label: t.studentsTaught, icon: 'ph-users-three', dec: '0' },
+        { n: avgAttPct, label: t.avgAtt + ' %', icon: 'ph-chart-line-up', dec: '0' },
+      ] : [
         { n: 41, label: t.hours, icon: 'ph-clock', dec: '0' },
         { n: 34, label: t.classesTaught, icon: 'ph-chalkboard-teacher', dec: '0' },
         { n: 20, label: t.studentsTaught, icon: 'ph-users-three', dec: '0' },
         { n: 92, label: t.avgAtt + ' %', icon: 'ph-chart-line-up', dec: '0' },
       ],
-      weekBars: [[6, 55], [7, 64], [5, 45], [8, 73], [9, 82], [11, 100]].map(([v, h], i) => ({ v, h, label: 'W' + (i + 1) })),
-      styleHours: [{ style: 'K-pop', hrs: 26, pct: 100 }, { style: 'Street Jazz', hrs: 11, pct: 42 }, { style: 'Choreo lab', hrs: 4, pct: 15 }],
-      markClass: s.markClass,
-      markDateLine: 'Tuesday · 4 Aug 2026 · ' + (this.classes.find(c => c.id === s.markClass) || {}).name,
-      markClassChips: this.classes.filter(c => c.teacherId === 1).map(c => {
-        const on2 = s.markClass === c.id;
+      weekBars: weekBarsReal || [[6, 55], [7, 64], [5, 45], [8, 73], [9, 82], [11, 100]].map(([v, h], i) => ({ v, h, label: 'W' + (i + 1) })),
+      styleHours: styleHoursReal || [{ style: 'K-pop', hrs: 26, pct: 100 }, { style: 'Street Jazz', hrs: 11, pct: 42 }, { style: 'Choreo lab', hrs: 4, pct: 15 }],
+      markClass: effMarkClass,
+      markDateLine: this.fmtDate(new Date().toISOString().slice(0, 10)) + ' · ' + (cls(effMarkClass) || {}).name,
+      markClassChips: myTeachingClasses.map(c => {
+        const on2 = effMarkClass === c.id;
         return { label: c.name, bd: on2 ? 'var(--acc)' : 'var(--bd)', bg: on2 ? 'var(--acc)' : 'var(--card)', fg: on2 ? '#1a1006' : 'var(--g4)', go: () => this.setState({ markClass: c.id, remarkFor: null }) };
       }),
-      markRows: (this.roster[s.markClass] || []).map((m, i) => {
-        const key = s.markClass + ':' + m.id, cur = (s.marks[key] || {}).status || '';
+      markRows: rosterFor(effMarkClass).map((m, i) => {
+        const key = effMarkClass + ':' + m.id, cur = (s.marks[key] || {}).status || '';
         const edge = cur === 'present' ? '#1f7a4d' : cur === 'absent' ? '#7a2a22' : cur === 'cancelled' ? '#a84715' : 'var(--bd)';
         const opt = (k, label, icon, bg, fg) => ({
           label, icon, bd: cur === k ? bg : 'var(--bd)', bg: cur === k ? bg : 'transparent', fg: cur === k ? fg : 'var(--g5)',
@@ -1615,19 +2065,19 @@ class Component extends DCLogic {
         };
       }),
       markProgressLabel: (() => {
-        const list = this.roster[s.markClass] || [];
-        return list.filter(m => (s.marks[s.markClass + ':' + m.id] || {}).status).length + ' ' + t.of + ' ' + list.length;
+        const list = rosterFor(effMarkClass);
+        return list.filter(m => (s.marks[effMarkClass + ':' + m.id] || {}).status).length + ' ' + t.of + ' ' + list.length;
       })(),
       markPct: (() => {
-        const list = this.roster[s.markClass] || [];
+        const list = rosterFor(effMarkClass);
         if (!list.length) return 0;
-        return list.filter(m => (s.marks[s.markClass + ':' + m.id] || {}).status).length / list.length * 100;
+        return list.filter(m => (s.marks[effMarkClass + ':' + m.id] || {}).status).length / list.length * 100;
       })(),
       remarkText: s.remarkText, onRemark: e => this.setState({ remarkText: e.target.value }),
       markAllPresent: () => {
         const next = { ...s.marks };
-        (this.roster[s.markClass] || []).forEach(m => {
-          const k = s.markClass + ':' + m.id;
+        rosterFor(effMarkClass).forEach(m => {
+          const k = effMarkClass + ':' + m.id;
           next[k] = { ...(next[k] || {}), status: 'present' };
         });
         this.setState({ marks: next });
@@ -1635,10 +2085,10 @@ class Component extends DCLogic {
       },
       resetMarks: () => {
         const next = { ...s.marks };
-        (this.roster[s.markClass] || []).forEach(m => { delete next[s.markClass + ':' + m.id]; });
+        rosterFor(effMarkClass).forEach(m => { delete next[effMarkClass + ':' + m.id]; });
         this.setState({ marks: next, remarkFor: null });
       },
-      saveMarks: () => this.flash(t.saved),
+      saveMarks: () => this.saveAttendanceMarks(effMarkClass, rosterFor(effMarkClass), s.marks, t),
       quoteVal: s.profile.quote, igVal: s.profile.ig, videoVal: s.profile.video,
       onQuote: e => this.setState({ profile: { ...s.profile, quote: e.target.value } }),
       onIg: e => this.setState({ profile: { ...s.profile, ig: e.target.value } }),
@@ -2127,12 +2577,34 @@ class Component extends DCLogic {
       userPlaceholder: s.loginRole === 'student' ? 'chloe.tan' : 'yuki.lim',
       userVal: s.user, pwVal: s.pw, onUser: e => this.setState({ user: e.target.value }), onPw: e => this.setState({ pw: e.target.value }),
       pwType: s.showPw ? 'text' : 'password', pwEye: s.showPw ? 'ph-eye-slash' : 'ph-eye', togglePw: () => this.setState(p => ({ showPw: !p.showPw })),
+      hasLoginError: !!s.loginError, loginErrorMsg: s.loginError,
       doLogin: () => {
-        this.setState({ loading: true });
-        setTimeout(() => this.setState({
-          loading: false, view: 'app', role: s.loginRole,
-          page: 'fees', tpage: 'today', stuck: false, showTop: false, introMenu: false,
-        }), 1150);
+        const role = s.loginRole, user = (s.user || '').trim(), pass = s.pw || '';
+        if (!user || !pass) { this.setState({ loginError: t.loginMissing }); return; }
+        this.setState({ loading: true, loginError: '' });
+        cloudFetchWithTimeout({
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login', user, pass, role }),
+        })
+          .then(r => r.json())
+          .then(j => {
+            if (!j || j.ok === false || j.error) {
+              this.setState({ loading: false, loginError: (j && j.error) || t.loginBad });
+              return;
+            }
+            if (!j.token || !j.account) {
+              this.setState({ loading: false, loginError: t.loginBad });
+              return;
+            }
+            try { localStorage.setItem(SESSION_KEY, JSON.stringify({ token: j.token, account: j.account })); } catch (e) {}
+            this.setState({
+              loading: false, view: 'app', role: j.account.role, account: j.account, sessionToken: j.token,
+              page: j.account.role === 'teacher' ? 'today' : 'fees', tpage: 'today',
+              stuck: false, showTop: false, introMenu: false, pw: '',
+            });
+            this.loadCloudData(j.token);
+          })
+          .catch(() => this.setState({ loading: false, loginError: t.loginOffline }));
       },
     };
   }
