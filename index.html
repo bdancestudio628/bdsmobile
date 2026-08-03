@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff7a29">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="B Dance Studio">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -371,6 +377,38 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <span style="width:7px;height:7px;border-radius:50%;background:var(--acc)"></span>
     </div>
     <p class="mn" style="color:var(--g5);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin:0">{{ t.loadingStudio }}</p>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ INSTALL APP HINT ══════════ -->
+<sc-if value="{{ showInstallHint }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ dismissInstallHint }}" style="position:absolute;inset:0;background:rgba(0,0,0,.78);z-index:240;display:flex;align-items:flex-end;justify-content:center">
+  <div onClick="{{ stop }}" style="background:var(--card);border-top:1px solid #a84715;width:100%;max-width:460px;padding:22px 20px 26px;text-align:center">
+    <img src="assets/logo.png" alt="" style="width:44px;height:44px;object-fit:contain;margin:0 auto 12px;display:block" />
+    <h3 class="dsp" style="font-size:20px;text-transform:uppercase;margin:0 0 8px">{{ t.installTitle }}</h3>
+    <p style="color:var(--g4);font-size:12px;line-height:1.6;margin:0 0 18px">{{ t.installLead }}</p>
+
+    <sc-if value="{{ installIsIos }}" hint-placeholder-val="{{ false }}">
+    <div style="text-align:left;background:#000;border:1px solid var(--bd);padding:14px 16px;margin-bottom:16px">
+      <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0 0 10px"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">1</span> <i class="ph ph-export" style="color:var(--acc);font-size:16px"></i> {{ t.installIosStep1 }}</p>
+      <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">2</span> <i class="ph ph-plus-square" style="color:var(--acc);font-size:16px"></i> {{ t.installIosStep2 }}</p>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ installIsAndroid }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ canNativeInstall }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ installNow }}" class="mn sheen" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);margin-bottom:10px">{{ t.installBtn }}</button>
+      </sc-if>
+      <sc-if value="{{ !canNativeInstall }}" hint-placeholder-val="{{ true }}">
+      <div style="text-align:left;background:#000;border:1px solid var(--bd);padding:14px 16px;margin-bottom:16px">
+        <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0 0 10px"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">1</span> <i class="ph ph-dots-three-vertical" style="color:var(--acc);font-size:16px"></i> {{ t.installAndroidStep1 }}</p>
+        <p class="mn" style="display:flex;align-items:center;gap:10px;color:#fff;font-size:12px;margin:0"><span style="width:22px;height:22px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">2</span> <i class="ph ph-plus-square" style="color:var(--acc);font-size:16px"></i> {{ t.installAndroidStep2 }}</p>
+      </div>
+      </sc-if>
+    </sc-if>
+
+    <button onClick="{{ dismissInstallHint }}" class="mn" style="width:100%;background:transparent;border:1px solid var(--bd);color:var(--g4);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:12px;cursor:pointer">{{ t.installLater }}</button>
   </div>
 </div>
 </sc-if>
@@ -1180,6 +1218,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
+    installPlatform: null, canNativeInstall: false,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -1368,6 +1407,21 @@ class Component extends DCLogic {
     return null;
   }
 
+  dismissInstallHint() {
+    try { localStorage.setItem('bdance_install_dismissed', '1'); } catch (e) {}
+    this.setState({ installPlatform: null });
+  }
+
+  async installNow() {
+    if (this.deferredInstallPrompt) {
+      this.deferredInstallPrompt.prompt();
+      try { await this.deferredInstallPrompt.userChoice; } catch (e) {}
+      this.deferredInstallPrompt = null;
+      this.setState({ canNativeInstall: false });
+    }
+    this.dismissInstallHint();
+  }
+
   logoutCloud() {
     try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
     this.setState({
@@ -1482,6 +1536,10 @@ class Component extends DCLogic {
       teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
       username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…',
+      installTitle: 'Install This App', installLead: 'Add B Dance Studio to your home screen for quick access, just like a real app.',
+      installIosStep1: 'Tap the Share button', installIosStep2: 'Then tap "Add to Home Screen"',
+      installAndroidStep1: 'Tap the ⋮ menu in your browser', installAndroidStep2: 'Then tap "Add to Home Screen" or "Install App"',
+      installBtn: 'Install App', installLater: 'Maybe later', installGotIt: 'Got it',
       demoHint: 'Use the username & password given to you by the studio', openInstagram: 'Open Instagram',
       loginMissing: 'Please enter your username and password.',
       loginBad: 'Invalid username or password.',
@@ -1517,6 +1575,10 @@ class Component extends DCLogic {
       teacher: '导师', teacherSub: '学员名单、点名与课时',
       studentLogin: '学生登录', teacherLogin: '导师登录',
       username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…',
+      installTitle: '安装此应用', installLead: '将 B Dance Studio 添加到主屏幕，像真正的App一样快速打开。',
+      installIosStep1: '点击分享按钮', installIosStep2: '然后点击"添加到主屏幕"',
+      installAndroidStep1: '点击浏览器右上角的 ⋮ 菜单', installAndroidStep2: '然后点击"添加到主屏幕"或"安装应用"',
+      installBtn: '安装应用', installLater: '稍后再说', installGotIt: '知道了',
       demoHint: '请使用舞室提供给你的用户名与密码登录', openInstagram: '打开 Instagram',
       loginMissing: '请输入用户名和密码。',
       loginBad: '用户名或密码不正确。',
@@ -2206,6 +2268,24 @@ class Component extends DCLogic {
     this.restoreSession();
     this.loadPublicData();
     if (this.props.accent) document.documentElement.style.setProperty('--acc', this.props.accent);
+    // "Add to Home Screen" hint — only for iOS/Android, only if not already installed, only if not
+    // previously dismissed. iOS Safari has no install API at all, so it always gets manual steps;
+    // Android/Chrome may offer a real one-tap install via beforeinstallprompt below.
+    try {
+      const ua = navigator.userAgent || '';
+      const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      const isAndroid = /Android/.test(ua);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      const dismissed = localStorage.getItem('bdance_install_dismissed') === '1';
+      if ((isIOS || isAndroid) && !isStandalone && !dismissed) {
+        this.setState({ installPlatform: isIOS ? 'ios' : 'android' });
+      }
+    } catch (e) {}
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+      this.setState({ canNativeInstall: true });
+    });
     this.evTimer = setInterval(() => {
       if (this.state.view === 'intro') this.setState(s => ({ eventSlide: (s.eventSlide + 1) % Math.max(1, this.getIntroEvents().length) }));
     }, 6500);
@@ -2630,6 +2710,11 @@ class Component extends DCLogic {
     return {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
+      showInstallHint: s.view === 'intro' && !s.introLoading && !!s.installPlatform,
+      installIsIos: s.installPlatform === 'ios', installIsAndroid: s.installPlatform === 'android',
+      canNativeInstall: s.canNativeInstall,
+      dismissInstallHint: () => this.dismissInstallHint(),
+      installNow: () => this.installNow(),
       isIntro: s.view === 'intro', isAuth: s.view === 'auth', isApp: s.view === 'app',
       role: s.role, page: s.page, tpage: s.tpage,
       setEn: () => this.setState({ lang: 'en' }), setZh: () => this.setState({ lang: 'zh' }),
