@@ -163,7 +163,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         <sc-for list="{{ events }}" as="ev" hint-placeholder-count="2">
           <div style="flex:0 0 100%;min-width:100%;padding:14px">
             <div style="position:relative;margin-bottom:12px">
-              <img src="assets/default-event-poster.jpg" alt="event poster" style="width:100%;display:block;border:1px solid var(--bd2)" />
+              <img src="{{ ev.posterSrc }}" alt="event poster" style="width:100%;display:block;border:1px solid var(--bd2)" />
               <span class="mn" style="position:absolute;top:8px;left:8px;background:var(--acc);color:#000;font-size:9.5px;font-weight:700;padding:3px 8px;text-transform:uppercase;letter-spacing:.08em">{{ ev.badge }}</span>
             </div>
             <h2 class="dsp" style="font-size:26px;text-transform:uppercase;margin:0 0 8px;min-height:26px"><span data-om-type="{{ ev.typeKey }}" data-om-order="0">{{ ev.title }}</span></h2>
@@ -178,7 +178,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
                 <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9.5px;font-weight:600;padding:4px 8px">{{ c }}</span>
               </sc-for>
             </div>
-            <button onClick="{{ goAuth }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px;border:0;cursor:pointer;transition:transform .15s">{{ t.eventBtn }}</button>
+            <button onClick="{{ ev.register }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:12px;border:0;cursor:pointer;transition:transform .15s">{{ t.eventBtn }}</button>
           </div>
         </sc-for>
       </div>
@@ -339,10 +339,10 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     <div data-om-pop="{{ loginRole }}" style="background:var(--card);border:1px solid var(--bd);padding:20px">
       <p class="mn" style="color:var(--acc);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 14px">{{ loginHeading }}</p>
       <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ t.username }}</label>
-      <input value="{{ userVal }}" onChange="{{ onUser }}" placeholder="{{ userPlaceholder }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px;outline:none;margin-bottom:12px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+      <input value="{{ userVal }}" onChange="{{ onUser }}" placeholder="" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px;outline:none;margin-bottom:12px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
       <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ t.password }}</label>
       <div style="position:relative;margin-bottom:18px">
-        <input type="{{ pwType }}" value="{{ pwVal }}" onChange="{{ onPw }}" placeholder="••••••••" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px 42px 12px 12px;outline:none;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+        <input type="{{ pwType }}" value="{{ pwVal }}" onChange="{{ onPw }}" placeholder="" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:12px 42px 12px 12px;outline:none;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
         <button onClick="{{ togglePw }}" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;cursor:pointer;font-size:14px"><i class="ph {{ pwEye }}" style="color:var(--g5);font-size:16px"></i></button>
       </div>
       <sc-if value="{{ hasLoginError }}" hint-placeholder-val="{{ false }}">
@@ -1463,7 +1463,7 @@ class Component extends DCLogic {
       findBtn: 'Find a Studio', meetBtn: 'Meet Instructors',
       studioReel: 'Studio Reel', showreel: 'Showreel',
       statBranches: 'Branches', statStyles: 'Styles', statInstructors: 'Instructors', statFounded: 'Founded',
-      eventsTitle: 'Upcoming Events', eventBtn: 'Sign in to register →',
+      eventsTitle: 'Upcoming Events', eventBtn: 'Register Now →',
       shopsEyebrow: 'Collaborated Shops', shopsTitle: 'Perks For Our Students', shopOff: '10% OFF',
       shopsLead: 'Show your student ID at any partner shop for 10% off. Tap a shop to see what they offer.',
       aboutEyebrow: 'About Us', aboutTitle: 'Built By Dancers, Not A Branch Playbook',
@@ -1498,7 +1498,7 @@ class Component extends DCLogic {
       findBtn: '寻找分店', meetBtn: '认识导师',
       studioReel: '工作室短片', showreel: '精彩短片',
       statBranches: '分店', statStyles: '风格', statInstructors: '导师', statFounded: '成立于',
-      eventsTitle: '近期活动', eventBtn: '登录报名 →',
+      eventsTitle: '近期活动', eventBtn: '立即报名 →',
       shopsEyebrow: '合作商店', shopsTitle: '学员专属优惠', shopOff: '9 折',
       shopsLead: '在合作商店出示学员证即享 9 折。点击商店查看优惠内容。',
       aboutEyebrow: '关于我们', aboutTitle: '由舞者创立，而非连锁模板',
@@ -2672,7 +2672,15 @@ class Component extends DCLogic {
         this.setState(p => ({ reelPlaying: !p.reelPlaying }));
       },
 
-      events: introEventsData.map((e, i) => ({ ...e, lead: e.lead || (s.lang === 'zh' ? '我们规模最大的舞蹈盛会 —— 个人赛、对战、团体翻跳与随机舞。来参赛，或来为你的队伍加油！' : 'Our biggest showcase yet — solo, battle, group cover and random play dance. Come compete, or come cheer your crew on.'), catList: (e.cats || '').split(',').map(c => c.trim()).filter(Boolean), typeKey: (i === s.eventSlide ? 'on' + i : 'off') })),
+      events: introEventsData.map((e, i) => ({
+        ...e,
+        lead: e.lead || (s.lang === 'zh' ? '我们规模最大的舞蹈盛会 —— 个人赛、对战、团体翻跳与随机舞。来参赛，或来为你的队伍加油！' : 'Our biggest showcase yet — solo, battle, group cover and random play dance. Come compete, or come cheer your crew on.'),
+        catList: (e.cats || '').split(',').map(c => c.trim()).filter(Boolean),
+        typeKey: (i === s.eventSlide ? 'on' + i : 'off'),
+        posterSrc: e.poster || 'assets/default-event-poster.jpg',
+        hasRegLink: !!e.regUrl,
+        register: () => { if (e.regUrl) window.open(e.regUrl, '_blank', 'noopener'); else this.setState({ sheet: { kind: 'contact' } }); },
+      })),
       evTransform: 'translateX(calc(-' + (s.eventSlide * 100) + '% + ' + (s.evDrag || 0) + 'px))',
       evTransition: s.evDragging ? 'none' : 'transform .55s cubic-bezier(.16,.84,.34,1)',
       evCursor: s.evDragging ? 'grabbing' : 'grab',
@@ -2754,7 +2762,6 @@ class Component extends DCLogic {
       tchBd: s.loginRole === 'teacher' ? 'var(--acc)' : 'var(--bd)', tchBg: s.loginRole === 'teacher' ? 'rgba(255,122,41,.12)' : 'var(--card)', tchFg: s.loginRole === 'teacher' ? 'var(--acc)' : '#fff',
       loginHeading: s.loginRole === 'student' ? t.studentLogin : t.teacherLogin,
       loginCta: s.loginRole === 'student' ? t.student + ' →' : t.teacher + ' →',
-      userPlaceholder: s.loginRole === 'student' ? 'chloe.tan' : 'yuki.lim',
       userVal: s.user, pwVal: s.pw, onUser: e => this.setState({ user: e.target.value }), onPw: e => this.setState({ pw: e.target.value }),
       pwType: s.showPw ? 'text' : 'password', pwEye: s.showPw ? 'ph-eye-slash' : 'ph-eye', togglePw: () => this.setState(p => ({ showPw: !p.showPw })),
       hasLoginError: !!s.loginError, loginErrorMsg: s.loginError,
