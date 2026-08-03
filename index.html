@@ -403,10 +403,10 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <div style="background:#1c1c1e;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <i class="ph ph-arrow-left" style="color:#8e8e93;font-size:14px"></i>
         <span class="mn" style="color:#8e8e93;font-size:9.5px">bdancestudio.com.my</span>
-        <span style="position:relative;display:inline-flex">
+        <button onClick="{{ shareNow }}" style="position:relative;display:inline-flex;background:none;border:0;padding:9px;margin:-9px;cursor:pointer">
           <span style="position:absolute;inset:-9px;border:2px solid var(--acc);border-radius:50%;animation:ringpop 1.6s ease-out infinite"></span>
           <i class="ph ph-export" style="color:var(--acc);font-size:17px;position:relative"></i>
-        </span>
+        </button>
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
         <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">2</span>
@@ -430,13 +430,14 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
           <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">1</span>
           <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installAndroidStep1 }}</p>
         </div>
-        <div style="background:#fff;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="background:#fff;border-radius:12px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
           <span class="mn" style="color:#5f6368;font-size:9.5px"><i class="ph ph-lock-simple"></i> bdancestudio.com.my</span>
-          <span style="position:relative;display:inline-flex">
+          <button onClick="{{ tryNativeInstall }}" style="position:relative;display:inline-flex;background:none;border:0;padding:9px;margin:-9px;cursor:pointer">
             <span style="position:absolute;inset:-9px;border:2px solid var(--acc);border-radius:50%;animation:ringpop 1.6s ease-out infinite"></span>
             <i class="ph ph-dots-three-vertical" style="color:#5f6368;font-size:17px;position:relative"></i>
-          </span>
+          </button>
         </div>
+        <p class="mn" style="color:var(--g5);font-size:9.5px;text-align:right;margin:0 0 14px">{{ t.installFindIcon }}</p>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <span style="width:20px;height:20px;border-radius:50%;background:var(--acc);color:#000;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0">2</span>
           <p class="mn" style="color:var(--g4);font-size:11px;margin:0">{{ t.installAndroidStep2 }}</p>
@@ -1463,6 +1464,21 @@ class Component extends DCLogic {
     this.dismissInstallHint();
   }
 
+  async shareNow() {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'B Dance Studio', text: 'B Dance Studio — Teacher & Student Portal', url: window.location.href });
+      } catch (e) { /* user cancelled, or share unsupported for this content — the illustrated steps below still work as a fallback */ }
+    }
+  }
+
+  // There is no Web API on any browser that lets a page open its own browser's menu — this only
+  // fires the real install prompt if one has become available since the modal opened; otherwise it's
+  // a no-op and the person still needs to tap the real ⋮ menu themselves, as illustrated below.
+  tryNativeInstall() {
+    if (this.deferredInstallPrompt) this.installNow();
+  }
+
   logoutCloud() {
     try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
     this.setState({
@@ -1580,7 +1596,7 @@ class Component extends DCLogic {
       installTitle: 'Install This App', installLead: 'Add B Dance Studio to your home screen for quick access, just like a real app.',
       installIosStep1: 'Tap the Share button', installIosStep2: 'Then tap "Add to Home Screen"',
       installAndroidStep1: 'Tap the ⋮ menu in your browser', installAndroidStep2: 'Then tap "Add to Home Screen" or "Install App"',
-      installBtn: 'Install App', installLater: 'Maybe later', installGotIt: 'Got it',
+      installBtn: 'Install App', installLater: 'Maybe later', installGotIt: 'Got it', installFindIcon: '👆 Look for this icon in your browser',
       demoHint: 'Use the username & password given to you by the studio', openInstagram: 'Open Instagram',
       loginMissing: 'Please enter your username and password.',
       loginBad: 'Invalid username or password.',
@@ -1619,7 +1635,7 @@ class Component extends DCLogic {
       installTitle: '安装此应用', installLead: '将 B Dance Studio 添加到主屏幕，像真正的App一样快速打开。',
       installIosStep1: '点击分享按钮', installIosStep2: '然后点击"添加到主屏幕"',
       installAndroidStep1: '点击浏览器右上角的 ⋮ 菜单', installAndroidStep2: '然后点击"添加到主屏幕"或"安装应用"',
-      installBtn: '安装应用', installLater: '稍后再说', installGotIt: '知道了',
+      installBtn: '安装应用', installLater: '稍后再说', installGotIt: '知道了', installFindIcon: '👆 在你的浏览器中找到此图标',
       demoHint: '请使用舞室提供给你的用户名与密码登录', openInstagram: '打开 Instagram',
       loginMissing: '请输入用户名和密码。',
       loginBad: '用户名或密码不正确。',
@@ -2770,7 +2786,7 @@ class Component extends DCLogic {
       setIosTab: () => this.setState({ installTab: 'ios' }), setAndroidTab: () => this.setState({ installTab: 'android' }),
       canNativeInstall: s.canNativeInstall,
       dismissInstallHint: () => this.dismissInstallHint(),
-      installNow: () => this.installNow(),
+      installNow: () => this.installNow(), shareNow: () => this.shareNow(), tryNativeInstall: () => this.tryNativeInstall(),
       isIntro: s.view === 'intro', isAuth: s.view === 'auth', isApp: s.view === 'app',
       role: s.role, page: s.page, tpage: s.tpage,
       setEn: () => this.setState({ lang: 'en' }), setZh: () => this.setState({ lang: 'zh' }),
