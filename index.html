@@ -227,7 +227,12 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <sc-for list="{{ introTeachers }}" as="tc" hint-placeholder-count="6">
         <button data-row="1" onClick="{{ tc.open }}" style="position:relative;overflow:hidden;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);padding:11px;display:flex;align-items:center;gap:12px;cursor:pointer">
           <span data-part="sweep" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent 25%,rgba(255,122,41,.22) 50%,transparent 75%)"></span>
+          <sc-if value="{{ tc.hasPhoto }}" hint-placeholder-val="{{ false }}">
+          <img src="{{ tc.photo }}" alt="{{ tc.name }}" style="width:54px;height:54px;border-radius:50%;flex-shrink:0;object-fit:cover" />
+          </sc-if>
+          <sc-if value="{{ !tc.hasPhoto }}" hint-placeholder-val="{{ true }}">
           <div data-part="num" style="width:54px;height:54px;border-radius:50%;flex-shrink:0;background:linear-gradient(150deg,{{ tc.c1 }},{{ tc.c2 }});display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:19px">{{ tc.initial }}</div>
+          </sc-if>
           <div style="flex:1;min-width:0">
             <p style="color:#fff;font-weight:700;font-size:13.5px;margin:0">{{ tc.name }}</p>
             <p style="color:var(--g5);font-size:11px;margin:3px 0 0">{{ tc.specLine }}</p>
@@ -260,6 +265,22 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       </sc-for>
     </div>
   </div>
+
+  <!-- See Us Move (separate from the Studio Reel — this is the real YouTube showcase video) -->
+  <sc-if value="{{ hasSeeUsMoveVideo }}" hint-placeholder-val="{{ false }}">
+  <div style="padding:26px 18px 30px;border-top:1px solid var(--bd2)">
+    <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px">{{ t.videoEyebrow }}</p>
+    <h2 class="dsp" data-om-words="1" style="font-size:30px;text-transform:uppercase;margin:0 0 16px">{{ t.videoTitle }}</h2>
+    <div style="position:relative;background:#000;border:1px solid var(--bd);aspect-ratio:16/9;overflow:hidden">
+      <sc-if value="{{ seeUsMoveIsYoutube }}" hint-placeholder-val="{{ true }}">
+      <iframe src="{{ seeUsMoveEmbedUrl }}" title="{{ t.videoTitle }}" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </sc-if>
+      <sc-if value="{{ !seeUsMoveIsYoutube }}" hint-placeholder-val="{{ false }}">
+      <video src="{{ seeUsMoveEmbedUrl }}" controls style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000"></video>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
 
   <!-- CTA -->
   <div style="padding:34px 18px;border-top:1px solid var(--bd2);text-align:center">
@@ -359,9 +380,14 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     <div style="position:relative;aspect-ratio:1;overflow:hidden;background:#000;perspective:900px">
       <div data-om-keyed="{{ tmSlide }}" data-om-kind="slide" data-om-dir="{{ tmDir }}" style="position:absolute;inset:0;transform-style:preserve-3d">
       <sc-if value="{{ tmIsPhoto }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ hasTeacherPhoto }}" hint-placeholder-val="{{ false }}">
+        <img src="{{ modalTeacher.photo }}" alt="{{ modalTeacher.name }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
+        </sc-if>
+        <sc-if value="{{ !hasTeacherPhoto }}" hint-placeholder-val="{{ true }}">
         <div style="position:absolute;inset:0;background:linear-gradient(150deg,{{ modalTeacher.c1 }},{{ modalTeacher.c2 }});display:flex;align-items:center;justify-content:center">
           <span class="dsp" style="font-size:96px;color:rgba(0,0,0,.35)">{{ modalTeacher.initial }}</span>
         </div>
+        </sc-if>
       </sc-if>
       <sc-if value="{{ tmIsQuote }}" hint-placeholder-val="{{ false }}">
         <div style="position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(90% 70% at 50% 20%,rgba(255,122,41,.16),#000)">
@@ -371,6 +397,15 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         </div>
       </sc-if>
       <sc-if value="{{ tmIsVideo }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ hasTeacherVideo }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ teacherVideoIsYoutube }}" hint-placeholder-val="{{ true }}">
+          <iframe src="{{ teacherVideoEmbedUrl }}" title="Showreel" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </sc-if>
+          <sc-if value="{{ !teacherVideoIsYoutube }}" hint-placeholder-val="{{ false }}">
+          <video src="{{ teacherVideoEmbedUrl }}" controls style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000"></video>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ !hasTeacherVideo }}" hint-placeholder-val="{{ true }}">
         <div style="position:absolute;inset:0;background:radial-gradient(110% 80% at 40% 30%,rgba(255,122,41,.2),#000);display:flex;align-items:center;justify-content:center">
           <div style="position:relative;width:62px;height:62px;display:flex;align-items:center;justify-content:center">
             <div style="position:absolute;inset:0;border:1px solid var(--acc);border-radius:50%;animation:ringpop 2s ease-out infinite"></div>
@@ -378,6 +413,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
           </div>
           <p class="mn" style="position:absolute;bottom:12px;left:0;right:0;text-align:center;color:var(--g5);font-size:9px;letter-spacing:.16em;text-transform:uppercase;margin:0">{{ t.showreel }}</p>
         </div>
+        </sc-if>
       </sc-if>
       </div>
       <div data-om-keyed="{{ tmSlide }}" data-om-kind="flash" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,122,41,.55) 50%,transparent 70%);opacity:0"></div>
@@ -1417,6 +1453,7 @@ class Component extends DCLogic {
       locEyebrow: 'Locations', locTitle: 'Four Branches, One Studio',
       locLead: 'Same styles, same teaching standard, different neighbourhoods.',
       ctaTitle: 'Ready To Start?', ctaLead: 'Enrolled students and teachers sign in above.', contactBtn: 'Contact Us →',
+      videoEyebrow: 'Watch', videoTitle: 'See Us Move',
       footTag: 'A dance studio run by people who still train. Four branches across Malaysia.',
       footPhone: '+60 12-345 6789', footHours: 'Mon–Sun · 10:00 AM – 10:00 PM',
       portal: 'Teacher & Student Portal', iAmA: 'I am a',
@@ -1451,6 +1488,7 @@ class Component extends DCLogic {
       locEyebrow: '分店地点', locTitle: '四家分店，同一间舞室',
       locLead: '相同的风格，相同的教学标准，不同的社区。',
       ctaTitle: '准备好开始了吗？', ctaLead: '在籍学生与导师请在上方登录。', contactBtn: '联系我们 →',
+      videoEyebrow: '观看', videoTitle: '见证我们的舞步',
       footTag: '一间由仍在训练的人经营的舞室。马来西亚四家分店。',
       footPhone: '+60 12-345 6789', footHours: '周一至周日 · 上午10点 – 晚上10点',
       portal: '导师与学生入口', iAmA: '我是',
@@ -2531,14 +2569,27 @@ class Component extends DCLogic {
     if (introDbContent.ctaLead) t.ctaLead = introDbContent.ctaLead;
     const introEventsData = this.getIntroEvents();
     const introShopsData = (Array.isArray(introDbContent.shops) && introDbContent.shops.length) ? introDbContent.shops : this.shops;
-    const introVideoSrc = introDbContent.videoUrl || introDbContent.reelUrl || '';
+    const introVideoSrc = introDbContent.reelUrl || '';
     const reelYtId = introVideoSrc ? this.youtubeId(introVideoSrc) : null;
     const hasRealReel = !!introVideoSrc;
     const reelIsYoutube = !!reelYtId;
     const reelEmbedUrl = reelIsYoutube ? ('https://www.youtube.com/embed/' + reelYtId + '?rel=0') : introVideoSrc;
+    const seeUsMoveUrl = introDbContent.videoUrl || '';
+    const seeUsMoveYtId = seeUsMoveUrl ? this.youtubeId(seeUsMoveUrl) : null;
+    const hasSeeUsMoveVideo = !!seeUsMoveUrl;
+    const seeUsMoveIsYoutube = !!seeUsMoveYtId;
+    const seeUsMoveEmbedUrl = seeUsMoveIsYoutube ? ('https://www.youtube.com/embed/' + seeUsMoveYtId + '?rel=0') : seeUsMoveUrl;
+    if (introDbContent.videoEyebrow) t.videoEyebrow = introDbContent.videoEyebrow;
+    if (introDbContent.videoTitle) t.videoTitle = introDbContent.videoTitle;
     const teachersShown = s.showAllTeachers ? introTeachersData : introTeachersData.slice(0, 4);
-    const dec = (o) => ({ ...o, specLine: (o.specs || []).join(' · '), initial: o.name.slice(0, 1) });
+    const dec = (o) => ({ ...o, specLine: (o.specs || []).join(' · '), initial: o.name.slice(0, 1), hasPhoto: !!o.photo });
     const mt = introTeachersData.find(x => x.id === s.teacherModal);
+    const hasTeacherPhoto = !!(mt && mt.photo);
+    const teacherVideoUrl = (mt && mt.video) || '';
+    const teacherVideoYtId = teacherVideoUrl ? this.youtubeId(teacherVideoUrl) : null;
+    const teacherVideoIsYoutube = !!teacherVideoYtId;
+    const teacherVideoEmbedUrl = teacherVideoIsYoutube ? ('https://www.youtube.com/embed/' + teacherVideoYtId + '?rel=0') : teacherVideoUrl;
+    const hasTeacherVideo = !!teacherVideoUrl;
     const mtSlides = ['photo', 'quote', 'video'];
     const tmIdx = s.tmSlide % 3;
 
@@ -2581,6 +2632,7 @@ class Component extends DCLogic {
 
       reelIcon: introVideoSrc ? 'ph-play' : (s.reelPlaying ? 'ph-pause' : 'ph-play'), reelPct: introVideoSrc ? 100 : s.reelPct,
       hasRealReel, reelIsYoutube, reelEmbedUrl,
+      hasSeeUsMoveVideo, seeUsMoveIsYoutube, seeUsMoveEmbedUrl,
       toggleReel: () => {
         if (introVideoSrc) { window.open(introVideoSrc, '_blank', 'noopener'); return; }
         this.setState(p => ({ reelPlaying: !p.reelPlaying }));
@@ -2645,6 +2697,7 @@ class Component extends DCLogic {
 
       teacherModalOpen: !!mt, modalTeacher: mt ? dec(mt) : { name: '', specLine: '', initial: '', quote: '', c1: '#ff7a29', c2: '#3a2010', id: 0 },
       tmIsPhoto: tmIdx === 0, tmIsQuote: tmIdx === 1, tmIsVideo: tmIdx === 2,
+      hasTeacherPhoto, hasTeacherVideo, teacherVideoIsYoutube, teacherVideoEmbedUrl,
       tmDots: mtSlides.map((_, i) => ({ bg: i === tmIdx ? 'var(--acc)' : '#3d3a36' })),
       tmSlide: tmIdx, tmDir: s.tmDir || 'next',
       tmPrev: (e) => { e.stopPropagation(); this.setState(p => ({ tmSlide: (p.tmSlide + 2) % 3, tmDir: 'prev' })); },
