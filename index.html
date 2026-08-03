@@ -176,6 +176,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
   </div>
 
   <!-- Shops -->
+  <sc-if value="{{ false }}" hint-placeholder-val="{{ false }}">
   <div style="padding:26px 0 26px;border-top:1px solid var(--bd2)">
     <div style="padding:0 18px">
       <p class="mn" style="color:var(--acc);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin:0 0 8px">{{ t.shopsEyebrow }}</p>
@@ -194,6 +195,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       </div>
     </div>
   </div>
+  </sc-if>
 
   <!-- About -->
   <div style="padding:26px 18px;border-top:1px solid var(--bd2)">
@@ -1111,7 +1113,7 @@ class Component extends DCLogic {
   state = {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
-    sessionToken: null, account: null, cloudDB: null, loginError: '', cloudLoading: false,
+    sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -1224,10 +1226,6 @@ class Component extends DCLogic {
   ];
 
   // ── Real backend: session restore + cloud data ──────────────────────
-  componentDidMount() {
-    this.restoreSession();
-  }
-
   async restoreSession() {
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { saved = null; }
@@ -1264,6 +1262,29 @@ class Component extends DCLogic {
     } catch (e) {
       this.setState({ cloudLoading: false });
     }
+  }
+
+  // Public landing-page content (events, teachers, branches, video, footer) — every visitor gets
+  // this, signed in or not, since it's the same GET the server hands out unauthenticated (scope:
+  // 'public'). Deliberately excludes anything about students/payments/attendance/accounts.
+  async loadPublicData() {
+    try {
+      const r = await cloudFetchWithTimeout({ method: 'GET' });
+      const j = await r.json().catch(() => null);
+      if (j && j.data) {
+        const parsed = JSON.parse(j.data);
+        this.setState({ publicDB: (parsed && parsed.db) || {} });
+      }
+    } catch (e) { /* stays on the built-in mock content until this succeeds */ }
+  }
+
+  // Single source of truth for which events are showing — used by render() AND the auto-advance
+  // timer below, so they never get out of sync with each other.
+  getIntroEvents() {
+    const cloudSrc = this.state.cloudDB || this.state.publicDB;
+    const introDb = cloudSrc && cloudSrc.intro;
+    if (introDb && Array.isArray(introDb.events) && introDb.events.length) return introDb.events;
+    return this.events; // mock fallback, only until publicDB has loaded
   }
 
   logoutCloud() {
@@ -2099,9 +2120,11 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    this.restoreSession();
+    this.loadPublicData();
     if (this.props.accent) document.documentElement.style.setProperty('--acc', this.props.accent);
     this.evTimer = setInterval(() => {
-      if (this.state.view === 'intro') this.setState(s => ({ eventSlide: (s.eventSlide + 1) % this.events.length }));
+      if (this.state.view === 'intro') this.setState(s => ({ eventSlide: (s.eventSlide + 1) % Math.max(1, this.getIntroEvents().length) }));
     }, 6500);
     this.reelTimer = setInterval(() => {
       if (this.state.reelPlaying) this.setState(s => ({ reelPct: s.reelPct >= 100 ? 0 : s.reelPct + 1.6 }));
@@ -2451,9 +2474,43 @@ class Component extends DCLogic {
     const s = this.state;
     const t = Object.assign({}, this.TR[s.lang], this.APP_TR[s.lang]);
     const on = { background: 'var(--acc)', color: '#000' }, off = { background: 'transparent', color: 'var(--g4)' };
-    const teachersShown = s.showAllTeachers ? this.teachers : this.teachers.slice(0, 4);
-    const dec = (o) => ({ ...o, specLine: o.specs.join(' · '), initial: o.name.slice(0, 1) });
-    const mt = this.teachers.find(x => x.id === s.teacherModal);
+    // Real public content (teachers/places/events/shops/footer/video) once loaded, falling back to the
+    // built-in mock content only until loadPublicData() resolves (or if it never can, e.g. offline).
+    const introSrc = s.cloudDB || s.publicDB;
+    const introTeachersData = (introSrc && Array.isArray(introSrc.teachers) && introSrc.teachers.length) ? introSrc.teachers : this.teachers;
+    const introPlacesData = (introSrc && Array.isArray(introSrc.places) && introSrc.places.length) ? introSrc.places : this.places;
+    const introDbContent = (introSrc && introSrc.intro) || {};
+    const introFooter = introDbContent.footer || {};
+    const waDigits = String(introFooter.whatsapp || introFooter.phone || '60123456789').replace(/\D/g, '');
+    if (introFooter.tagline) t.footTag = introFooter.tagline;
+    if (introFooter.phone) t.footPhone = introFooter.phone;
+    if (introFooter.hours) t.footHours = introFooter.hours;
+    if (introDbContent.heroEyebrow) t.heroEyebrow = introDbContent.heroEyebrow;
+    else if (introSrc && Array.isArray(introSrc.classes) && introSrc.classes.length) {
+      const styleList = [...new Set(introSrc.classes.map(c => c.style))].slice(0, 4).join(' · ');
+      if (styleList) t.heroEyebrow = styleList;
+    }
+    if (introDbContent.heroTitle) { const parts = String(introDbContent.heroTitle).split('\n'); t.heroLine1 = parts[0] || t.heroLine1; t.heroLine2 = parts[1] || t.heroLine2; }
+    if (introDbContent.heroLead) t.heroLead = introDbContent.heroLead;
+    if (introDbContent.findBtn) t.findBtn = introDbContent.findBtn;
+    if (introDbContent.meetBtn) t.meetBtn = introDbContent.meetBtn;
+    if (introDbContent.aboutEyebrow) t.aboutEyebrow = introDbContent.aboutEyebrow;
+    if (introDbContent.aboutTitle) t.aboutTitle = introDbContent.aboutTitle;
+    if (introDbContent.aboutLead) t.aboutLead = introDbContent.aboutLead;
+    if (introDbContent.instrEyebrow) t.instrEyebrow = introDbContent.instrEyebrow;
+    if (introDbContent.instrTitle) t.instrTitle = introDbContent.instrTitle;
+    if (introDbContent.instrLead) t.instrLead = introDbContent.instrLead;
+    if (introDbContent.locEyebrow) t.locEyebrow = introDbContent.locEyebrow;
+    if (introDbContent.locTitle) t.locTitle = introDbContent.locTitle;
+    if (introDbContent.locLead) t.locLead = introDbContent.locLead;
+    if (introDbContent.ctaTitle) t.ctaTitle = introDbContent.ctaTitle;
+    if (introDbContent.ctaLead) t.ctaLead = introDbContent.ctaLead;
+    const introEventsData = this.getIntroEvents();
+    const introShopsData = (Array.isArray(introDbContent.shops) && introDbContent.shops.length) ? introDbContent.shops : this.shops;
+    const introVideoSrc = introDbContent.videoUrl || introDbContent.reelUrl || '';
+    const teachersShown = s.showAllTeachers ? introTeachersData : introTeachersData.slice(0, 4);
+    const dec = (o) => ({ ...o, specLine: (o.specs || []).join(' · '), initial: o.name.slice(0, 1) });
+    const mt = introTeachersData.find(x => x.id === s.teacherModal);
     const mtSlides = ['photo', 'quote', 'video'];
     const tmIdx = s.tmSlide % 3;
 
@@ -2490,14 +2547,17 @@ class Component extends DCLogic {
       },
 
       stats: [
-        { val: 4, label: t.statBranches }, { val: 8, label: t.statStyles },
-        { val: this.teachers.length, label: t.statInstructors }, { val: 2026, label: t.statFounded },
+        { val: introPlacesData.length, label: t.statBranches }, { val: (introSrc && Array.isArray(introSrc.classes) ? new Set(introSrc.classes.map(c => c.style)).size : 0) || 8, label: t.statStyles },
+        { val: introTeachersData.length, label: t.statInstructors }, { val: 2026, label: t.statFounded },
       ],
 
-      reelIcon: s.reelPlaying ? 'ph-pause' : 'ph-play', reelPct: s.reelPct,
-      toggleReel: () => this.setState(p => ({ reelPlaying: !p.reelPlaying })),
+      reelIcon: introVideoSrc ? 'ph-play' : (s.reelPlaying ? 'ph-pause' : 'ph-play'), reelPct: introVideoSrc ? 100 : s.reelPct,
+      toggleReel: () => {
+        if (introVideoSrc) { window.open(introVideoSrc, '_blank', 'noopener'); return; }
+        this.setState(p => ({ reelPlaying: !p.reelPlaying }));
+      },
 
-      events: this.events.map((e, i) => ({ ...e, lead: s.lang === 'zh' ? '我们规模最大的舞蹈盛会 —— 个人赛、对战、团体翻跳与随机舞。来参赛，或来为你的队伍加油！' : 'Our biggest showcase yet — solo, battle, group cover and random play dance. Come compete, or come cheer your crew on.', catList: e.cats.split(',').map(c => c.trim()), typeKey: (i === s.eventSlide ? 'on' + i : 'off') })),
+      events: introEventsData.map((e, i) => ({ ...e, lead: e.lead || (s.lang === 'zh' ? '我们规模最大的舞蹈盛会 —— 个人赛、对战、团体翻跳与随机舞。来参赛，或来为你的队伍加油！' : 'Our biggest showcase yet — solo, battle, group cover and random play dance. Come compete, or come cheer your crew on.'), catList: (e.cats || '').split(',').map(c => c.trim()).filter(Boolean), typeKey: (i === s.eventSlide ? 'on' + i : 'off') })),
       evTransform: 'translateX(calc(-' + (s.eventSlide * 100) + '% + ' + (s.evDrag || 0) + 'px))',
       evTransition: s.evDragging ? 'none' : 'transform .55s cubic-bezier(.16,.84,.34,1)',
       evCursor: s.evDragging ? 'grabbing' : 'grab',
@@ -2512,19 +2572,23 @@ class Component extends DCLogic {
       },
       evEnd: () => {
         if (!s.evDragging) return;
-        const dx = s.evDrag || 0, n = this.events.length;
+        const dx = s.evDrag || 0, n = introEventsData.length;
         this.dragX0 = null;
         let next = s.eventSlide;
         if (Math.abs(dx) > 45) next = (s.eventSlide + (dx < 0 ? 1 : -1) + n) % n;
         this.setState({ evDragging: false, evDrag: 0, eventSlide: next });
       },
-      eventDots: this.events.map((_, i) => ({ w: i === s.eventSlide ? '22px' : '6px', bg: i === s.eventSlide ? 'var(--acc)' : '#3d3a36', go: () => this.setState({ eventSlide: i }) })),
+      eventDots: introEventsData.map((_, i) => ({ w: i === s.eventSlide ? '22px' : '6px', bg: i === s.eventSlide ? 'var(--acc)' : '#3d3a36', go: () => this.setState({ eventSlide: i }) })),
 
-      waHref: 'https://wa.me/60123456789', telHref: 'tel:+60123456789',
-      shopLoop: [...this.shops, ...this.shops].map((sh, i) => ({ ...sh, open: () => this.setState({ sheet: { kind: 'shop', shop: sh } }) })),
+      waHref: 'https://wa.me/' + waDigits, telHref: 'tel:+' + waDigits,
+      shopLoop: [...introShopsData, ...introShopsData].map((sh, i) => {
+        const palette = [['#ff7a29', '#5c2a10'], ['#ff4d2e', '#3a2010'], ['#e39b5a', '#6b3a14'], ['#ffa057', '#7a2d0c'], ['#ff6a3d', '#4a1c08'], ['#ffb277', '#7a4520']];
+        const [c1, c2] = sh.c1 ? [sh.c1, sh.c2] : palette[i % palette.length];
+        return { ...sh, initial: sh.initial || (sh.name || '?').slice(0, 1), c1, c2, open: () => this.setState({ sheet: { kind: 'shop', shop: sh } }) };
+      }),
 
       introTeachers: teachersShown.map(tc => ({ ...dec(tc), open: () => this.setState({ teacherModal: tc.id, tmSlide: 0 }) })),
-      teacherToggleLabel: s.showAllTeachers ? t.showLess : t.showAllTeachers.replace('{n}', this.teachers.length),
+      teacherToggleLabel: s.showAllTeachers ? t.showLess : t.showAllTeachers.replace('{n}', introTeachersData.length),
       toggleAllTeachers: () => {
         const anime = window.anime, M = this.M, KEEP = 4;
         const box = document.getElementById('teacher-list');
@@ -2546,7 +2610,7 @@ class Component extends DCLogic {
         }
       },
 
-      introPlaces: this.places.map((pl, i) => ({ ...pl, n: '0' + (i + 1), open: () => this.setState({ sheet: { kind: 'dir', place: pl } }) })),
+      introPlaces: introPlacesData.map((pl, i) => ({ ...pl, n: '0' + (i + 1), open: () => this.setState({ sheet: { kind: 'dir', place: pl } }) })),
 
       openContact: () => this.setState({ sheet: { kind: 'contact' }, introMenu: false }),
 
@@ -2565,7 +2629,7 @@ class Component extends DCLogic {
         ? [{ label: t.shopOff + ' — walk-in', icon: 'ph-shopping-bag', href: '#' }, { label: 'Visit shop', icon: 'ph-link-simple', href: '#' }]
         : s.sheet.kind === 'dir'
           ? [{ label: 'Waze', icon: 'ph-car', href: 'https://waze.com/ul?q=' + encodeURIComponent(s.sheet.place.address) + '&navigate=yes' }, { label: 'Google Maps', icon: 'ph-map-trifold', href: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.sheet.place.address) }]
-          : this.places.map((p, i) => ({ label: p.name, icon: 'ph-whatsapp-logo', href: 'https://wa.me/6012345678' + i + '?text=' + encodeURIComponent('Hi B Dance Studio ' + p.name + ', I would like to ask about classes.') }))) : [],
+          : introPlacesData.map((p) => ({ label: p.name, icon: 'ph-whatsapp-logo', href: 'https://wa.me/' + waDigits + '?text=' + encodeURIComponent('Hi B Dance Studio ' + p.name + ', I would like to ask about classes.') }))) : [],
       closeSheet: () => this.dismissSheet('[data-om-sheet]', () => this.setState({ sheet: null })),
 
       loginRole: s.loginRole,
