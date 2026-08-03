@@ -1413,7 +1413,6 @@ class Component extends DCLogic {
   }
 
   dismissInstallHint() {
-    try { localStorage.setItem('bdance_install_dismissed', '1'); } catch (e) {}
     this.setState({ installPlatform: null });
   }
 
@@ -2273,16 +2272,15 @@ class Component extends DCLogic {
     this.restoreSession();
     this.loadPublicData();
     if (this.props.accent) document.documentElement.style.setProperty('--acc', this.props.accent);
-    // "Add to Home Screen" hint — only for iOS/Android, only if not already installed, only if not
-    // previously dismissed. iOS Safari has no install API at all, so it always gets manual steps;
-    // Android/Chrome may offer a real one-tap install via beforeinstallprompt below.
+    // "Add to Home Screen" hint — shows on every visit made through a regular browser tab; the ONLY
+    // thing that permanently stops it is actually installing the app (detected via standalone mode).
+    // Dismissing with "Maybe later" only closes it for this page load, not forever.
     try {
       const ua = navigator.userAgent || '';
       const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
       const isAndroid = /Android/.test(ua);
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-      const dismissed = localStorage.getItem('bdance_install_dismissed') === '1';
-      if ((isIOS || isAndroid) && !isStandalone && !dismissed) {
+      if ((isIOS || isAndroid) && !isStandalone) {
         this.setState({ installPlatform: isIOS ? 'ios' : 'android', installTab: isIOS ? 'ios' : 'android' });
       }
     } catch (e) {}
