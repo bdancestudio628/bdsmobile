@@ -461,6 +461,116 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 </div>
 </sc-if>
 
+<!-- ══════════ CLASS FORM (ADD/EDIT) ══════════ -->
+<sc-if value="{{ classFormOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.78);z-index:260;display:flex;align-items:center;justify-content:center;padding:18px" onClick="{{ closeClassForm }}">
+  <div onClick="{{ stop }}" style="background:var(--card);border:1px solid var(--bd);border-top:2px solid var(--acc);width:100%;max-width:420px;max-height:85vh;overflow-y:auto;padding:20px">
+    <p class="dsp" style="font-size:18px;text-transform:uppercase;margin:0 0 16px"><i class="ph ph-plus" style="color:var(--acc);margin-right:6px"></i>{{ classFormTitle }}</p>
+    <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.className }}</p>
+    <input value="{{ cfName }}" onChange="{{ onCfName }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:13px;padding:11px;margin-bottom:12px" />
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.styleLabel }}</p>
+        <select onChange="{{ onCfStyle }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px">
+          <sc-for list="{{ cfStyleOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+        </select>
+      </div>
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.branchLabel }}</p>
+        <select onChange="{{ onCfPlace }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px">
+          <sc-for list="{{ cfPlaceOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.dayLabel }}</p>
+        <select onChange="{{ onCfDay }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px">
+          <sc-for list="{{ cfDayOpts }}" as="o" hint-placeholder-count="7"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+        </select>
+      </div>
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.roomLabel }}</p>
+        <select onChange="{{ onCfRoom }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px">
+          <sc-for list="{{ cfRoomOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.startLabel }}</p>
+        <input type="time" value="{{ cfStart }}" onChange="{{ onCfStart }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
+      </div>
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.endLabel }}</p>
+        <input type="time" value="{{ cfEnd }}" onChange="{{ onCfEnd }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.maxStudentsLabel }}</p>
+        <input type="number" value="{{ cfMax }}" onChange="{{ onCfMax }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
+      </div>
+      <div>
+        <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.difficultyLabel }}</p>
+        <select onChange="{{ onCfDiff }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px">
+          <sc-for list="{{ cfDiffOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button onClick="{{ closeClassForm }}" class="mn" style="flex:1;background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:11px;font-weight:600;padding:12px;cursor:pointer">{{ t.cancel }}</button>
+      <button onClick="{{ saveClassForm }}" class="mn" style="flex:1;background:var(--acc);color:var(--ink);border:0;font-size:11px;font-weight:700;letter-spacing:.08em;padding:12px;cursor:pointer">{{ t.save }}</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ MANAGE CLASS ENROLLMENT ══════════ -->
+<sc-if value="{{ enrollOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.78);z-index:260;display:flex;align-items:center;justify-content:center;padding:18px" onClick="{{ closeEnroll }}">
+  <div onClick="{{ stop }}" style="background:var(--card);border:1px solid var(--bd);border-top:2px solid var(--acc);width:100%;max-width:420px;max-height:85vh;overflow-y:auto;padding:20px">
+    <p class="dsp" style="font-size:18px;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-plus" style="color:var(--acc);margin-right:6px"></i>{{ t.manageEnrollment }}</p>
+    <p style="color:var(--g4);font-size:11.5px;line-height:1.5;margin:0 0 16px">{{ t.manageEnrollmentLead }}</p>
+    <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.classLabel }}</p>
+    <select onChange="{{ onEnrollClass }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:11px;margin-bottom:16px">
+      <sc-for list="{{ enrollClassOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+    </select>
+    <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.studentsTapToggle }}</p>
+    <div style="position:relative;margin-bottom:12px">
+      <i class="ph ph-magnifying-glass" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g5);font-size:13px"></i>
+      <input value="{{ enrollSearchVal }}" onChange="{{ onEnrollSearch }}" placeholder="{{ t.searchStudent }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:11px 11px 11px 32px" />
+    </div>
+    <div style="border:1px solid var(--bd);max-height:240px;overflow-y:auto;margin-bottom:16px">
+      <sc-for list="{{ enrollRows }}" as="r" hint-placeholder-count="4">
+      <div onClick="{{ r.toggle }}" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--bd);cursor:pointer">
+        <span style="width:16px;height:16px;border:1px solid var(--bd);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ r.checked ? 'var(--acc)' : 'transparent' }}">
+          <sc-if value="{{ r.checked }}" hint-placeholder-val="{{ false }}"><i class="ph ph-check" style="font-size:11px;color:#000"></i></sc-if>
+        </span>
+        <span style="color:#fff;font-size:12.5px">{{ r.name }} · {{ t.idWord }} {{ r.id }} · {{ t.ageWord }} {{ r.age }}</span>
+      </div>
+      </sc-for>
+    </div>
+    <button onClick="{{ closeEnroll }}" class="mn" style="width:100%;background:var(--acc);color:var(--ink);border:0;font-size:11px;font-weight:700;letter-spacing:.08em;padding:12px;cursor:pointer">{{ t.done }}</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ DELETE CLASS CONFIRM ══════════ -->
+<sc-if value="{{ deleteConfirmOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(0,0,0,.78);z-index:270;display:flex;align-items:center;justify-content:center;padding:24px" onClick="{{ cancelDelete }}">
+  <div onClick="{{ stop }}" style="background:var(--card);border:1px solid #712b13;width:100%;max-width:340px;padding:22px;text-align:center">
+    <i class="ph ph-warning-circle" style="font-size:34px;color:#f0997b;margin-bottom:10px;display:block"></i>
+    <p class="dsp" style="font-size:17px;text-transform:uppercase;margin:0 0 8px">{{ t.confirmDeleteClassTitle }}</p>
+    <p style="color:var(--g4);font-size:12px;line-height:1.5;margin:0 0 18px">{{ t.confirmDeleteClassLead }}</p>
+    <div style="display:flex;gap:8px">
+      <button onClick="{{ cancelDelete }}" class="mn" style="flex:1;background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:11px;font-weight:600;padding:12px;cursor:pointer">{{ t.cancel }}</button>
+      <button onClick="{{ confirmDelete }}" class="mn" style="flex:1;background:#a8281a;color:#fff;border:0;font-size:11px;font-weight:700;letter-spacing:.06em;padding:12px;cursor:pointer">{{ t.delBtn }}</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
 <!-- ══════════ LOADING ══════════ -->
 <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;background:#000;z-index:300;display:flex;align-items:center;justify-content:center">
@@ -1020,28 +1130,47 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 
     <!-- ───── TEACHER · CLASSES / ROSTER ───── -->
     <sc-if value="{{ tgRoster }}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Teacher · Classes">
-      <h2 class="dsp" data-om-words="flip" style="font-size:30px;text-transform:uppercase;margin:0 0 4px">{{ t.tabRoster }}</h2>
-      <p style="color:var(--g5);font-size:11px;margin:0 0 16px">{{ rosterLead }}</p>
-      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:12px">
-        <sc-for list="{{ myTeachClasses }}" as="c" hint-placeholder-count="3">
-          <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-              <div>
-                <p class="dsp" style="color:var(--acc2);font-size:23px;text-transform:uppercase;margin:0;line-height:1">{{ c.name }}</p>
-                <p class="mn" style="color:var(--g5);font-size:10px;margin:6px 0 0">{{ c.meta }}</p>
+    <div data-screen-label="Teacher · Schedule">
+      <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--acc);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <i class="ph ph-chalkboard-teacher" style="font-size:24px;color:var(--acc);flex-shrink:0"></i>
+        <div style="min-width:0">
+          <p class="dsp" style="font-size:20px;text-transform:uppercase;margin:0;line-height:1">{{ t.mySchedule }}</p>
+          <p class="mn" style="color:var(--g5);font-size:10.5px;margin:5px 0 0">{{ scheduleHeaderName }} · {{ scheduleHeaderCount }}</p>
+        </div>
+      </div>
+
+      <button onClick="{{ openAddClass }}" class="mn" style="width:100%;background:var(--acc);color:var(--ink);border:0;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;cursor:pointer;margin-bottom:16px">{{ t.addNewClass }}</button>
+
+      <p class="mn" style="color:var(--g5);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px">{{ t.filterByDay }}</p>
+      <select onChange="{{ setDayFilter }}" class="mn" style="width:100%;background:var(--card);border:1px solid var(--bd);color:#fff;font-size:13px;padding:11px;margin-bottom:18px">
+        <sc-for list="{{ dayFilterOptions }}" as="d" hint-placeholder-count="7">
+        <option value="{{ d.value }}" selected="{{ d.selected }}">{{ d.label }}</option>
+        </sc-for>
+      </select>
+
+      <sc-if value="{{ !hasScheduleClasses }}" hint-placeholder-val="{{ false }}">
+      <p style="color:var(--g5);font-size:12px;text-align:center;padding:30px 0">{{ noClassesOnDayLine }}</p>
+      </sc-if>
+
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ scheduleCards }}" as="c" hint-placeholder-count="2">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:13px">
+            <p class="dsp" style="color:var(--acc2);font-size:19px;text-transform:uppercase;margin:0 0 6px;line-height:1">{{ c.name }}</p>
+            <div style="display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap">
+              <span class="mn" style="font-size:9.5px;background:#241c17;color:var(--acc2);border:1px solid #3d2c1e;padding:3px 8px">{{ c.style }}</span>
+              <span class="mn" style="font-size:9.5px;background:#1c1c1c;color:var(--g4);border:1px solid var(--bd);padding:3px 8px">{{ c.difficulty }}</span>
+            </div>
+            <p style="color:var(--g4);font-size:11.5px;margin:0 0 11px"><i class="ph ph-buildings" style="color:var(--g5);margin-right:3px"></i>{{ c.placeName }} · <i class="ph ph-map-pin" style="color:var(--g5);margin-right:2px"></i>{{ c.room }} · {{ c.start }}–{{ c.end }}</p>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+              <span class="mn" style="font-size:10.5px;color:#7ee2ab;background:rgba(31,122,77,.18);padding:3px 9px">{{ c.countLabel }}</span>
+              <div style="flex:1;height:4px;background:#2a2724">
+                <div style="height:100%;background:var(--acc);width:{{ c.pct }}%"></div>
               </div>
-              <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;padding:4px 7px;white-space:nowrap">{{ c.style }}</span>
             </div>
-            <div style="display:flex;gap:5px;margin:12px 0 10px;flex-wrap:wrap">
-              <sc-for list="{{ c.avatars }}" as="a" hint-placeholder-count="6">
-                <span style="width:27px;height:27px;background:linear-gradient(150deg,{{ a.c1 }},{{ a.c2 }});display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">{{ a.initial }}</span>
-              </sc-for>
-              <span class="mn" style="height:27px;padding:0 8px;display:flex;align-items:center;border:1px dashed var(--bd);color:var(--g5);font-size:9.5px">{{ c.count }}</span>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button onClick="{{ c.mark }}" class="mn" style="flex:1;background:var(--acc);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border:0;cursor:pointer;transition:transform .16s"><i class="ph ph-check-square" style="margin-right:6px"></i>{{ t.markAttendance }}</button>
-              <button onClick="{{ c.open }}" class="mn" style="flex:1;background:transparent;border:1px solid #a84715;color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;cursor:pointer;transition:all .2s"><i class="ph ph-users-three" style="margin-right:6px"></i>{{ t.roster }}</button>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button onClick="{{ c.openAdd }}" class="mn" style="flex:1;min-width:110px;background:var(--acc);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.06em;padding:9px;border:0;cursor:pointer">{{ t.addStudentBtn }}</button>
+              <button onClick="{{ c.openEdit }}" class="mn" style="background:transparent;border:1px solid var(--bd);color:#fff;font-size:10px;font-weight:600;padding:9px 14px;cursor:pointer">{{ t.edit }}</button>
+              <button onClick="{{ c.openDelete }}" class="mn" style="background:transparent;border:1px solid #712b13;color:#f0997b;font-size:10px;font-weight:600;padding:9px 14px;cursor:pointer">{{ t.delBtn }}</button>
             </div>
           </div>
         </sc-for>
@@ -1278,6 +1407,7 @@ class Component extends DCLogic {
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
     installPlatform: null, canNativeInstall: false, installTab: 'ios',
+    dayFilter: '', classSheet: null, classForm: null, enrollSheet: null, enrollClassId: null, enrollSearch: '', deleteConfirmId: null,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
     marks: {}, markClass: 1, remarkFor: null, remarkText: '',
@@ -1594,6 +1724,126 @@ class Component extends DCLogic {
     }
   }
 
+  // ── Shared fetch-fresh / save-whole helpers, used by all the class-management writes below ──
+  async fetchFreshDb() {
+    if (!this.state.sessionToken) return null;
+    try {
+      const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + this.state.sessionToken } });
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || !j.data) return null;
+      const parsed = JSON.parse(j.data);
+      return { parsed, freshDb: (parsed && parsed.db) || {} };
+    } catch (e) { return null; }
+  }
+
+  async saveWholeDb(parsed) {
+    try {
+      const saveR = await cloudFetchWithTimeout({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.sessionToken },
+        body: JSON.stringify({ data: parsed }),
+      });
+      const saveJ = await saveR.json().catch(() => null);
+      return !!(saveR.ok && saveJ && saveJ.ok !== false && !saveJ.error);
+    } catch (e) { return false; }
+  }
+
+  // Two classes clash when their times actually overlap, not just when they start at the same
+  // minute — back-to-back (one ends 20:30, next starts 20:30) is fine. Mirrors the desktop exactly.
+  rangesOverlap(aStart, aEnd, bStart, bEnd) {
+    const as = this.parseTimeToMinutes(aStart), ae = this.parseTimeToMinutes(aEnd);
+    const bs = this.parseTimeToMinutes(bStart), be = this.parseTimeToMinutes(bEnd);
+    if (as == null || ae == null || bs == null || be == null) return false;
+    return as < be && bs < ae;
+  }
+
+  // A room can only hold one class at a time (checked per branch); a teacher can't be in two
+  // places at once (checked across every branch). Pass the class's own id when editing so it
+  // doesn't clash with itself.
+  findClassConflicts(vals, excludeId, allClasses) {
+    const others = allClasses.filter(c => !excludeId || c.id !== excludeId);
+    const sameDay = others.filter(c => c.day === vals.day && this.rangesOverlap(vals.start, vals.end, c.start, c.end));
+    return {
+      room: sameDay.find(c => c.placeId === vals.placeId && String(c.room || '').trim().toLowerCase() === String(vals.room || '').trim().toLowerCase()),
+      teacher: sameDay.find(c => c.teacherId === vals.teacherId),
+    };
+  }
+
+  // Adds a new class or saves edits to an existing one — validates times and checks for room/teacher
+  // clashes first, exactly like the desktop's saveTeacherClass()/validateClassTimes().
+  async saveClassNow(t) {
+    const f = this.state.classForm;
+    const myTeacherId = this.state.account ? this.state.account.ref : null;
+    if (!f || !f.name || !f.name.trim()) { this.flash(t.classNeedName); return; }
+    const s = this.parseTimeToMinutes(f.start), e = this.parseTimeToMinutes(f.end);
+    if (s == null || e == null) { this.flash(t.classNeedTimes); return; }
+    if (e <= s) { this.flash(t.classEndAfterStart); return; }
+    this.setState({ cloudLoading: true });
+    const res = await this.fetchFreshDb();
+    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    const { parsed, freshDb } = res;
+    const classesArr = Array.isArray(freshDb.classes) ? [...freshDb.classes] : [];
+    const editId = f.id || null;
+    const vals = {
+      name: f.name.trim(), style: f.style, difficulty: f.difficulty, placeId: parseInt(f.placeId, 10),
+      day: f.day, room: f.room || 'Big Room', start: f.start, end: f.end, max: parseInt(f.max, 10) || 15,
+      teacherId: editId ? ((classesArr.find(x => x.id === editId) || {}).teacherId) : myTeacherId,
+    };
+    const clash = this.findClassConflicts(vals, editId, classesArr);
+    if (clash.room) { this.setState({ cloudLoading: false }); this.flash(t.classClashRoom.replace('{room}', clash.room.room).replace('{name}', clash.room.name)); return; }
+    if (clash.teacher) { this.setState({ cloudLoading: false }); this.flash(t.classClashTeacher.replace('{name}', clash.teacher.name)); return; }
+    let nextClassId = (parsed.nid && parsed.nid.classes) || (classesArr.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1);
+    let finalClasses;
+    if (editId) {
+      finalClasses = classesArr.map(c => (c.id === editId ? { ...c, ...vals } : c));
+    } else {
+      finalClasses = [...classesArr, { id: nextClassId, ...vals }];
+      nextClassId += 1;
+    }
+    freshDb.classes = finalClasses;
+    parsed.db = freshDb;
+    if (parsed.nid) parsed.nid.classes = nextClassId;
+    const ok = await this.saveWholeDb(parsed);
+    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    this.setState({ cloudDB: freshDb, cloudLoading: false, classSheet: null, classForm: null });
+    this.flash(editId ? t.classUpdated : t.classAdded);
+  }
+
+  async deleteClassNow(classId, t) {
+    this.setState({ cloudLoading: true });
+    const res = await this.fetchFreshDb();
+    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    const { parsed, freshDb } = res;
+    freshDb.classes = (Array.isArray(freshDb.classes) ? freshDb.classes : []).filter(c => c.id !== classId);
+    parsed.db = freshDb;
+    const ok = await this.saveWholeDb(parsed);
+    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    this.setState({ cloudDB: freshDb, cloudLoading: false, deleteConfirmId: null });
+    this.flash(t.classDeleted);
+  }
+
+  // Enrollment lives on the STUDENT record (classIds array), not the class — matches the desktop's
+  // toggleEnrollment() exactly, including reverting the local copy if the save fails.
+  async toggleEnrollmentNow(studentId, classId, t) {
+    this.setState({ cloudLoading: true });
+    const res = await this.fetchFreshDb();
+    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    const { parsed, freshDb } = res;
+    const studentsArr = Array.isArray(freshDb.students) ? freshDb.students : [];
+    const idx = studentsArr.findIndex(x => x.id === studentId);
+    if (idx < 0) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    const cur = studentsArr[idx];
+    const classIds = Array.isArray(cur.classIds) ? [...cur.classIds] : [];
+    const at = classIds.indexOf(classId);
+    if (at === -1) classIds.push(classId); else classIds.splice(at, 1);
+    freshDb.students = studentsArr.map((x, i) => (i === idx ? { ...x, classIds } : x));
+    parsed.db = freshDb;
+    const ok = await this.saveWholeDb(parsed);
+    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    this.setState({ cloudDB: freshDb, cloudLoading: false });
+    this.flash(at === -1 ? t.addedToClass : t.removedFromClass);
+  }
+
   // Writes go through the same student-safe path the desktop app uses: the server only lets an
   // account patch its OWN record (enforced there, not just here), never the whole database.
   async updateStudentRecord(id, patch) {
@@ -1654,6 +1904,22 @@ class Component extends DCLogic {
       loginBad: 'Invalid username or password.',
       loginOffline: 'Could not reach the studio server — check your connection and try again.',
       saveFailed: 'Could not save — check your connection and try again.',
+      mySchedule: 'My Schedule', addNewClass: '+ Add New Class', filterByDay: 'Filter by day',
+      classesThisWeek: 'classes this week', noClassesOnDay: 'No classes on',
+      editMyClass: 'Edit My Class', addMyClass: 'Add New Class', className: 'Class Name',
+      styleLabel: 'Style', branchLabel: 'Branch', dayLabel: 'Day', roomLabel: 'Room', classLabel: 'Class',
+      startLabel: 'Start', endLabel: 'End', maxStudentsLabel: 'Max Students', difficultyLabel: 'Difficulty',
+      cancel: 'Cancel', addStudentBtn: '+ Add Student', delBtn: 'Del', edit: 'Edit',
+      manageEnrollment: 'Manage Class Enrollment', manageEnrollmentLead: 'Add or remove students from this class. Students can belong to more than one class.',
+      studentsTapToggle: 'Students (tap to add / remove)', searchStudent: 'Search by name or student ID…',
+      done: 'Done', ageWord: 'Age', idWord: 'ID',
+      confirmDeleteClassTitle: 'Delete this class?', confirmDeleteClassLead: 'This removes it from the schedule. This cannot be undone.',
+      classNeedName: 'Please enter a class name.', classNeedTimes: 'Please set both a start and an end time.',
+      classEndAfterStart: 'The end time must be later than the start time.',
+      classClashRoom: 'Room conflict: "{room}" already has "{name}" at that time.',
+      classClashTeacher: '{name} already teaches another class at that time.',
+      classUpdated: 'Class updated', classAdded: 'Class added', classDeleted: 'Class deleted',
+      addedToClass: 'Added to class', removedFromClass: 'Removed from class', save: 'Save',
       contactTitle: 'Contact Us', chooseNav: 'Open directions with',
       contactShort: 'Contact', signInShort: 'Sign in', findShort: 'Studios', meetShort: 'Instructors',
     },
@@ -1693,6 +1959,22 @@ class Component extends DCLogic {
       loginBad: '用户名或密码不正确。',
       loginOffline: '无法连接舞室服务器 —— 请检查网络连接后重试。',
       saveFailed: '保存失败 —— 请检查网络连接后重试。',
+      mySchedule: '我的课表', addNewClass: '+ 添加新课程', filterByDay: '按星期筛选',
+      classesThisWeek: '本周课程', noClassesOnDay: '这一天没有课程：',
+      editMyClass: '编辑我的课程', addMyClass: '添加新课程', className: '课程名称',
+      styleLabel: '风格', branchLabel: '分店', dayLabel: '星期', roomLabel: '教室', classLabel: '课程',
+      startLabel: '开始时间', endLabel: '结束时间', maxStudentsLabel: '最多学生数', difficultyLabel: '难度',
+      cancel: '取消', addStudentBtn: '+ 添加学生', delBtn: '删除', edit: '编辑',
+      manageEnrollment: '管理课程报名', manageEnrollmentLead: '在此课程中添加或移除学生。学生可以同时报读多门课程。',
+      studentsTapToggle: '学生（点击添加 / 移除）', searchStudent: '按姓名或学号搜索…',
+      done: '完成', ageWord: '年龄', idWord: '学号',
+      confirmDeleteClassTitle: '删除此课程？', confirmDeleteClassLead: '这将从课表中移除该课程，且无法撤销。',
+      classNeedName: '请输入课程名称。', classNeedTimes: '请设置开始与结束时间。',
+      classEndAfterStart: '结束时间必须晚于开始时间。',
+      classClashRoom: '教室冲突：「{room}」在该时段已有「{name}」。',
+      classClashTeacher: '{name} 在该时段已教授另一门课程。',
+      classUpdated: '课程已更新', classAdded: '课程已添加', classDeleted: '课程已删除',
+      addedToClass: '已添加至课程', removedFromClass: '已从课程移除', save: '保存',
       contactTitle: '联系我们', chooseNav: '选择导航应用',
       contactShort: '联系', signInShort: '登录', findShort: '分店', meetShort: '导师',
     },
@@ -1846,11 +2128,19 @@ class Component extends DCLogic {
   }
 
   parseTimeToMinutes(str) {
-    const m = /^(\d{1,2}):(\d{2})\s*([AP]M)$/i.exec(String(str || '').trim());
+    const s = String(str || '').trim();
+    let m = /^(\d{1,2}):(\d{2})$/.exec(s);
+    if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+    m = /^(\d{1,2}):(\d{2})\s*([AP]M)$/i.exec(s);
     if (!m) return null;
     let h = parseInt(m[1], 10) % 12;
     if (/pm/i.test(m[3])) h += 12;
     return h * 60 + parseInt(m[2], 10);
+  }
+
+  minToTime(mins) {
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   }
 
   classDurationHours(c) {
@@ -2001,6 +2291,22 @@ class Component extends DCLogic {
     const meTeacher = (usingCloud && isT) ? ((teachersData.find(x => x.id === myTeacherId)) || null) : null;
     const myTeachingClasses = classesData.filter(c => c.teacherId === myTeacherId);
     const effMarkClass = myTeachingClasses.some(c => c.id === s.markClass) ? s.markClass : ((myTeachingClasses[0] || {}).id ?? s.markClass);
+
+    // ── Class schedule management (My Schedule tab + Add/Edit/Delete/Enrollment) ──
+    const CLASS_STYLES = ['Hip-hop', 'K-pop', 'Street Jazz', 'Popping', 'Kid Dance', 'Waacking', 'Dancehall', 'Choreography'];
+    const CLASS_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const CLASS_ROOMS = ['Big Room', 'Small Room', 'Private Room'];
+    const CLASS_DIFFICULTIES = ['All Levels', 'Beginner', 'Intermediate', 'Advanced'];
+    const scheduleTodayWeekday = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    const dayFilterValue = s.dayFilter || scheduleTodayWeekday;
+    const scheduleClasses = myTeachingClasses.filter(c => c.day === dayFilterValue);
+    const classFormOpen = !!s.classSheet;
+    const cf = s.classForm || {};
+    const enrollOpen = !!s.enrollSheet;
+    const enrollClassId = s.enrollClassId || (myTeachingClasses[0] || {}).id || null;
+    const enrollSearchLower = (s.enrollSearch || '').toLowerCase();
+    const allRealStudents = usingCloud && Array.isArray(cdb.students) ? cdb.students : [];
+    const enrollStudentList = allRealStudents.filter(x => !enrollSearchLower || x.name.toLowerCase().includes(enrollSearchLower));
 
     // ── Teacher activity + salary (real, once cloud data is loaded) ──
     const salary = (usingCloud && isT) ? this.teacherSalary(myTeacherId, cdb) : null;
@@ -2290,15 +2596,63 @@ class Component extends DCLogic {
       })),
       startMarking: () => this.setState({ tpage: 'mark', markClass: (myTeachingClasses[0] || {}).id || null }),
       rosterLead: myTeachingClasses.length + ' ' + t.myClasses.toLowerCase() + ' · ' + t.tapStudent,
-      myTeachClasses: myTeachingClasses.map(c => ({
-        ...c, meta: c.day + ' · ' + c.start + '–' + c.end + ' · ' + c.room,
-        count: '+' + Math.max(0, rosterFor(c.id).length - 5),
-        avatars: rosterFor(c.id).slice(0, 5).map((m, i) => ({
-          initial: m.name.slice(0, 1), c1: ['#ff7a29', '#ff4d2e', '#ffa057', '#e39b5a', '#ff6a3d'][i % 5], c2: '#3a2010',
-        })),
-        mark: () => this.setState({ tpage: 'mark', markClass: c.id, remarkFor: null }),
-        open: () => this.flash(t.roster + ' · ' + c.name),
-      })),
+      scheduleHeaderName: meTeacher ? meTeacher.name : '', scheduleHeaderCount: myTeachingClasses.length + ' ' + t.classesThisWeek,
+      openAddClass: () => this.setState({
+        classSheet: 'add',
+        classForm: { id: null, name: '', style: CLASS_STYLES[0], placeId: (placesData[0] || {}).id || '', day: dayFilterValue, room: CLASS_ROOMS[0], start: '', end: '', max: 15, difficulty: CLASS_DIFFICULTIES[0] },
+      }),
+      dayFilterValue, dayFilterOptions: CLASS_DAYS.map(d => ({ value: d, label: d, selected: d === dayFilterValue })),
+      setDayFilter: e => this.setState({ dayFilter: e.target.value }),
+      noClassesOnDayLine: t.noClassesOnDay + ' ' + dayFilterValue,
+      hasScheduleClasses: scheduleClasses.length > 0,
+      scheduleCards: scheduleClasses.map(c => {
+        const enrolled = rosterFor(c.id).length;
+        return {
+          ...c, enrolled, pct: c.max ? Math.min(100, Math.round(enrolled / c.max * 100)) : 0,
+          countLabel: enrolled + '/' + c.max, placeName: pName(c.placeId),
+          openAdd: () => this.setState({ enrollSheet: true, enrollClassId: c.id, enrollSearch: '' }),
+          openEdit: () => this.setState({
+            classSheet: 'edit',
+            classForm: { id: c.id, name: c.name, style: c.style, placeId: c.placeId, day: c.day, room: c.room, start: c.start, end: c.end, max: c.max, difficulty: c.difficulty || 'All Levels' },
+          }),
+          openDelete: () => this.setState({ deleteConfirmId: c.id }),
+        };
+      }),
+
+      classFormOpen, classFormTitle: cf.id ? t.editMyClass : t.addMyClass,
+      cfName: cf.name || '', onCfName: e => this.setState({ classForm: { ...s.classForm, name: e.target.value } }),
+      cfStyleOpts: CLASS_STYLES.map(v => ({ value: v, label: v, selected: v === cf.style })),
+      onCfStyle: e => this.setState({ classForm: { ...s.classForm, style: e.target.value } }),
+      cfPlaceOpts: placesData.map(p => ({ value: p.id, label: p.name, selected: p.id === cf.placeId })),
+      onCfPlace: e => this.setState({ classForm: { ...s.classForm, placeId: parseInt(e.target.value, 10) } }),
+      cfDayOpts: CLASS_DAYS.map(v => ({ value: v, label: v, selected: v === cf.day })),
+      onCfDay: e => this.setState({ classForm: { ...s.classForm, day: e.target.value } }),
+      cfRoomOpts: CLASS_ROOMS.map(v => ({ value: v, label: v, selected: v === cf.room })),
+      onCfRoom: e => this.setState({ classForm: { ...s.classForm, room: e.target.value } }),
+      cfStart: cf.start || '', onCfStart: e => this.setState({ classForm: { ...s.classForm, start: e.target.value } }),
+      cfEnd: cf.end || '', onCfEnd: e => this.setState({ classForm: { ...s.classForm, end: e.target.value } }),
+      cfMax: cf.max || 15, onCfMax: e => this.setState({ classForm: { ...s.classForm, max: e.target.value } }),
+      cfDiffOpts: CLASS_DIFFICULTIES.map(v => ({ value: v, label: v, selected: v === cf.difficulty })),
+      onCfDiff: e => this.setState({ classForm: { ...s.classForm, difficulty: e.target.value } }),
+      closeClassForm: () => this.setState({ classSheet: null, classForm: null }),
+      saveClassForm: () => this.saveClassNow(t),
+
+      enrollOpen,
+      enrollClassOpts: myTeachingClasses.map(c => ({ value: c.id, label: c.name + ' · ' + c.day + ' ' + c.start + ' (' + pName(c.placeId) + ')', selected: c.id === enrollClassId })),
+      onEnrollClass: e => this.setState({ enrollClassId: parseInt(e.target.value, 10) }),
+      enrollSearchVal: s.enrollSearch || '', onEnrollSearch: e => this.setState({ enrollSearch: e.target.value }),
+      enrollRows: enrollStudentList.map(x => {
+        const checked = Array.isArray(x.classIds) && x.classIds.includes(enrollClassId);
+        return {
+          id: x.id, name: x.name, age: x.age, checked,
+          toggle: () => this.toggleEnrollmentNow(x.id, enrollClassId, t),
+        };
+      }),
+      closeEnroll: () => this.setState({ enrollSheet: null, enrollClassId: null, enrollSearch: '' }),
+
+      deleteConfirmOpen: !!s.deleteConfirmId,
+      cancelDelete: () => this.setState({ deleteConfirmId: null }),
+      confirmDelete: () => this.deleteClassNow(s.deleteConfirmId, t),
       hourTiles: usingCloud ? [
         { n: Math.round(totalHoursAllTime * 10) / 10, label: t.hours, icon: 'ph-clock', dec: (totalHoursAllTime % 1) ? '1' : '0' },
         { n: sessionMap.size, label: t.classesTaught, icon: 'ph-chalkboard-teacher', dec: '0' },
