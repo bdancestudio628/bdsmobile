@@ -1222,6 +1222,26 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         </div>
       </div>
 
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:14px">
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.payBreakdown }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-for list="{{ payCardsT }}" as="p" hint-placeholder-count="3">
+            <div style="background:#000;border:1px solid var(--bd2);padding:11px">
+              <p class="mn" style="color:var(--g5);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;line-height:1.3">{{ p.label }}</p>
+              <p class="dsp" style="color:#fff;font-size:24px;margin:0;line-height:1">{{ p.qty }}</p>
+              <p class="mn" style="color:var(--g5);font-size:9.5px;margin:5px 0 0">{{ p.sub }}</p>
+            </div>
+          </sc-for>
+          <div style="background:rgba(255,122,41,.1);border:1px solid var(--acc);padding:11px">
+            <p class="mn" style="color:var(--g5);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;line-height:1.3">{{ payTotalCard.label }}</p>
+            <p class="dsp" style="color:var(--acc);font-size:24px;margin:0;line-height:1">{{ payTotalCard.amt }}</p>
+            <p class="mn" style="color:var(--g5);font-size:9.5px;margin:5px 0 0">{{ payTotalCard.sub }}</p>
+          </div>
+        </div>
+      </div>
+      <p style="color:var(--g5);font-size:10px;line-height:1.6;margin:0 0 8px">💡 {{ t.salaryExplain1 }}</p>
+      <p style="color:var(--g5);font-size:10px;line-height:1.6;margin:0 0 18px">💡 {{ t.salaryExplain2 }}</p>
+
       <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
         <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.payBreakdown }}</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -2087,6 +2107,8 @@ class Component extends DCLogic {
       installBtn: 'Install App', installLater: 'Maybe later', installGotIt: 'Got it', installFindIcon: 'Look for this icon in your browser 👆',
       totalSalaryCard: 'Total Salary', allMonthsWord: 'all months',
       earningRecords: 'Earning Records', noPaidRecords: 'No paid records', amountPaid: 'Amount Paid:',
+      salaryExplain1: 'Salary is calculated month by month, based on when the classes were actually taught. Each monthly-fee class-contribution earns your tiered rate for that month, and each paid "Single Class" drop-in earns RM25. Only Paid records count.',
+      salaryExplain2: 'Your monthly-fee class rate depends on your total monthly-fee class-contributions each month, across all your classes (one student taking 4 classes with you counts as 4, not 1): RM70/class for 1–20, RM75/class for 21–40, and RM80/class for 41 and above.',
       demoHint: 'Use the username & password given to you by the studio', openInstagram: 'Open Instagram', openXiaohongshu: 'Open Xiaohongshu',
       loginMissing: 'Please enter your username and password.',
       loginBad: 'Invalid username or password.',
@@ -2156,6 +2178,8 @@ class Component extends DCLogic {
       installBtn: '安装应用', installLater: '稍后再说', installGotIt: '知道了', installFindIcon: '在你的浏览器中找到此图标 👆',
       totalSalaryCard: '总薪资', allMonthsWord: '所有月份',
       earningRecords: '收入记录', noPaidRecords: '暂无已缴费记录', amountPaid: '缴费金额：',
+      salaryExplain1: '薪资按月计算，依据课程实际授课的日期计算 —— 每一份月费课程按当月的阶梯费率计算，每笔已缴费的「单堂课」可获得 RM25。只计算已缴费的记录。',
+      salaryExplain2: '你的月费课程费率取决于当月你所有课程的月费课时总数（一位学生报读你4门课即计为4，而非1）：1–20 节为 RM70/节，21–40 节为 RM75/节，41 节以上为 RM80/节。',
       demoHint: '请使用舞室提供给你的用户名与密码登录', openInstagram: '打开 Instagram', openXiaohongshu: '打开小红书',
       loginMissing: '请输入用户名和密码。',
       loginBad: '用户名或密码不正确。',
@@ -2831,6 +2855,18 @@ class Component extends DCLogic {
         { label: t.salarySingleClass, qty: 4, sub: '× RM25 = RM100' },
       ],
       payTotalCard: { label: t.totalSalaryCard, amt: 'RM' + (salary ? Math.round(salary.total) : 1845), sub: t.allMonthsWord },
+      payCardsT: (salary ? [
+        salary.monthlySingleRateQty ? { label: t.salarySingleRate, qty: salary.monthlySingleRateQty, sub: 'RM' + Math.round(salary.monthlySingleRateEarn) } : null,
+        salary.monthlyMultiRateClassQty ? { label: t.salaryMultiRate, qty: salary.monthlyMultiRateClassQty, sub: 'RM' + Math.round(salary.monthlyMultiRateEarn) } : null,
+        { label: t.salarySingleClass, qty: salary.singleClassQty, sub: '× RM25 = RM' + Math.round(salary.singleClassEarn) },
+        salary.danceShowQty ? { label: t.salaryDanceShow, qty: salary.danceShowQty, sub: 'RM' + Math.round(salary.danceShowEarn) } : null,
+        salary.privateQty ? { label: t.salaryPrivate, qty: salary.privateQty, sub: 'RM' + Math.round(salary.privateEarn) } : null,
+      ].filter(Boolean) : [
+        { label: t.salarySingleRate, qty: 3, sub: 'RM210' },
+        { label: t.salaryMultiRate, qty: 12, sub: 'RM840' },
+        { label: t.salarySingleClass, qty: 4, sub: '× RM25 = RM100' },
+      ]),
+      payTotalCard: { label: t.totalSalaryCard, amt: 'RM' + (salary ? Math.round(salary.total) : 1845), sub: t.allMonthsWord },
       earningRows: salary ? salary.rows.map(r => ({
         name: r.name, type: r.type, earnedMonth: r.earnedMonth, date: r.date || '—',
         amount: (typeof r.amount === 'number') ? 'RM' + Math.round(r.amount) : 'RM0', earn: 'RM' + Math.round(r.earn),
@@ -2951,7 +2987,7 @@ class Component extends DCLogic {
       deleteConfirmOpen: !!s.deleteConfirmId,
       cancelDelete: () => this.setState({ deleteConfirmId: null }),
       confirmDelete: () => this.deleteClassNow(s.deleteConfirmId, t),
-      hourTiles: usingCloud ? [
+      hourTiles: (usingCloud ? [
         { n: Math.round(totalHoursAllTime * 10) / 10, label: t.hours, icon: 'ph-clock', dec: (totalHoursAllTime % 1) ? '1' : '0' },
         { n: sessionMap.size, label: t.classesTaught, icon: 'ph-chalkboard-teacher', dec: '0' },
         { n: distinctStudentsAllTime, label: t.studentsTaught, icon: 'ph-users-three', dec: '0' },
@@ -2961,7 +2997,7 @@ class Component extends DCLogic {
         { n: 34, label: t.classesTaught, icon: 'ph-chalkboard-teacher', dec: '0' },
         { n: 20, label: t.studentsTaught, icon: 'ph-users-three', dec: '0' },
         { n: 92, label: t.avgAtt + ' %', icon: 'ph-chart-line-up', dec: '0' },
-      ],
+      ]),
       weekBars: weekBarsReal || [[6, 55], [7, 64], [5, 45], [8, 73], [9, 82], [11, 100]].map(([v, h], i) => ({ v, h, label: 'W' + (i + 1) })),
       styleHours: styleHoursReal || [{ style: 'K-pop', hrs: 26, pct: 100 }, { style: 'Street Jazz', hrs: 11, pct: 42 }, { style: 'Choreo lab', hrs: 4, pct: 15 }],
       markClass: effMarkClass,
