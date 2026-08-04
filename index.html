@@ -573,9 +573,9 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     </div>
     <div style="border:1px solid var(--bd);max-height:240px;overflow-y:auto;margin-bottom:16px">
       <sc-for list="{{ enrollRows }}" as="r" hint-placeholder-count="4">
-      <div onClick="{{ r.toggle }}" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--bd);cursor:pointer">
-        <span style="width:16px;height:16px;border:1px solid var(--bd);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ r.checked ? 'var(--acc)' : 'transparent' }}">
-          <sc-if value="{{ r.checked }}" hint-placeholder-val="{{ false }}"><i class="ph ph-check" style="font-size:11px;color:#000"></i></sc-if>
+      <div onClick="{{ r.toggle }}" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid var(--bd);cursor:pointer;background:{{ r.checked ? 'rgba(255,122,41,.1)' : 'transparent' }}">
+        <span style="width:18px;height:18px;border:1.5px solid {{ r.checked ? 'var(--acc)' : 'var(--bd)' }};border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ r.checked ? 'var(--acc)' : 'transparent' }}">
+          <sc-if value="{{ r.checked }}" hint-placeholder-val="{{ false }}"><i class="ph ph-check" style="font-size:12px;font-weight:700;color:#000"></i></sc-if>
         </span>
         <span style="color:#fff;font-size:12.5px">{{ r.name }} · {{ t.idWord }} {{ r.id }} · {{ t.ageWord }} {{ r.age }}</span>
       </div>
@@ -1224,15 +1224,20 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 
       <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px">
         <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.payBreakdown }}</p>
-        <sc-for list="{{ payRowsT }}" as="p" hint-placeholder-count="3">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--bd2)">
-            <div>
-              <p style="color:var(--g2);font-size:11.5px;font-weight:600;margin:0">{{ p.label }}</p>
-              <p class="mn" style="color:var(--g5);font-size:10px;margin:3px 0 0">{{ p.meta }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-for list="{{ payCardsT }}" as="p" hint-placeholder-count="3">
+            <div style="background:#000;border:1px solid var(--bd2);padding:11px">
+              <p class="mn" style="color:var(--g5);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;line-height:1.3">{{ p.label }}</p>
+              <p class="dsp" style="color:#fff;font-size:24px;margin:0;line-height:1">{{ p.qty }}</p>
+              <p class="mn" style="color:var(--g5);font-size:9.5px;margin:5px 0 0">{{ p.sub }}</p>
             </div>
-            <p class="mn" style="color:#fff;font-size:12px;font-weight:600;margin:0">{{ p.amount }}</p>
+          </sc-for>
+          <div style="background:rgba(255,122,41,.1);border:1px solid var(--acc);padding:11px">
+            <p class="mn" style="color:var(--g5);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;line-height:1.3">{{ payTotalCard.label }}</p>
+            <p class="dsp" style="color:var(--acc);font-size:24px;margin:0;line-height:1">{{ payTotalCard.amt }}</p>
+            <p class="mn" style="color:var(--g5);font-size:9.5px;margin:5px 0 0">{{ payTotalCard.sub }}</p>
           </div>
-        </sc-for>
+        </div>
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px">
@@ -1258,17 +1263,23 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         </div>
       </div>
 
-      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">{{ t.hoursByStyle }}</p>
-      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;display:flex;flex-direction:column;gap:12px">
-        <sc-for list="{{ styleHours }}" as="sh" hint-placeholder-count="3">
-          <div>
-            <div class="mn" style="display:flex;justify-content:space-between;font-size:10px;color:var(--g4);margin-bottom:6px">
-              <span>{{ sh.style }}</span><span style="color:var(--acc)">{{ sh.hrs }}h</span>
-            </div>
-            <div style="height:6px;background:#000;border:1px solid var(--bd)">
-              <div data-om-bar="{{ sh.pct }}" style="height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:{{ sh.pct }}%"></div>
-            </div>
+      <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 12px">{{ t.earningRecords }}</p>
+      <div style="border:1px solid var(--bd)">
+        <sc-if value="{{ !earningRows.length }}" hint-placeholder-val="{{ true }}">
+        <p style="color:var(--g5);font-size:12px;text-align:center;padding:24px 0">{{ t.noPaidRecords }}</p>
+        </sc-if>
+        <sc-for list="{{ earningRows }}" as="e" hint-placeholder-count="3">
+        <div style="padding:11px 13px;border-bottom:1px solid var(--bd)">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+            <p style="color:#fff;font-size:12.5px;font-weight:600;margin:0">{{ e.name }}</p>
+            <p class="mn" style="color:#7ee2ab;font-size:12px;font-weight:700;margin:0;white-space:nowrap">+{{ e.earn }}</p>
           </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px">
+            <span class="mn" style="font-size:9px;background:rgba(255,122,41,.12);color:var(--acc2);padding:2px 7px">{{ e.earnedMonth }}</span>
+            <span class="mn" style="font-size:9px;background:#1c1c1c;color:var(--g4);border:1px solid var(--bd);padding:2px 7px">{{ e.type }}</span>
+          </div>
+          <p class="mn" style="color:var(--g5);font-size:10px;margin:0">{{ t.amountPaid }} {{ e.amount }} · {{ e.date }}</p>
+        </div>
         </sc-for>
       </div>
     </div>
@@ -1284,6 +1295,20 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         <sc-for list="{{ markClassChips }}" as="ch" hint-placeholder-count="3">
           <button onClick="{{ ch.go }}" class="mn" style="flex-shrink:0;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;cursor:pointer;border:1px solid {{ ch.bd }};background:{{ ch.bg }};color:{{ ch.fg }}">{{ ch.label }}</button>
         </sc-for>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:12px;margin-bottom:12px;text-align:center">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <button onClick="{{ prevAttDay }}" class="mn" style="background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:9.5px;font-weight:600;padding:8px 10px;cursor:pointer"><i class="ph ph-caret-left"></i></button>
+          <div>
+            <p style="color:#fff;font-weight:700;font-size:13px;margin:0">{{ attDateLabel }}</p>
+            <sc-if value="{{ isReplacementDay }}" hint-placeholder-val="{{ false }}">
+            <p class="mn" style="color:var(--acc2);font-size:9.5px;margin:3px 0 0">{{ replacementDayNote }}</p>
+            </sc-if>
+          </div>
+          <button onClick="{{ nextAttDay }}" class="mn" style="background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:9.5px;font-weight:600;padding:8px 10px;cursor:pointer"><i class="ph ph-caret-right"></i></button>
+        </div>
+        <input type="date" onChange="{{ jumpAttDate }}" class="mn" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12px;padding:9px" />
       </div>
 
       <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
@@ -1329,6 +1354,54 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       </div>
 
       <button data-fancy="1" onClick="{{ saveMarks }}" class="mn" style="position:relative;overflow:hidden;width:100%;margin-top:14px;background:var(--acc);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember)">{{ t.saveRoster }}</button>
+
+      <p class="mn" style="color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:28px 0 3px"><i class="ph ph-clock-counter-clockwise" style="color:var(--acc);margin-right:5px"></i>{{ t.previousRecordsFor }} {{ markClassNameOnly }} <span class="mn" style="color:var(--g5);font-weight:400;text-transform:none;letter-spacing:0">{{ t.tapToJump }}</span></p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 8px">
+        <div>
+          <p class="mn" style="color:var(--g5);font-size:9px;margin:0 0 4px">{{ t.fromWord }}</p>
+          <input type="date" value="{{ attHistFromVal }}" onChange="{{ onAttHistFrom }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
+        </div>
+        <div>
+          <p class="mn" style="color:var(--g5);font-size:9px;margin:0 0 4px">{{ t.toWord }}</p>
+          <input type="date" value="{{ attHistToVal }}" onChange="{{ onAttHistTo }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
+        </div>
+      </div>
+      <sc-if value="{{ hasAttHistFilter }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ clearAttHistFilter }}" class="mn" style="background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:9.5px;font-weight:600;padding:7px 11px;cursor:pointer;margin-bottom:10px">{{ t.clearFilterBtn }}</button>
+      </sc-if>
+      <div style="border:1px solid var(--bd);max-height:220px;overflow-y:auto">
+        <sc-if value="{{ !attHistoryRows.length }}" hint-placeholder-val="{{ true }}">
+        <p style="color:var(--g5);font-size:11px;text-align:center;padding:20px 0">{{ hasAttHistFilter ? t.noRecordsInRange : t.noRecordsYet }}</p>
+        </sc-if>
+        <sc-for list="{{ attHistoryRows }}" as="h" hint-placeholder-count="3">
+        <button onClick="{{ h.jump }}" style="display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--bd);padding:10px 12px;cursor:pointer">
+          <p style="color:#fff;font-size:12px;font-weight:600;margin:0">{{ h.label }}</p>
+          <p class="mn" style="color:var(--g5);font-size:10px;margin:3px 0 0">{{ h.summary }}</p>
+        </button>
+        </sc-for>
+      </div>
+
+      <p class="mn" style="color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:24px 0 3px"><i class="ph ph-note-pencil" style="color:var(--acc);margin-right:5px"></i>{{ t.replacementRecordsTitle }}</p>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.5;margin:0 0 10px">{{ t.replacementRecordsNote }}</p>
+      <div style="position:relative;margin-bottom:10px">
+        <i class="ph ph-magnifying-glass" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g5);font-size:13px"></i>
+        <input value="{{ repSearchVal }}" onChange="{{ onRepSearch }}" placeholder="{{ t.searchStudent }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:11px 11px 11px 32px" />
+      </div>
+      <div style="border:1px solid var(--bd);max-height:240px;overflow-y:auto">
+        <sc-if value="{{ !replacementRows.length }}" hint-placeholder-val="{{ true }}">
+        <p style="color:var(--g5);font-size:11px;text-align:center;padding:20px 0">{{ t.noReplacementSessions }}</p>
+        </sc-if>
+        <sc-for list="{{ replacementRows }}" as="rp" hint-placeholder-count="2">
+        <div style="padding:10px 12px;border-bottom:1px solid var(--bd)">
+          <div style="display:flex;justify-content:space-between;gap:8px">
+            <p style="color:#fff;font-size:12px;font-weight:600;margin:0">{{ rp.student }}</p>
+            <p class="mn" style="color:var(--g5);font-size:10px;margin:0">{{ rp.date }}</p>
+          </div>
+          <p class="mn" style="color:var(--acc2);font-size:10px;margin:3px 0 0">{{ rp.className }} · {{ rp.status }}</p>
+          <p style="color:var(--g4);font-size:11px;margin:4px 0 0">{{ rp.remark }}</p>
+        </div>
+        </sc-for>
+      </div>
     </div>
     </sc-if>
 
@@ -1447,6 +1520,7 @@ class Component extends DCLogic {
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
     installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false,
+    attDate: null, attHistFrom: '', attHistTo: '', repSearch: '',
     dayFilter: '', classSheet: null, classForm: null, enrollSheet: null, enrollClassId: null, enrollSearch: '', deleteConfirmId: null,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
@@ -1682,14 +1756,13 @@ class Component extends DCLogic {
   // that the desktop's markAttendance() triggers (checkAttendanceBilling / reconcileAutoBills) — those
   // are non-trivial billing rules, and getting them wrong risks corrupting real payment records. This
   // only ever adds/updates attendance rows, never anything financial.
-  async saveAttendanceMarks(classId, roster, marks, t) {
+  async saveAttendanceMarks(classId, dateStr, roster, marks, t) {
     if (this.state.cloudLoading) return;
     if (!this.state.cloudDB || !this.state.sessionToken) { this.flash(t.saved); return; }
     const entries = roster
       .map(m => ({ studentId: m.id, mark: marks[classId + ':' + m.id] }))
       .filter(x => x.mark && x.mark.status);
     if (!entries.length) { this.flash(t.saved); return; }
-    const dateStr = new Date().toISOString().slice(0, 10);
     this.setState({ cloudLoading: true });
     try {
       // Fetch fresh immediately before writing — this narrows the window in which a concurrent edit
@@ -2001,10 +2074,19 @@ class Component extends DCLogic {
       teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
       username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…', refreshed: 'Refreshed', savingNow: 'Saving…',
+      loggedOutInactive: 'Signed out after 5 minutes of inactivity',
+      replacementDayNote: 'This class normally runs {day}s, {start}–{end}',
+      previousRecordsFor: 'Previous records for', tapToJump: '(tap a date to jump)', noRecordsYet: 'No records yet',
+      noRecordsInRange: 'No records in this range', clearFilterBtn: 'Clear filter', fromWord: 'From', toWord: 'To',
+      replacementRecordsTitle: 'Replacement Records', replacementRecordsNote: 'Remarks added when a student is marked absent (e.g. they did a replacement elsewhere) — the front desk\'s record.',
+      dateWord: 'Date', studentWord: 'Student', classWord: 'Class', statusWord: 'Status', remarkWord: 'Remark',
+      noReplacementSessions: 'No replacement sessions yet',
       installTitle: 'Install This App', installLead: 'Add B Dance Studio to your home screen for quick access, just like a real app.',
       installIosStep1: 'Tap the Share button', installIosStep2: 'Then tap "Add to Home Screen"',
       installAndroidStep1: 'Tap the ⋮ menu in your browser', installAndroidStep2: 'Then tap "Add to Home Screen" or "Install App"',
       installBtn: 'Install App', installLater: 'Maybe later', installGotIt: 'Got it', installFindIcon: 'Look for this icon in your browser 👆',
+      totalSalaryCard: 'Total Salary', allMonthsWord: 'all months',
+      earningRecords: 'Earning Records', noPaidRecords: 'No paid records', amountPaid: 'Amount Paid:',
       demoHint: 'Use the username & password given to you by the studio', openInstagram: 'Open Instagram', openXiaohongshu: 'Open Xiaohongshu',
       loginMissing: 'Please enter your username and password.',
       loginBad: 'Invalid username or password.',
@@ -2061,10 +2143,19 @@ class Component extends DCLogic {
       teacher: '导师', teacherSub: '学员名单、点名与课时',
       studentLogin: '学生登录', teacherLogin: '导师登录',
       username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…', refreshed: '已刷新', savingNow: '保存中…',
+      loggedOutInactive: '由于5分钟内无操作，已自动登出',
+      replacementDayNote: '此课程通常在每周{day}，{start}–{end}上课',
+      previousRecordsFor: '以下课程的历史记录：', tapToJump: '（点击日期跳转）', noRecordsYet: '暂无记录',
+      noRecordsInRange: '此范围内没有记录', clearFilterBtn: '清除筛选', fromWord: '从', toWord: '到',
+      replacementRecordsTitle: '补课记录', replacementRecordsNote: '学生被标记缺席时填写的备注（例如去别处补课）—— 供前台存档查看。',
+      dateWord: '日期', studentWord: '学生', classWord: '课程', statusWord: '状态', remarkWord: '备注',
+      noReplacementSessions: '暂无补课记录',
       installTitle: '安装此应用', installLead: '将 B Dance Studio 添加到主屏幕，像真正的App一样快速打开。',
       installIosStep1: '点击分享按钮', installIosStep2: '然后点击"添加到主屏幕"',
       installAndroidStep1: '点击浏览器右上角的 ⋮ 菜单', installAndroidStep2: '然后点击"添加到主屏幕"或"安装应用"',
       installBtn: '安装应用', installLater: '稍后再说', installGotIt: '知道了', installFindIcon: '在你的浏览器中找到此图标 👆',
+      totalSalaryCard: '总薪资', allMonthsWord: '所有月份',
+      earningRecords: '收入记录', noPaidRecords: '暂无已缴费记录', amountPaid: '缴费金额：',
       demoHint: '请使用舞室提供给你的用户名与密码登录', openInstagram: '打开 Instagram', openXiaohongshu: '打开小红书',
       loginMissing: '请输入用户名和密码。',
       loginBad: '用户名或密码不正确。',
@@ -2269,6 +2360,27 @@ class Component extends DCLogic {
     return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   }
 
+  toLocalISODate(d) {
+    const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  dayIndexOf(dayName) {
+    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(dayName);
+  }
+
+  // The most recent occurrence of a weekday on/before today — e.g. "nearest Saturday" so marking
+  // attendance always opens on the most recently-run session by default, matching the desktop.
+  nearestDateForDay(dayName) {
+    const targetIdx = this.dayIndexOf(dayName);
+    const today = new Date();
+    let diff = today.getDay() - targetIdx;
+    if (diff < 0) diff += 7;
+    const d = new Date(today);
+    d.setDate(d.getDate() - diff);
+    return this.toLocalISODate(d);
+  }
+
   classDurationHours(c) {
     const a = this.parseTimeToMinutes(c && c.start), b = this.parseTimeToMinutes(c && c.end);
     if (a == null || b == null) return 1;
@@ -2417,6 +2529,11 @@ class Component extends DCLogic {
     const meTeacher = (usingCloud && isT) ? ((teachersData.find(x => x.id === myTeacherId)) || null) : null;
     const myTeachingClasses = classesData.filter(c => c.teacherId === myTeacherId);
     const effMarkClass = myTeachingClasses.some(c => c.id === s.markClass) ? s.markClass : ((myTeachingClasses[0] || {}).id ?? s.markClass);
+    const effMarkClassObj = classesData.find(c => c.id === effMarkClass) || null;
+    const effAttDate = s.attDate || (effMarkClassObj ? this.nearestDateForDay(effMarkClassObj.day) : this.toLocalISODate(new Date()));
+    const attDateObj = new Date(effAttDate + 'T00:00:00');
+    const attDateLabel = isNaN(attDateObj) ? '' : attDateObj.toLocaleDateString('en-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const isReplacementDay = !!(effMarkClassObj && !isNaN(attDateObj) && this.dayIndexOf(effMarkClassObj.day) !== attDateObj.getDay());
 
     // ── Class schedule management (My Schedule tab + Add/Edit/Delete/Enrollment) ──
     const CLASS_STYLES = ['Hip-hop', 'K-pop', 'Street Jazz', 'Popping', 'Kid Dance', 'Waacking', 'Dancehall', 'Choreography'];
@@ -2485,10 +2602,15 @@ class Component extends DCLogic {
       const wk = monday.toISOString().slice(0, 10);
       weekBuckets[wk] = (weekBuckets[wk] || 0) + 1;
     });
-    const weekKeysSorted = Object.keys(weekBuckets).sort().slice(-6);
-    const weekBarsReal = weekKeysSorted.length ? (() => {
-      const maxV = Math.max(1, ...weekKeysSorted.map(w => weekBuckets[w]));
-      return weekKeysSorted.map((w, i) => ({ v: weekBuckets[w], h: Math.round(weekBuckets[w] / maxV * 100), label: 'W' + (i + 1) }));
+    // Always exactly 6 CONSECUTIVE weeks ending with the current week — weeks with no sessions show
+    // as a real zero bar, rather than being skipped (which used to make gaps invisible).
+    const thisMonday = (() => { const d = new Date(); const dow = (d.getDay() + 6) % 7; d.setDate(d.getDate() - dow); return d; })();
+    const last6WeekKeys = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(thisMonday); d.setDate(d.getDate() - (5 - i) * 7); return this.toLocalISODate(d);
+    });
+    const weekBarsReal = (usingCloud && isT) ? (() => {
+      const maxV = Math.max(1, ...last6WeekKeys.map(w => weekBuckets[w] || 0));
+      return last6WeekKeys.map((w, i) => ({ v: weekBuckets[w] || 0, h: Math.round((weekBuckets[w] || 0) / maxV * 100), label: 'W' + (i + 1) }));
     })() : null;
     const styleHoursReal = Object.keys(hoursByStyle).length ? (() => {
       const maxHrs = Math.max(1, ...Object.values(hoursByStyle));
@@ -2697,17 +2819,23 @@ class Component extends DCLogic {
       payTotal: salary ? Math.round(salary.total) : 1845,
       payFormula: salary ? t.salaryFormula : ('41 ' + t.hours.toLowerCase() + ' × RM45' + t.perHour),
       payStatus: t.pendingPay,
-      payRowsT: salary ? [
-        salary.monthlySingleRateQty ? { label: t.salarySingleRate, meta: salary.monthlySingleRateQty + ' × ~RM' + Math.round(salary.monthlySingleRateEarn / salary.monthlySingleRateQty), amount: 'RM' + Math.round(salary.monthlySingleRateEarn) } : null,
-        salary.monthlyMultiRateClassQty ? { label: t.salaryMultiRate, meta: salary.monthlyMultiRateClassQty + ' × ~RM' + Math.round(salary.monthlyMultiRateEarn / salary.monthlyMultiRateClassQty), amount: 'RM' + Math.round(salary.monthlyMultiRateEarn) } : null,
-        salary.singleClassQty ? { label: t.salarySingleClass, meta: salary.singleClassQty + ' × RM25', amount: 'RM' + Math.round(salary.singleClassEarn) } : null,
-        salary.danceShowQty ? { label: t.salaryDanceShow, meta: salary.danceShowQty + ' ' + t.classesTaught.toLowerCase(), amount: 'RM' + Math.round(salary.danceShowEarn) } : null,
-        salary.privateQty ? { label: t.salaryPrivate, meta: salary.privateQty + ' ' + t.classesTaught.toLowerCase(), amount: 'RM' + Math.round(salary.privateEarn) } : null,
+      payCardsT: salary ? [
+        salary.monthlySingleRateQty ? { label: t.salarySingleRate, qty: salary.monthlySingleRateQty, sub: 'RM' + Math.round(salary.monthlySingleRateEarn) } : null,
+        salary.monthlyMultiRateClassQty ? { label: t.salaryMultiRate, qty: salary.monthlyMultiRateClassQty, sub: 'RM' + Math.round(salary.monthlyMultiRateEarn) } : null,
+        { label: t.salarySingleClass, qty: salary.singleClassQty, sub: '× RM25 = RM' + Math.round(salary.singleClassEarn) },
+        salary.danceShowQty ? { label: t.salaryDanceShow, qty: salary.danceShowQty, sub: 'RM' + Math.round(salary.danceShowEarn) } : null,
+        salary.privateQty ? { label: t.salaryPrivate, qty: salary.privateQty, sub: 'RM' + Math.round(salary.privateEarn) } : null,
       ].filter(Boolean) : [
-        { label: 'K-pop Beginner + Intermediate', meta: '26 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM1,170' },
-        { label: 'Street Jazz Open', meta: '11 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM495' },
-        { label: 'Choreo lab', meta: '4 ' + t.hours.toLowerCase() + ' × RM45', amount: 'RM180' },
+        { label: t.salarySingleRate, qty: 3, sub: 'RM210' },
+        { label: t.salaryMultiRate, qty: 12, sub: 'RM840' },
+        { label: t.salarySingleClass, qty: 4, sub: '× RM25 = RM100' },
       ],
+      payTotalCard: { label: t.totalSalaryCard, amt: 'RM' + (salary ? Math.round(salary.total) : 1845), sub: t.allMonthsWord },
+      earningRows: salary ? salary.rows.map(r => ({
+        name: r.name, type: r.type, earnedMonth: r.earnedMonth, date: r.date || '—',
+        amount: (typeof r.amount === 'number') ? 'RM' + Math.round(r.amount) : 'RM0', earn: 'RM' + Math.round(r.earn),
+      })) : [],
+
       todayLabel: this.fmtDate(new Date().toISOString().slice(0, 10)), greeting: t.goodEvening + ', ' + (meTeacher ? meTeacher.name.split(' ')[0] : 'Yuki'),
       nextClass: upcomingToday ? {
         name: upcomingToday.name, time: upcomingToday.start + ' – ' + upcomingToday.end,
@@ -2837,25 +2965,33 @@ class Component extends DCLogic {
       weekBars: weekBarsReal || [[6, 55], [7, 64], [5, 45], [8, 73], [9, 82], [11, 100]].map(([v, h], i) => ({ v, h, label: 'W' + (i + 1) })),
       styleHours: styleHoursReal || [{ style: 'K-pop', hrs: 26, pct: 100 }, { style: 'Street Jazz', hrs: 11, pct: 42 }, { style: 'Choreo lab', hrs: 4, pct: 15 }],
       markClass: effMarkClass,
-      markDateLine: this.fmtDate(new Date().toISOString().slice(0, 10)) + ' · ' + (cls(effMarkClass) || {}).name,
+      markDateLine: this.fmtDate(effAttDate) + ' · ' + (cls(effMarkClass) || {}).name, markClassNameOnly: (cls(effMarkClass) || {}).name || '',
+      attDateLabel, isReplacementDay, replacementDayNote: t.replacementDayNote.replace('{day}', (effMarkClassObj || {}).day).replace('{start}', (effMarkClassObj || {}).start).replace('{end}', (effMarkClassObj || {}).end),
+      prevAttDay: () => { const d = new Date(effAttDate + 'T00:00:00'); d.setDate(d.getDate() - 7); this.setState({ attDate: this.toLocalISODate(d) }); },
+      nextAttDay: () => { const d = new Date(effAttDate + 'T00:00:00'); d.setDate(d.getDate() + 7); this.setState({ attDate: this.toLocalISODate(d) }); },
+      jumpAttDate: e => { if (e.target.value) this.setState({ attDate: e.target.value }); },
       markClassChips: myTeachingClasses.map(c => {
         const on2 = effMarkClass === c.id;
-        return { label: c.name, bd: on2 ? 'var(--acc)' : 'var(--bd)', bg: on2 ? 'var(--acc)' : 'var(--card)', fg: on2 ? '#1a1006' : 'var(--g4)', go: () => this.setState({ markClass: c.id, remarkFor: null }) };
+        return { label: c.name, bd: on2 ? 'var(--acc)' : 'var(--bd)', bg: on2 ? 'var(--acc)' : 'var(--card)', fg: on2 ? '#1a1006' : 'var(--g4)', go: () => this.setState({ markClass: c.id, remarkFor: null, attDate: null }) };
       }),
       markRows: rosterFor(effMarkClass).map((m, i) => {
-        const key = effMarkClass + ':' + m.id, cur = (s.marks[key] || {}).status || '';
+        const key = effMarkClass + ':' + effAttDate + ':' + m.id;
+        const localMark = s.marks[key];
+        const savedRec = attendanceData.find(a => a.classId === effMarkClass && a.date === effAttDate && a.studentId === m.id && !a.extra);
+        const cur = (localMark && localMark.status) || (savedRec && savedRec.status) || '';
+        const curRemark = (localMark && localMark.remark !== undefined) ? localMark.remark : ((savedRec && savedRec.remark) || '');
         const edge = cur === 'present' ? '#1f7a4d' : cur === 'absent' ? '#7a2a22' : cur === 'cancelled' ? '#a84715' : 'var(--bd)';
         const opt = (k, label, icon, bg, fg) => ({
           label, icon, bd: cur === k ? bg : 'var(--bd)', bg: cur === k ? bg : 'transparent', fg: cur === k ? fg : 'var(--g5)',
-          go: () => this.setState(p => ({ marks: { ...p.marks, [key]: { ...(p.marks[key] || {}), status: k } } })),
+          go: () => this.setState(p => ({ marks: { ...p.marks, [key]: { ...(p.marks[key] || { remark: curRemark }), status: k } } })),
         });
         return {
           id: key, name: m.name, initial: m.name.slice(0, 1), sub: t.age + ' ' + m.age,
           c1: ['#ff7a29', '#ff4d2e', '#ffa057', '#e39b5a', '#ff6a3d'][i % 5], c2: '#3a2010', edge,
-          remark: (s.marks[key] || {}).remark || '', editing: s.remarkFor === key,
-          noteColor: (s.marks[key] || {}).remark ? 'var(--acc)' : 'var(--g5)',
-          note: () => this.setState({ remarkFor: s.remarkFor === key ? null : key, remarkText: (s.marks[key] || {}).remark || '' }),
-          saveNote: () => { this.setState(p => ({ marks: { ...p.marks, [key]: { ...(p.marks[key] || {}), remark: p.remarkText } }, remarkFor: null })); this.flash(t.saved); },
+          remark: curRemark, editing: s.remarkFor === key,
+          noteColor: curRemark ? 'var(--acc)' : 'var(--g5)',
+          note: () => this.setState({ remarkFor: s.remarkFor === key ? null : key, remarkText: curRemark }),
+          saveNote: () => { this.setState(p => ({ marks: { ...p.marks, [key]: { ...(p.marks[key] || { status: cur }), remark: p.remarkText } }, remarkFor: null })); this.flash(t.saved); },
           opts: [
             opt('present', t.present, 'ph-check', '#1f7a4d', '#dffaeb'),
             opt('absent', t.absent, 'ph-x', '#a8281a', '#ffe4df'),
@@ -2865,18 +3001,26 @@ class Component extends DCLogic {
       }),
       markProgressLabel: (() => {
         const list = rosterFor(effMarkClass);
-        return list.filter(m => (s.marks[effMarkClass + ':' + m.id] || {}).status).length + ' ' + t.of + ' ' + list.length;
+        const marked = list.filter(m => {
+          const key = effMarkClass + ':' + effAttDate + ':' + m.id;
+          return (s.marks[key] && s.marks[key].status) || attendanceData.some(a => a.classId === effMarkClass && a.date === effAttDate && a.studentId === m.id && !a.extra);
+        });
+        return marked.length + ' ' + t.of + ' ' + list.length;
       })(),
       markPct: (() => {
         const list = rosterFor(effMarkClass);
         if (!list.length) return 0;
-        return list.filter(m => (s.marks[effMarkClass + ':' + m.id] || {}).status).length / list.length * 100;
+        const marked = list.filter(m => {
+          const key = effMarkClass + ':' + effAttDate + ':' + m.id;
+          return (s.marks[key] && s.marks[key].status) || attendanceData.some(a => a.classId === effMarkClass && a.date === effAttDate && a.studentId === m.id && !a.extra);
+        });
+        return marked.length / list.length * 100;
       })(),
       remarkText: s.remarkText, onRemark: e => this.setState({ remarkText: e.target.value }),
       markAllPresent: () => {
         const next = { ...s.marks };
         rosterFor(effMarkClass).forEach(m => {
-          const k = effMarkClass + ':' + m.id;
+          const k = effMarkClass + ':' + effAttDate + ':' + m.id;
           next[k] = { ...(next[k] || {}), status: 'present' };
         });
         this.setState({ marks: next });
@@ -2884,10 +3028,48 @@ class Component extends DCLogic {
       },
       resetMarks: () => {
         const next = { ...s.marks };
-        rosterFor(effMarkClass).forEach(m => { delete next[effMarkClass + ':' + m.id]; });
+        rosterFor(effMarkClass).forEach(m => { delete next[effMarkClass + ':' + effAttDate + ':' + m.id]; });
         this.setState({ marks: next, remarkFor: null });
       },
-      saveMarks: () => this.saveAttendanceMarks(effMarkClass, rosterFor(effMarkClass), s.marks, t),
+      saveMarks: () => this.saveAttendanceMarks(effMarkClass, effAttDate, rosterFor(effMarkClass), s.marks, t),
+
+      // ── Previous Records (read-only history for the selected class) ──
+      attHistFromVal: s.attHistFrom, attHistToVal: s.attHistTo,
+      onAttHistFrom: e => this.setState({ attHistFrom: e.target.value }),
+      onAttHistTo: e => this.setState({ attHistTo: e.target.value }),
+      hasAttHistFilter: !!(s.attHistFrom || s.attHistTo),
+      clearAttHistFilter: () => this.setState({ attHistFrom: '', attHistTo: '' }),
+      attHistoryRows: (() => {
+        let recs = attendanceData.filter(a => a.classId === effMarkClass && !a.extra);
+        if (s.attHistFrom) recs = recs.filter(a => a.date >= s.attHistFrom);
+        if (s.attHistTo) recs = recs.filter(a => a.date <= s.attHistTo);
+        const byDate = {};
+        recs.forEach(a => {
+          if (!byDate[a.date]) byDate[a.date] = { present: 0, absent: 0, cancelled: 0 };
+          if (byDate[a.date][a.status] != null) byDate[a.date][a.status]++;
+        });
+        return Object.keys(byDate).sort((a, b) => b.localeCompare(a)).map(date => ({
+          date, label: this.fmtDate(date), summary: byDate[date].present + ' ' + t.present + ' · ' + byDate[date].absent + ' ' + t.absent + ' · ' + byDate[date].cancelled + ' ' + t.cancelled,
+          jump: () => this.setState({ attDate: date }),
+        }));
+      })(),
+
+      // ── Replacement Records (read-only — remarks left on absent students, across this teacher's classes) ──
+      repSearchVal: s.repSearch, onRepSearch: e => this.setState({ repSearch: e.target.value }),
+      replacementRows: (() => {
+        const q = (s.repSearch || '').toLowerCase();
+        let recs = attendanceData.filter(a => myClassIdSet.has(a.classId) && a.remark && a.remark.trim());
+        if (q) recs = recs.filter(a => {
+          const st = allRealStudents.find(x => x.id === a.studentId);
+          return st && st.name.toLowerCase().includes(q);
+        });
+        return recs.sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(a => {
+          const st = allRealStudents.find(x => x.id === a.studentId) || {};
+          const clsObj = cls(a.classId) || {};
+          return { date: this.fmtDate(a.date), student: st.name || '—', className: clsObj.name || '—', status: a.status === 'absent' ? t.absent : a.status, remark: a.remark };
+        });
+      })(),
+
       quoteVal: s.profile.quote, igVal: s.profile.ig, xhsVal: s.profile.xhs, videoVal: s.profile.video,
       onQuote: e => this.setState({ profile: { ...s.profile, quote: e.target.value } }),
       onIg: e => this.setState({ profile: { ...s.profile, ig: e.target.value } }),
@@ -2923,6 +3105,19 @@ class Component extends DCLogic {
         this.setState({ installPlatform: isIOS ? 'ios' : 'android', installTab: isIOS ? 'ios' : 'android' });
       }
     } catch (e) {}
+
+    // Auto-logout after 5 minutes of no interaction while signed in. Only applies to the app view —
+    // browsing the public landing page never triggers it.
+    this.lastActivity = Date.now();
+    const markActive = () => { this.lastActivity = Date.now(); };
+    ['click', 'touchstart', 'keydown', 'scroll'].forEach(ev => window.addEventListener(ev, markActive, { passive: true }));
+    this.inactivityTimer = setInterval(() => {
+      if (this.state.view === 'app' && this.state.sessionToken && (Date.now() - this.lastActivity) > 5 * 60 * 1000) {
+        const t = Object.assign({}, this.TR[this.state.lang], this.APP_TR[this.state.lang]);
+        this.logoutCloud();
+        this.flash(t.loggedOutInactive);
+      }
+    }, 10000);
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.deferredInstallPrompt = e;
