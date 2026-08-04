@@ -35,6 +35,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 @keyframes glowpulse{0%,100%{opacity:.35}50%{opacity:.9}}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes spinl{to{transform:rotate(360deg)}}
+@keyframes loadbar{0%{left:-40%}100%{left:100%}}
 @keyframes bounce3{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
 @keyframes sheen{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
 @keyframes ringpop{0%{transform:scale(.6);opacity:.8}100%{transform:scale(2.1);opacity:0}}
@@ -382,6 +383,32 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     </div>
     <p class="mn" style="color:var(--g5);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin:0">{{ t.loadingStudio }}</p>
   </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showAppLoader }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#000;z-index:250;display:flex;align-items:center;justify-content:center">
+  <div style="text-align:center">
+    <img src="assets/logo.png" alt="" data-mo-loader="1" style="width:56px;height:56px;object-fit:contain;margin:0 auto 16px;display:block" />
+    <div data-mo-loader-dots="1" style="display:flex;justify-content:center;gap:6px;margin-bottom:12px">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc)"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc)"></span>
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--acc)"></span>
+    </div>
+    <p class="mn" style="color:var(--g5);font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin:0">{{ t.loadingStudio }}</p>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ SAVING INDICATOR ══════════ -->
+<sc-if value="{{ cloudLoading }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:400;background:rgba(0,0,0,.02)"></div>
+<div style="position:absolute;top:0;left:0;right:0;height:3px;z-index:401;background:rgba(255,122,41,.15);overflow:hidden">
+  <div style="position:absolute;top:0;bottom:0;left:-40%;width:40%;background:var(--acc);animation:loadbar 1s ease-in-out infinite"></div>
+</div>
+<div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:401;background:var(--card);border:1px solid var(--bd);border-radius:999px;padding:7px 14px;display:flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(0,0,0,.4)">
+  <span style="width:12px;height:12px;border:2px solid var(--acc);border-top-color:transparent;border-radius:50%;animation:spinl .7s linear infinite"></span>
+  <span class="mn" style="color:#fff;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase">{{ t.savingNow }}</span>
 </div>
 </sc-if>
 
@@ -1074,57 +1101,55 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 
     <!-- ───── TEACHER · TODAY ───── -->
     <sc-if value="{{ tgRoster }}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Teacher · Today">
-      <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;margin:0 0 6px">{{ todayLabel }}</p>
-      <h2 class="dsp" style="font-size:33px;text-transform:uppercase;margin:0 0 14px">{{ greeting }}</h2>
-
-      <div style="position:relative;overflow:hidden;background:var(--card);border:1px solid var(--acc);padding:16px;margin-bottom:14px">
-        <div aria-hidden="true" style="position:absolute;top:-40%;right:-30%;width:80%;height:190%;background:linear-gradient(to bottom left,rgba(255,122,41,.2),transparent 70%);animation:rake 8s ease-in-out infinite"></div>
-        <div style="position:relative">
-          <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
-            <span style="width:7px;height:7px;border-radius:50%;background:var(--acc);animation:glowpulse 1.4s ease-in-out infinite"></span>
-            <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0">{{ t.nextClass }}</p>
-          </div>
-          <p class="dsp" style="font-size:32px;text-transform:uppercase;margin:0;line-height:.95">{{ nextClass.name }}</p>
-          <div class="mn" style="display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 14px;font-size:10.5px;color:var(--g4)">
-            <span><i class="ph ph-clock" style="color:var(--acc)"></i> {{ nextClass.time }}</span>
-            <span><i class="ph ph-map-pin" style="color:var(--acc)"></i> {{ nextClass.room }}</span>
-            <span><i class="ph ph-users-three" style="color:var(--acc)"></i> {{ nextClass.headcount }}</span>
-          </div>
-          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px">
-            <p class="dsp" data-count="{{ nextClass.mins }}" style="color:var(--acc);font-size:42px;margin:0;line-height:1">{{ nextClass.mins }}</p>
-            <p class="mn" style="color:var(--g5);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;margin:0">{{ t.minsToGo }}</p>
-          </div>
-          <button data-fancy="1" onClick="{{ startMarking }}" class="mn" style="position:relative;overflow:hidden;width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--acc);color:var(--ink);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:14px;border:0;cursor:pointer;box-shadow:4px 4px 0 var(--ember);transition:all .18s">{{ t.takeAttendance }}<i class="ph ph-clipboard-text" style="font-size:17px"></i></button>
+    <div data-screen-label="Teacher · Students">
+      <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--acc);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <i class="ph ph-chalkboard-teacher" style="font-size:24px;color:var(--acc);flex-shrink:0"></i>
+        <div style="min-width:0">
+          <p class="dsp" style="font-size:20px;text-transform:uppercase;margin:0;line-height:1">{{ t.myStudentsTitle }}</p>
+          <p class="mn" style="color:var(--g5);font-size:10.5px;margin:5px 0 0">{{ myStudentsHeaderCount }}</p>
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px">
-        <sc-for list="{{ todayTiles }}" as="x" hint-placeholder-count="3">
-          <div style="background:var(--card);border:1px solid var(--bd);padding:11px 6px;text-align:center">
-            <p class="dsp" data-count="{{ x.n }}" data-dec="{{ x.dec }}" style="color:var(--acc);font-size:26px;margin:0;line-height:1">{{ x.n }}</p>
-            <p class="mn" style="color:var(--g5);font-size:8px;text-transform:uppercase;letter-spacing:.08em;margin:6px 0 0">{{ x.label }}</p>
+      <p style="color:var(--g5);font-size:10.5px;line-height:1.5;margin:0 0 14px"><i class="ph ph-lightbulb" style="color:var(--acc);margin-right:4px"></i>{{ t.billedSeparatelyNote }}</p>
+
+      <sc-if value="{{ !hasMyStudents }}" hint-placeholder-val="{{ false }}">
+      <p style="color:var(--g5);font-size:12px;text-align:center;padding:30px 0">{{ t.noStudentsFound }}</p>
+      </sc-if>
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ myStudentsRows }}" as="r" hint-placeholder-count="2">
+          <div style="background:var(--card);border:1px solid var(--bd);padding:13px">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:11px">
+              <span style="width:38px;height:38px;border-radius:50%;background:linear-gradient(150deg,var(--acc),#7a2d0c);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;flex-shrink:0">{{ r.initial }}</span>
+              <div style="min-width:0">
+                <p style="color:#fff;font-weight:600;font-size:13.5px;margin:0">{{ r.name }}</p>
+                <p class="mn" style="color:var(--g5);font-size:10px;margin:2px 0 0">{{ t.idWord }} {{ r.studentId }} · {{ t.ageWord }} {{ r.age }}</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;font-size:11.5px">
+              <div>
+                <p class="mn" style="color:var(--g5);font-size:9px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 3px">{{ t.branchWord }}</p>
+                <p style="color:var(--g4);margin:0">{{ r.branches }}</p>
+              </div>
+              <div>
+                <p class="mn" style="color:var(--g5);font-size:9px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 3px">{{ t.myClassesWord }}</p>
+                <p style="color:var(--acc2);font-weight:600;margin:0">{{ r.clsHereNames }}</p>
+              </div>
+              <div>
+                <p class="mn" style="color:var(--g5);font-size:9px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 3px">{{ t.parentWord }}</p>
+                <p style="color:var(--g4);margin:0">{{ r.parent }}</p>
+              </div>
+              <div>
+                <p class="mn" style="color:var(--g5);font-size:9px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 3px">{{ t.phoneWord }}</p>
+                <p style="color:var(--g4);margin:0">{{ r.phone }}</p>
+              </div>
+            </div>
+            <p class="mn" style="color:var(--g5);font-size:9px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 5px">{{ t.feeStatusMyClass }}</p>
+            <span class="mn" style="display:inline-block;font-size:10.5px;font-weight:600;padding:4px 9px;background:{{ r.badgeBg }};color:{{ r.badgeFg }}">{{ r.badgeLabel }}</span>
           </div>
         </sc-for>
       </div>
 
-      <p class="mn" data-om-words="sweep" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 10px">{{ t.weekAhead }}</p>
-      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:8px">
-        <sc-for list="{{ weekAhead }}" as="w" hint-placeholder-count="3">
-          <button data-row="1" onClick="{{ w.open }}" style="position:relative;overflow:hidden;width:100%;text-align:left;display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--bd);border-left:3px solid {{ w.edge }};padding:12px;cursor:pointer">
-            <span data-part="sweep" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent 25%,rgba(255,122,41,.22) 50%,transparent 75%)"></span>
-            <div data-part="num" style="text-align:center;width:34px;flex-shrink:0">
-              <p class="mn" style="color:var(--acc);font-size:9px;font-weight:700;letter-spacing:.1em;margin:0;text-transform:uppercase">{{ w.dow }}</p>
-              <p class="dsp" style="font-size:20px;margin:2px 0 0;line-height:1">{{ w.dd }}</p>
-            </div>
-            <div style="flex:1;min-width:0">
-              <p style="color:#fff;font-weight:600;font-size:12.5px;margin:0">{{ w.name }}</p>
-              <p class="mn" style="color:var(--g5);font-size:10px;margin:4px 0 0">{{ w.meta }}</p>
-            </div>
-            <span class="mn" style="font-size:8.5px;font-weight:700;padding:3px 6px;background:{{ w.tagBg }};color:{{ w.tagFg }};white-space:nowrap">{{ w.tag }}</span>
-          </button>
-        </sc-for>
-      </div>
+      <p class="mn" style="color:var(--g5);font-size:10.5px;line-height:1.5;margin:16px 0 0"><i class="ph ph-lightbulb" style="color:var(--acc);margin-right:4px"></i>{{ t.enrollmentNoteTeacher }}</p>
     </div>
     </sc-if>
 
@@ -1160,7 +1185,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
               <span class="mn" style="font-size:9.5px;background:#241c17;color:var(--acc2);border:1px solid #3d2c1e;padding:3px 8px">{{ c.style }}</span>
               <span class="mn" style="font-size:9.5px;background:#1c1c1c;color:var(--g4);border:1px solid var(--bd);padding:3px 8px">{{ c.difficulty }}</span>
             </div>
-            <p style="color:var(--g4);font-size:11.5px;margin:0 0 11px"><i class="ph ph-buildings" style="color:var(--g5);margin-right:3px"></i>{{ c.placeName }} · <i class="ph ph-map-pin" style="color:var(--g5);margin-right:2px"></i>{{ c.room }} · {{ c.start }}–{{ c.end }}</p>
+            <p style="color:var(--g4);font-size:11.5px;margin:0 0 11px"><i class="ph ph-buildings" style="color:var(--g5);margin-right:3px"></i>{{ c.placeName }} · <i class="ph ph-map-pin" style="color:var(--g5);margin-right:2px"></i>{{ c.room }} · {{ c.day }} {{ c.start }}–{{ c.end }}</p>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
               <span class="mn" style="font-size:10.5px;color:#7ee2ab;background:rgba(31,122,77,.18);padding:3px 9px">{{ c.countLabel }}</span>
               <div style="flex:1;height:4px;background:#2a2724">
@@ -1406,7 +1431,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false, installTab: 'ios',
+    installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false,
     dayFilter: '', classSheet: null, classForm: null, enrollSheet: null, enrollClassId: null, enrollSearch: '', deleteConfirmId: null,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
     sheet: null, toast: null, reelPlaying: false, reelPct: 12,
@@ -1533,7 +1558,7 @@ class Component extends DCLogic {
       if (j && j.ok && j.account) {
         this.setState({
           sessionToken: saved.token, account: j.account, view: 'app', role: j.account.role,
-          page: j.account.role === 'teacher' ? 'today' : 'fees', tpage: 'today',
+          page: j.account.role === 'teacher' ? 'today' : 'fees', tpage: 'today', appDataLoading: true,
         });
         this.loadCloudData(saved.token);
       } else {
@@ -1550,7 +1575,7 @@ class Component extends DCLogic {
       if (j && j.data) {
         const parsed = JSON.parse(j.data);
         const db = (parsed && parsed.db) || {};
-        const patch = { cloudDB: db, cloudLoading: false };
+        const patch = { cloudDB: db, cloudLoading: false, appDataLoading: false };
         const acct = this.state.account;
         if (acct && acct.role === 'teacher' && Array.isArray(db.teachers)) {
           const me = db.teachers.find(x => x.id === acct.ref);
@@ -1558,10 +1583,10 @@ class Component extends DCLogic {
         }
         this.setState(patch);
       } else {
-        this.setState({ cloudLoading: false });
+        this.setState({ cloudLoading: false, appDataLoading: false });
       }
     } catch (e) {
-      this.setState({ cloudLoading: false });
+      this.setState({ cloudLoading: false, appDataLoading: false });
     }
   }
 
@@ -1894,7 +1919,7 @@ class Component extends DCLogic {
       student: 'Student', studentSub: 'Fees, classes, attendance & rewards',
       teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
-      username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…', refreshed: 'Refreshed',
+      username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…', refreshed: 'Refreshed', savingNow: 'Saving…',
       installTitle: 'Install This App', installLead: 'Add B Dance Studio to your home screen for quick access, just like a real app.',
       installIosStep1: 'Tap the Share button', installIosStep2: 'Then tap "Add to Home Screen"',
       installAndroidStep1: 'Tap the ⋮ menu in your browser', installAndroidStep2: 'Then tap "Add to Home Screen" or "Install App"',
@@ -1905,7 +1930,7 @@ class Component extends DCLogic {
       loginOffline: 'Could not reach the studio server — check your connection and try again.',
       saveFailed: 'Could not save — check your connection and try again.',
       mySchedule: 'My Schedule', addNewClass: '+ Add New Class', filterByDay: 'Filter by day',
-      classesThisWeek: 'classes this week', noClassesOnDay: 'No classes on',
+      classesThisWeek: 'classes this week', noClassesOnDay: 'No classes on', allDays: 'All', noClassesAtAll: 'No classes yet — tap "Add New Class" to create one.',
       editMyClass: 'Edit My Class', addMyClass: 'Add New Class', className: 'Class Name',
       styleLabel: 'Style', branchLabel: 'Branch', dayLabel: 'Day', roomLabel: 'Room', classLabel: 'Class',
       startLabel: 'Start', endLabel: 'End', maxStudentsLabel: 'Max Students', difficultyLabel: 'Difficulty',
@@ -1920,6 +1945,11 @@ class Component extends DCLogic {
       classClashTeacher: '{name} already teaches another class at that time.',
       classUpdated: 'Class updated', classAdded: 'Class added', classDeleted: 'Class deleted',
       addedToClass: 'Added to class', removedFromClass: 'Removed from class', save: 'Save',
+      myStudentsTitle: 'My Students', myStudentsCount: 'student', myStudentsCountPl: 'students', acrossYourClasses: 'across your classes',
+      billedSeparatelyNote: 'Each class is billed separately — the fee status below is only for YOUR class with this student, not any other teacher\'s class they may also take.',
+      enrollmentNoteTeacher: 'Fee status is shown for reference — recording or changing a payment is done by the front desk or admin. Use "Manage Enrollment" to add or remove students from your own classes; students can belong to more than one class.',
+      nameWord: 'Name', branchWord: 'Branch', myClassesWord: 'My Class(es)', parentWord: 'Parent', phoneWord: 'Phone', feeStatusMyClass: 'Fee Status (my class)',
+      paidWord: 'Paid', unpaidWord: 'Unpaid', noRecord: 'No Record', noStudentsFound: 'No students found',
       contactTitle: 'Contact Us', chooseNav: 'Open directions with',
       contactShort: 'Contact', signInShort: 'Sign in', findShort: 'Studios', meetShort: 'Instructors',
     },
@@ -1949,7 +1979,7 @@ class Component extends DCLogic {
       student: '学生', studentSub: '学费、课程、出席与奖励',
       teacher: '导师', teacherSub: '学员名单、点名与课时',
       studentLogin: '学生登录', teacherLogin: '导师登录',
-      username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…', refreshed: '已刷新',
+      username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…', refreshed: '已刷新', savingNow: '保存中…',
       installTitle: '安装此应用', installLead: '将 B Dance Studio 添加到主屏幕，像真正的App一样快速打开。',
       installIosStep1: '点击分享按钮', installIosStep2: '然后点击"添加到主屏幕"',
       installAndroidStep1: '点击浏览器右上角的 ⋮ 菜单', installAndroidStep2: '然后点击"添加到主屏幕"或"安装应用"',
@@ -1960,7 +1990,7 @@ class Component extends DCLogic {
       loginOffline: '无法连接舞室服务器 —— 请检查网络连接后重试。',
       saveFailed: '保存失败 —— 请检查网络连接后重试。',
       mySchedule: '我的课表', addNewClass: '+ 添加新课程', filterByDay: '按星期筛选',
-      classesThisWeek: '本周课程', noClassesOnDay: '这一天没有课程：',
+      classesThisWeek: '本周课程', noClassesOnDay: '这一天没有课程：', allDays: '全部', noClassesAtAll: '暂无课程 —— 点击「添加新课程」创建一门课。',
       editMyClass: '编辑我的课程', addMyClass: '添加新课程', className: '课程名称',
       styleLabel: '风格', branchLabel: '分店', dayLabel: '星期', roomLabel: '教室', classLabel: '课程',
       startLabel: '开始时间', endLabel: '结束时间', maxStudentsLabel: '最多学生数', difficultyLabel: '难度',
@@ -1975,6 +2005,11 @@ class Component extends DCLogic {
       classClashTeacher: '{name} 在该时段已教授另一门课程。',
       classUpdated: '课程已更新', classAdded: '课程已添加', classDeleted: '课程已删除',
       addedToClass: '已添加至课程', removedFromClass: '已从课程移除', save: '保存',
+      myStudentsTitle: '我的学员', myStudentsCount: '位学生', myStudentsCountPl: '位学生', acrossYourClasses: '分布在您的课程中',
+      billedSeparatelyNote: '每门课程都是独立计费的 —— 下方的付款状态仅代表该学生在您课程中的状态，不包含该学生可能报读的其他导师课程。',
+      enrollmentNoteTeacher: '付款状态仅供参考 —— 记录或修改付款由前台或管理员处理。使用「管理报读」可在您自己的课程中添加或移除学生；学生可以同时报读多门课程。',
+      nameWord: '姓名', branchWord: '分店', myClassesWord: '我的课程', parentWord: '家长', phoneWord: '电话', feeStatusMyClass: '付款状态（我的课程）',
+      paidWord: '已缴', unpaidWord: '未缴', noRecord: '暂无记录', noStudentsFound: '未找到学生',
       contactTitle: '联系我们', chooseNav: '选择导航应用',
       contactShort: '联系', signInShort: '登录', findShort: '分店', meetShort: '导师',
     },
@@ -2297,9 +2332,8 @@ class Component extends DCLogic {
     const CLASS_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const CLASS_ROOMS = ['Big Room', 'Small Room', 'Private Room'];
     const CLASS_DIFFICULTIES = ['All Levels', 'Beginner', 'Intermediate', 'Advanced'];
-    const scheduleTodayWeekday = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-    const dayFilterValue = s.dayFilter || scheduleTodayWeekday;
-    const scheduleClasses = myTeachingClasses.filter(c => c.day === dayFilterValue);
+    const dayFilterValue = s.dayFilter || 'All';
+    const scheduleClasses = dayFilterValue === 'All' ? myTeachingClasses : myTeachingClasses.filter(c => c.day === dayFilterValue);
     const classFormOpen = !!s.classSheet;
     const cf = s.classForm || {};
     const enrollOpen = !!s.enrollSheet;
@@ -2307,6 +2341,17 @@ class Component extends DCLogic {
     const enrollSearchLower = (s.enrollSearch || '').toLowerCase();
     const allRealStudents = usingCloud && Array.isArray(cdb.students) ? cdb.students : [];
     const enrollStudentList = allRealStudents.filter(x => !enrollSearchLower || x.name.toLowerCase().includes(enrollSearchLower));
+
+    // ── My Students (teacher's own students across their classes, with fee status scoped to
+    // THIS teacher's class only — a student billed by another teacher's class isn't reflected here) ──
+    const myClassIdSet2 = new Set(myTeachingClasses.map(c => c.id));
+    const isSingleOrTrialLabel = p => {
+      const lbl = ((p.month || '') + ' ' + (p.notes || '')).toLowerCase();
+      return lbl.includes('single class') || lbl.includes('trial class');
+    };
+    const myStudentsList = allRealStudents.filter(x => Array.isArray(x.classIds) && x.classIds.some(cid => myClassIdSet2.has(cid)));
+    const allAccounts = usingCloud && Array.isArray(cdb.accounts) ? cdb.accounts : [];
+    const paymentsAll = usingCloud && Array.isArray(cdb.payments) ? cdb.payments : [];
 
     // ── Teacher activity + salary (real, once cloud data is loaded) ──
     const salary = (usingCloud && isT) ? this.teacherSalary(myTeacherId, cdb) : null;
@@ -2599,11 +2644,11 @@ class Component extends DCLogic {
       scheduleHeaderName: meTeacher ? meTeacher.name : '', scheduleHeaderCount: myTeachingClasses.length + ' ' + t.classesThisWeek,
       openAddClass: () => this.setState({
         classSheet: 'add',
-        classForm: { id: null, name: '', style: CLASS_STYLES[0], placeId: (placesData[0] || {}).id || '', day: dayFilterValue, room: CLASS_ROOMS[0], start: '', end: '', max: 15, difficulty: CLASS_DIFFICULTIES[0] },
+        classForm: { id: null, name: '', style: CLASS_STYLES[0], placeId: (placesData[0] || {}).id || '', day: dayFilterValue === 'All' ? CLASS_DAYS[0] : dayFilterValue, room: CLASS_ROOMS[0], start: '', end: '', max: 15, difficulty: CLASS_DIFFICULTIES[0] },
       }),
-      dayFilterValue, dayFilterOptions: CLASS_DAYS.map(d => ({ value: d, label: d, selected: d === dayFilterValue })),
+      dayFilterValue, dayFilterOptions: ['All', ...CLASS_DAYS].map(d => ({ value: d, label: d === 'All' ? t.allDays : d, selected: d === dayFilterValue })),
       setDayFilter: e => this.setState({ dayFilter: e.target.value }),
-      noClassesOnDayLine: t.noClassesOnDay + ' ' + dayFilterValue,
+      noClassesOnDayLine: dayFilterValue === 'All' ? t.noClassesAtAll : (t.noClassesOnDay + ' ' + dayFilterValue),
       hasScheduleClasses: scheduleClasses.length > 0,
       scheduleCards: scheduleClasses.map(c => {
         const enrolled = rosterFor(c.id).length;
@@ -2649,6 +2694,28 @@ class Component extends DCLogic {
         };
       }),
       closeEnroll: () => this.setState({ enrollSheet: null, enrollClassId: null, enrollSearch: '' }),
+
+      myStudentsHeaderCount: myStudentsList.length + ' ' + (myStudentsList.length === 1 ? t.myStudentsCount : t.myStudentsCountPl) + ' ' + t.acrossYourClasses,
+      hasMyStudents: myStudentsList.length > 0,
+      myStudentsRows: myStudentsList.map(x => {
+        const clsHere = myTeachingClasses.filter(c => (x.classIds || []).includes(c.id));
+        const clsHereNames = clsHere.map(c => c.name).join(', ') || '—';
+        const allMyClassesOfStudent = classesData.filter(c => (x.classIds || []).includes(c.id));
+        const branches = [...new Set(allMyClassesOfStudent.map(c => pName(c.placeId)))].join(', ') || '—';
+        const clsHereIds = clsHere.map(c => c.id);
+        const latest = paymentsAll
+          .filter(p => p.studentId === x.id && p.classId && clsHereIds.includes(p.classId) && !isSingleOrTrialLabel(p))
+          .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.id || 0) - (a.id || 0))[0];
+        const acct = allAccounts.find(a => a.role === 'student' && a.ref === x.id);
+        const badgeLabel = latest ? ((latest.month || '') + ': ' + (latest.status === 'Paid' ? t.paidWord : t.unpaidWord)) : t.noRecord;
+        const badgeBg = !latest ? 'rgba(255,255,255,.08)' : (latest.status === 'Paid' ? 'rgba(31,122,77,.22)' : 'rgba(255,77,46,.18)');
+        const badgeFg = !latest ? 'var(--g4)' : (latest.status === 'Paid' ? '#7ee2ab' : '#ff8a78');
+        return {
+          id: x.id, name: x.name, initial: x.name.slice(0, 1), studentId: acct ? acct.user : '—',
+          age: x.age, branches, clsHereNames, parent: x.parent || '—', phone: x.phone || '—',
+          badgeLabel, badgeBg, badgeFg,
+        };
+      }),
 
       deleteConfirmOpen: !!s.deleteConfirmId,
       cancelDelete: () => this.setState({ deleteConfirmId: null }),
@@ -3190,6 +3257,8 @@ class Component extends DCLogic {
     return {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
+      showAppLoader: s.view === 'app' && s.appDataLoading,
+      cloudLoading: s.cloudLoading,
       showInstallHint,
       refreshNow: () => this.refreshNow(),
       installTab: s.installTab, installIsIos: s.installTab === 'ios', installIsAndroid: s.installTab === 'android',
@@ -3355,7 +3424,7 @@ class Component extends DCLogic {
             try { localStorage.setItem(SESSION_KEY, JSON.stringify({ token: j.token, account: j.account })); } catch (e) {}
             this.setState({
               loading: false, view: 'app', role: j.account.role, account: j.account, sessionToken: j.token,
-              page: j.account.role === 'teacher' ? 'today' : 'fees', tpage: 'today',
+              page: j.account.role === 'teacher' ? 'today' : 'fees', tpage: 'today', appDataLoading: true,
               stuck: false, showTop: false, introMenu: false, pw: '',
             });
             this.loadCloudData(j.token);
