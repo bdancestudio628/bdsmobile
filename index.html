@@ -743,7 +743,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 </sc-if>
 
 <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
-<div data-om-toast="{{ toast }}" style="position:absolute;bottom:96px;left:50%;transform:translateX(-50%);background:#0c2a1c;border:1px solid #1f7a4d;color:#7ee2ab;font-size:12px;font-weight:600;padding:10px 16px;z-index:260;white-space:nowrap"><i class="ph ph-check-circle" style="margin-right:6px"></i>{{ toast }}</div>
+<div data-om-toast="{{ toast }}" style="position:absolute;bottom:96px;left:50%;transform:translateX(-50%);background:{{ toastError ? '#2a0c0c' : '#0c2a1c' }};border:1px solid {{ toastError ? '#a8281a' : '#1f7a4d' }};color:{{ toastError ? '#ff8a78' : '#7ee2ab' }};font-size:12px;font-weight:600;padding:10px 16px;z-index:260;white-space:nowrap"><i class="ph {{ toastError ? 'ph-warning-circle' : 'ph-check-circle' }}" style="margin-right:6px"></i>{{ toast }}</div>
 </sc-if>
 
 <!-- ══════════ SIGNED-IN APP ══════════ -->
@@ -869,11 +869,29 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       </div>
 
       <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:14px">
-        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.myProfile }}</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;font-size:11.5px">
-          <sc-for list="{{ profileRows }}" as="r" hint-placeholder-count="4">
-            <p style="margin:0"><span style="color:var(--g5)">{{ r.k }}</span><br /><span style="color:var(--g2)">{{ r.v }}</span></p>
-          </sc-for>
+        <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px">{{ t.accountStatus }}</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-if value="{{ hasCreditExpiry }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="mn" style="color:var(--g5);font-size:10.5px"><i class="ph ph-ticket"></i> {{ t.creditExpiryLabel }}</span>
+            <span style="color:#7ee2ab;font-size:11.5px;font-weight:600">{{ creditExpiryDate }}</span>
+          </div>
+          </sc-if>
+          <sc-if value="{{ showExpiredCredit }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="mn" style="color:var(--g5);font-size:10.5px"><i class="ph ph-ticket"></i> {{ t.creditExpiryLabel }}</span>
+            <span style="color:#ff8a78;font-size:11.5px;font-weight:600">{{ t.expiredWord }} {{ creditExpiredLabel }}</span>
+          </div>
+          </sc-if>
+          <sc-if value="{{ nearestMakeup }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span class="mn" style="color:var(--g5);font-size:10.5px"><i class="ph ph-calendar-x"></i> {{ t.makeupDeadline }}</span>
+              <span style="color:var(--acc2);font-size:11.5px;font-weight:600">{{ nearestMakeup.date }}</span>
+            </div>
+            <p class="mn" style="color:var(--g5);font-size:9.5px;margin:4px 0 0">{{ nearestMakeup.className }} · {{ nearestMakeup.daysLeft }} {{ t.daysLeftWord }}</p>
+          </div>
+          </sc-if>
         </div>
       </div>
       <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 14px"><i class="ph ph-lightbulb"></i> {{ t.enrollHint }}</p>
@@ -885,10 +903,14 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
               <p class="dsp" style="color:var(--acc2);font-size:23px;text-transform:uppercase;margin:0;line-height:1">{{ c.name }}</p>
               <span class="mn" style="background:#000;border:1px solid var(--bd);color:var(--acc2);font-size:9px;font-weight:600;padding:4px 7px;white-space:nowrap">{{ c.style }}</span>
             </div>
-            <div class="mn" style="display:flex;flex-direction:column;gap:4px;margin:10px 0 12px;font-size:10.5px;color:var(--g5)">
+            <div class="mn" style="display:flex;flex-direction:column;gap:4px;margin:10px 0 10px;font-size:10.5px;color:var(--g5)">
               <span><i class="ph ph-calendar-blank"></i> {{ c.when }}</span>
               <span><i class="ph ph-map-pin"></i> {{ c.where }}</span>
               <span><i class="ph ph-user"></i> <span style="color:var(--acc2)">{{ c.teacher }}</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#000;border:1px solid var(--bd2);padding:8px 11px;margin-bottom:12px">
+              <span class="mn" style="color:var(--g5);font-size:9.5px">{{ t.cycleProgress }}</span>
+              <span class="mn" style="color:#fff;font-size:10.5px;font-weight:600">{{ c.cycleUsed }}/4 <span style="color:var(--g5);font-weight:400">· {{ c.cycleLeft }} {{ t.remainingWord }}</span></span>
             </div>
             <p class="mn" style="color:#fff;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 8px">{{ c.matesLabel }}</p>
             <div style="display:flex;flex-direction:column;gap:0">
@@ -1054,14 +1076,15 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       </div>
 
       <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-t-shirt"></i> {{ t.freeTshirt }}</p>
-      <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--acc);padding:13px;margin-bottom:6px;display:flex;align-items:center;gap:11px">
-        <div style="width:19px;height:19px;background:var(--acc);color:#000;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0"><i class="ph ph-check"></i></div>
+      <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid {{ tshirtRedeemed ? 'var(--acc)' : 'var(--bd)' }};padding:13px;margin-bottom:20px;display:flex;align-items:center;gap:11px">
+        <div style="width:19px;height:19px;background:{{ tshirtRedeemed ? 'var(--acc)' : 'transparent' }};border:1px solid var(--bd);color:#000;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">
+          <sc-if value="{{ tshirtRedeemed }}" hint-placeholder-val="{{ true }}"><i class="ph ph-check"></i></sc-if>
+        </div>
         <div>
           <p style="color:#fff;font-weight:600;font-size:12px;margin:0">{{ t.tshirtTitle }}</p>
-          <p style="color:var(--g5);font-size:10.5px;margin:4px 0 0">{{ t.tshirtDone }}</p>
+          <p style="color:var(--g5);font-size:10.5px;margin:4px 0 0">{{ tshirtRedeemed ? t.tshirtDone : t.tshirtNotYet }}</p>
         </div>
       </div>
-      <p class="mn" style="color:#4a4640;font-size:9px;margin:0 0 20px;letter-spacing:.06em"><i class="ph ph-calendar-check"></i> {{ t.tshirtUntil }}</p>
 
       <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-medal"></i> {{ t.gradesByStyle }}</p>
       <div data-om-stagger="1" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
@@ -1083,6 +1106,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         </sc-if>
       </div>
 
+      <sc-if value="{{ false }}" hint-placeholder-val="{{ false }}">
       <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-gift"></i> {{ t.redeemRewards }}</p>
       <div data-om-stagger="1" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
         <sc-for list="{{ rewardCards }}" as="r" hint-placeholder-count="6">
@@ -1107,6 +1131,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
           </div>
         </sc-for>
       </div>
+      </sc-if>
     </div>
     </sc-if>
 
@@ -1813,7 +1838,7 @@ class Component extends DCLogic {
       // starts colliding with simultaneous desktop edits in practice.
       const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + this.state.sessionToken } });
       const j = await r.json().catch(() => null);
-      if (!r.ok || !j || !j.data) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      if (!r.ok || !j || !j.data) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
       const parsed = JSON.parse(j.data);
       const freshDb = (parsed && parsed.db) || {};
       const attendanceArr = Array.isArray(freshDb.attendance) ? [...freshDb.attendance] : [];
@@ -1839,12 +1864,12 @@ class Component extends DCLogic {
         body: JSON.stringify({ data: parsed }),
       });
       const saveJ = await saveR.json().catch(() => null);
-      if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
       this.setState({ cloudDB: freshDb, cloudLoading: false, marks: {} });
       this.flash(t.saved);
     } catch (e) {
       this.setState({ cloudLoading: false });
-      this.flash(t.saveFailed);
+      this.flash(t.saveFailed, true);
     }
   }
 
@@ -1884,11 +1909,11 @@ class Component extends DCLogic {
   async handlePhotoUpload(fileList, t) {
     const file = fileList && fileList[0];
     if (!file || this.state.cloudLoading) return;
-    if (!file.type.startsWith('image/')) { this.flash(t.uploadNotImage); return; }
-    if (file.size > 8 * 1024 * 1024) { this.flash(t.photoTooBig); return; }
+    if (!file.type.startsWith('image/')) { this.flash(t.uploadNotImage, true); return; }
+    if (file.size > 8 * 1024 * 1024) { this.flash(t.photoTooBig, true); return; }
     this.setState({ photoUploadStatus: t.uploading, cloudLoading: true });
     const res = await this.uploadMediaFile(file);
-    if (!res.ok) { this.setState({ photoUploadStatus: '', cloudLoading: false }); this.flash(res.error); return; }
+    if (!res.ok) { this.setState({ photoUploadStatus: '', cloudLoading: false }); this.flash(res.error, true); return; }
     this.setState({ profile: { ...this.state.profile, photo: res.url }, photoUploadStatus: '', cloudLoading: false });
     await this.saveTeacherProfile(t);
   }
@@ -1896,28 +1921,28 @@ class Component extends DCLogic {
   async handleVideoUpload(fileList, t) {
     const file = fileList && fileList[0];
     if (!file || this.state.cloudLoading) return;
-    if (!file.type.startsWith('video/')) { this.flash(t.uploadNotVideo); return; }
-    if (file.size > 50 * 1024 * 1024) { this.flash(t.videoTooBig); return; }
+    if (!file.type.startsWith('video/')) { this.flash(t.uploadNotVideo, true); return; }
+    if (file.size > 50 * 1024 * 1024) { this.flash(t.videoTooBig, true); return; }
     this.setState({ videoUploadStatus: t.checkingVideo });
     const dur = await this.videoDurationSeconds(file);
-    if (dur != null && dur > 60) { this.setState({ videoUploadStatus: '' }); this.flash(t.videoTooLong); return; }
+    if (dur != null && dur > 60) { this.setState({ videoUploadStatus: '' }); this.flash(t.videoTooLong, true); return; }
     this.setState({ videoUploadStatus: t.uploading, cloudLoading: true });
     const res = await this.uploadMediaFile(file);
-    if (!res.ok) { this.setState({ videoUploadStatus: '', cloudLoading: false }); this.flash(res.error); return; }
+    if (!res.ok) { this.setState({ videoUploadStatus: '', cloudLoading: false }); this.flash(res.error, true); return; }
     this.setState({ profile: { ...this.state.profile, video: res.url }, videoUploadStatus: '', cloudLoading: false });
     await this.saveTeacherProfile(t);
   }
 
   async saveTeacherProfile(t) {
     if (this.state.cloudLoading) return;
-    if (!this.state.sessionToken || !this.state.account) { this.flash(t.saveFailed); return; }
+    if (!this.state.sessionToken || !this.state.account) { this.flash(t.saveFailed, true); return; }
     const myId = this.state.account.ref;
     const profile = this.state.profile;
     this.setState({ cloudLoading: true });
     try {
       const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + this.state.sessionToken } });
       const j = await r.json().catch(() => null);
-      if (!r.ok || !j || !j.data) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      if (!r.ok || !j || !j.data) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
       const parsed = JSON.parse(j.data);
       const freshDb = (parsed && parsed.db) || {};
       const teachersArr = Array.isArray(freshDb.teachers)
@@ -1931,12 +1956,12 @@ class Component extends DCLogic {
         body: JSON.stringify({ data: parsed }),
       });
       const saveJ = await saveR.json().catch(() => null);
-      if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+      if (!saveR.ok || !saveJ || saveJ.error || saveJ.ok === false) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
       this.setState({ cloudDB: freshDb, cloudLoading: false });
       this.flash(t.saved);
     } catch (e) {
       this.setState({ cloudLoading: false });
-      this.flash(t.saveFailed);
+      this.flash(t.saveFailed, true);
     }
   }
 
@@ -1991,13 +2016,13 @@ class Component extends DCLogic {
     if (this.state.cloudLoading) return;
     const f = this.state.classForm;
     const myTeacherId = this.state.account ? this.state.account.ref : null;
-    if (!f || !f.name || !f.name.trim()) { this.flash(t.classNeedName); return; }
+    if (!f || !f.name || !f.name.trim()) { this.flash(t.classNeedName, true); return; }
     const s = this.parseTimeToMinutes(f.start), e = this.parseTimeToMinutes(f.end);
-    if (s == null || e == null) { this.flash(t.classNeedTimes); return; }
-    if (e <= s) { this.flash(t.classEndAfterStart); return; }
+    if (s == null || e == null) { this.flash(t.classNeedTimes, true); return; }
+    if (e <= s) { this.flash(t.classEndAfterStart, true); return; }
     this.setState({ cloudLoading: true });
     const res = await this.fetchFreshDb();
-    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     const { parsed, freshDb } = res;
     const classesArr = Array.isArray(freshDb.classes) ? [...freshDb.classes] : [];
     const editId = f.id || null;
@@ -2007,8 +2032,8 @@ class Component extends DCLogic {
       teacherId: editId ? ((classesArr.find(x => x.id === editId) || {}).teacherId) : myTeacherId,
     };
     const clash = this.findClassConflicts(vals, editId, classesArr);
-    if (clash.room) { this.setState({ cloudLoading: false }); this.flash(t.classClashRoom.replace('{room}', clash.room.room).replace('{name}', clash.room.name)); return; }
-    if (clash.teacher) { this.setState({ cloudLoading: false }); this.flash(t.classClashTeacher.replace('{name}', clash.teacher.name)); return; }
+    if (clash.room) { this.setState({ cloudLoading: false }); this.flash(t.classClashRoom.replace('{room}', clash.room.room).replace('{name}', clash.room.name), true); return; }
+    if (clash.teacher) { this.setState({ cloudLoading: false }); this.flash(t.classClashTeacher.replace('{name}', clash.teacher.name), true); return; }
     let nextClassId = (parsed.nid && parsed.nid.classes) || (classesArr.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1);
     let finalClasses;
     if (editId) {
@@ -2021,7 +2046,7 @@ class Component extends DCLogic {
     parsed.db = freshDb;
     if (parsed.nid) parsed.nid.classes = nextClassId;
     const ok = await this.saveWholeDb(parsed);
-    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     this.setState({ cloudDB: freshDb, cloudLoading: false, classSheet: null, classForm: null });
     this.flash(editId ? t.classUpdated : t.classAdded);
   }
@@ -2030,12 +2055,12 @@ class Component extends DCLogic {
     if (this.state.cloudLoading) return;
     this.setState({ cloudLoading: true });
     const res = await this.fetchFreshDb();
-    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     const { parsed, freshDb } = res;
     freshDb.classes = (Array.isArray(freshDb.classes) ? freshDb.classes : []).filter(c => c.id !== classId);
     parsed.db = freshDb;
     const ok = await this.saveWholeDb(parsed);
-    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     this.setState({ cloudDB: freshDb, cloudLoading: false, deleteConfirmId: null });
     this.flash(t.classDeleted);
   }
@@ -2046,11 +2071,11 @@ class Component extends DCLogic {
     if (this.state.cloudLoading) return;
     this.setState({ cloudLoading: true });
     const res = await this.fetchFreshDb();
-    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (!res) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     const { parsed, freshDb } = res;
     const studentsArr = Array.isArray(freshDb.students) ? freshDb.students : [];
     const idx = studentsArr.findIndex(x => x.id === studentId);
-    if (idx < 0) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (idx < 0) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     const cur = studentsArr[idx];
     const classIds = Array.isArray(cur.classIds) ? [...cur.classIds] : [];
     const at = classIds.indexOf(classId);
@@ -2058,7 +2083,7 @@ class Component extends DCLogic {
     freshDb.students = studentsArr.map((x, i) => (i === idx ? { ...x, classIds } : x));
     parsed.db = freshDb;
     const ok = await this.saveWholeDb(parsed);
-    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed); return; }
+    if (!ok) { this.setState({ cloudLoading: false }); this.flash(t.saveFailed, true); return; }
     this.setState({ cloudDB: freshDb, cloudLoading: false });
     this.flash(at === -1 ? t.addedToClass : t.removedFromClass);
   }
@@ -2247,6 +2272,8 @@ class Component extends DCLogic {
       bank: 'Bank', accName: 'Account Name', accNo: 'Account No.', duitnow: 'DuitNow',
       monthlyFee: 'Monthly Fee', credits: 'Credits', unpaidCount: 'Unpaid',
       creditBalance: 'Credit Balance', creditBalanceHint: 'Used for extra or replacement classes',
+      accountStatus: 'Account Status', creditExpiryLabel: 'Credit Expiry', expiredWord: 'Expired',
+      makeupDeadline: 'Makeup Class Deadline', daysLeftWord: 'days left', remainingWord: 'remaining',
       outstanding: 'Outstanding', unpaid: 'Unpaid', paid: 'Paid', payHistory: 'Payment History',
       myClasses: 'My Classes', myProfile: 'My Profile', allClasses: 'All Classes',
       myAttendance: 'My Attendance', rewards: 'Rewards', profile: 'My Profile', logout: 'Log out',
@@ -2262,7 +2289,7 @@ class Component extends DCLogic {
       keepDancing: 'Keep dancing to level up your grade', points: 'Points',
       earn: 'Earn {n} points for every class you attend, then redeem them below.',
       freeTshirt: 'New Student Free T-Shirt', tshirtTitle: 'Free T-shirt for New Student',
-      tshirtDone: 'Collected — enjoy your free new-student t-shirt!', tshirtUntil: 'Available until 31 April 2027',
+      tshirtDone: 'Collected — enjoy your free new-student t-shirt! 🎉', tshirtNotYet: 'Not collected yet — visit the front desk to claim your free t-shirt.',
       gradesByStyle: 'Grades by Dance Style', birthday: 'Birthday', bdayGift: '100 bonus points on your birthday',
       claimBirthday: 'Claim Birthday Reward', birthdayToday: '🎉 Happy Birthday!', birthdayClaimed: 'Birthday reward claimed', noGradesYet: 'No grades set yet',
       birthdayNone: 'No birthday on file — ask the front desk to add it.',
@@ -2307,6 +2334,8 @@ class Component extends DCLogic {
       bank: '银行', accName: '户名', accNo: '账号', duitnow: 'DuitNow',
       monthlyFee: '月费', credits: '课时券', unpaidCount: '未付',
       creditBalance: '课时券余额', creditBalanceHint: '用于加课或补课',
+      accountStatus: '账户状态', creditExpiryLabel: '课时券到期日', expiredWord: '已过期',
+      makeupDeadline: '补课截止日期', daysLeftWord: '天后截止', remainingWord: '节剩余',
       outstanding: '未付款项', unpaid: '未付', paid: '已付', payHistory: '付款记录',
       myClasses: '我的课程', myProfile: '我的资料', allClasses: '全部课程',
       myAttendance: '我的出席', rewards: '奖励', profile: '我的资料', logout: '退出登录',
@@ -2322,7 +2351,7 @@ class Component extends DCLogic {
       keepDancing: '继续跳舞，提升你的级别', points: '积分',
       earn: '每出席一堂课可获得 {n} 积分，可在下方兑换。',
       freeTshirt: '新生免费T恤', tshirtTitle: '新生免费T恤',
-      tshirtDone: '已领取 — 好好享受你的新生T恤！', tshirtUntil: '有效期至 2027年4月31日',
+      tshirtDone: '已领取 — 好好享受你的新生T恤！🎉', tshirtNotYet: '尚未领取 —— 请前往前台领取你的免费T恤。',
       gradesByStyle: '各舞风级别', birthday: '生日', bdayGift: '生日当天赠送100积分',
       claimBirthday: '领取生日奖励', birthdayToday: '🎉 生日快乐！', birthdayClaimed: '生日奖励已领取', noGradesYet: '尚未设置级别',
       birthdayNone: '尚未登记生日 —— 请前台帮忙添加。',
@@ -2747,6 +2776,7 @@ class Component extends DCLogic {
       ],
       hasOutstanding: pending.length > 0,
       myCreditsVal: myCredits, myCreditsIsDec: (myCredits % 1 !== 0) ? '1' : '0',
+      tshirtRedeemed: !!st.tshirtRedeemed,
       outstanding: pending.map(p => ({ ...p, title: p.month + ' 2026 · ' + (cls(p.classId) || {}).name })),
       payRows: myPayments.filter(p => p.status === 'Paid').map(p => ({
         ...p, cls: (cls(p.classId) || {}).name, meta: p.date + (p.method ? ' · ' + p.method : ''),
@@ -2760,14 +2790,30 @@ class Component extends DCLogic {
       ],
       myClassCards: myClasses.map(c => {
         const mates = rosterFor(c.id).filter(m => m.id !== st.id);
+        const presentThisCycle = Math.min(4, myAttendanceRecs.filter(a => a.classId === c.id && a.status === 'present').length);
         return {
           ...c, when: c.day + ' · ' + c.start + '–' + c.end, where: c.room + ' · ' + pName(c.placeId),
           teacher: tName(c.teacherId), matesLabel: t.classmates + ' (' + mates.length + ')',
           mates: mates.map(m => ({ ...m, initial: m.name.slice(0, 1), ageLabel: t.age + ' ' + m.age })),
+          cycleUsed: presentThisCycle, cycleLeft: 4 - presentThisCycle,
         };
       }),
 
       allClassesLine: classesData.length + ' ' + t.allClasses.toLowerCase(),
+      hasCreditExpiry: !!(st.creditExpiry && !creditsExpired),
+      creditExpiryDate: st.creditExpiry ? this.fmtDate(st.creditExpiry) : '',
+      creditExpiredLabel: creditsExpired ? this.fmtDate(st.creditExpiry) : '',
+      showExpiredCredit: !!(creditsExpired && st.creditExpiry),
+      nearestMakeup: (() => {
+        const absences = myAttendanceRecs.filter(a => a.status === 'absent' && a.date).sort((a, b) => b.date.localeCompare(a.date));
+        if (!absences.length) return null;
+        const absDate = new Date(absences[0].date + 'T00:00:00');
+        if (isNaN(absDate)) return null;
+        const deadline = new Date(absDate); deadline.setDate(deadline.getDate() + 28);
+        const daysLeft = Math.ceil((deadline - new Date()) / 86400000);
+        if (daysLeft < 0) return null;
+        return { date: this.fmtDate(this.toLocalISODate(deadline)), daysLeft, className: (cls(absences[0].classId) || {}).name || '' };
+      })(),
       styleFilter: s.styleFilter || 'all',
       styleChips: ['all', ...Array.from(new Set(classesData.map(c => c.style)))].map(x => {
         const active = (s.styleFilter || 'all') === x;
@@ -2835,7 +2881,7 @@ class Component extends DCLogic {
         if (!bday || !bday.isToday || bday.claimedThisYear) return;
         const claims = [...(st.bdayClaims || []), new Date().getFullYear()];
         const okSave = await this.updateStudentRecord(st.id, { bdayClaims: claims });
-        this.flash(okSave ? t.birthdayToday : t.saveFailed);
+        this.flash(okSave ? t.birthdayToday : t.saveFailed, !okSave);
       },
       rewardCards: rewardsData.map(r => {
         const can = pts >= r.cost;
@@ -2856,7 +2902,7 @@ class Component extends DCLogic {
             const newList = [entry, ...myRedemptions];
             const okSave = await this.updateStudentRecord(st.id, { redemptions: newList });
             if (okSave) { this.setState({ codeModal: { ...r, code, name: nm } }); this.flash(t.redeemed); }
-            else this.flash(t.saveFailed);
+            else this.flash(t.saveFailed, true);
           },
         };
       }),
@@ -2871,10 +2917,10 @@ class Component extends DCLogic {
       saveBday: async () => {
         if (s.bdayDraft == null || s.bdayDraft === st.birthday) { this.flash(t.saved); return; }
         const ok = await this.updateStudentRecord(st.id, { birthday: s.bdayDraft });
-        if (ok) { this.setState({ bdayDraft: null }); this.flash(t.saved); } else { this.flash(t.saveFailed); }
+        if (ok) { this.setState({ bdayDraft: null }); this.flash(t.saved); } else { this.flash(t.saveFailed, true); }
       },
       pwFields: [{ label: t.currentPw }, { label: t.newPw }, { label: t.confirmPw }],
-      savePw: () => this.flash(t.pwChangeUnavailable),
+      savePw: () => this.flash(t.pwChangeUnavailable, true),
       lockedHint: t.lockedHint,
 
       // ── sticky intro nav ──
@@ -3575,8 +3621,9 @@ class Component extends DCLogic {
       q('[data-mo-qr]').forEach(el => {
         if (el.__moQr) return;
         el.__moQr = 1;
-        Mo.animate(el, { x: [-90, 12, -6, 0], opacity: [0, 1, 1, 1], rotate: [-10, 4, -2, 0] },
-          { duration: 0.75, ease: 'easeOut' });
+        const offscreen = -(window.innerWidth || 400) - 40; // clears the left edge of any screen size
+        Mo.animate(el, { x: [offscreen, 16, -8, 0], opacity: [0, 1, 1, 1], rotate: [-14, 5, -2, 0] },
+          { duration: 0.85, ease: 'easeOut' });
       });
     }
 
@@ -3595,7 +3642,7 @@ class Component extends DCLogic {
     });
   }
 
-  flash(msg) { this.setState({ toast: msg }); clearTimeout(this.toastT); this.toastT = setTimeout(() => this.setState({ toast: null }), 1800); }
+  flash(msg, isError) { this.setState({ toast: msg, toastError: !!isError }); clearTimeout(this.toastT); this.toastT = setTimeout(() => this.setState({ toast: null }), 1800); }
   scrollTo(id) {
     const el = document.getElementById(id); if (!el) return;
     const box = el.parentElement, anime = window.anime, M = this.M;
@@ -3675,7 +3722,7 @@ class Component extends DCLogic {
 
     return {
       ...this.appVals(t),
-      t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
+      t, lang: s.lang, loading: s.loading, toast: s.toast, toastError: s.toastError, showIntroLoader: s.view === 'intro' && s.introLoading,
       showAppLoader: s.view === 'app' && s.appDataLoading,
       appContentReady: !s.appDataLoading && !s.appDataError,
       showAppError: s.view === 'app' && !s.appDataLoading && s.appDataError,
