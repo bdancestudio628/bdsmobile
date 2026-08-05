@@ -925,7 +925,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         </sc-for>
       </div>
 
-      <div data-om-stagger="{{ styleFilter }}" style="display:flex;flex-direction:column;gap:10px">
+      <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:10px">
         <sc-for list="{{ allClassRows }}" as="c" hint-placeholder-count="6">
           <div style="background:var(--card);border:1px solid var(--bd);padding:13px;transition:all .2s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
@@ -954,6 +954,20 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       </div>
       <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 14px"><i class="ph ph-lightbulb"></i> {{ t.attHint }}</p>
 
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+        <div>
+          <p class="mn" style="color:var(--g5);font-size:9px;margin:0 0 4px">{{ t.fromWord }}</p>
+          <input type="date" data-lazyvalue="{{ attRecFromVal }}" onChange="{{ onAttRecFrom }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
+        </div>
+        <div>
+          <p class="mn" style="color:var(--g5);font-size:9px;margin:0 0 4px">{{ t.toWord }}</p>
+          <input type="date" data-lazyvalue="{{ attRecToVal }}" onChange="{{ onAttRecTo }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
+        </div>
+      </div>
+      <sc-if value="{{ hasAttRecFilter }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ clearAttRecFilter }}" class="mn" style="background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:9.5px;font-weight:600;padding:7px 11px;cursor:pointer;margin-bottom:14px">{{ t.clearFilterBtn }}</button>
+      </sc-if>
+
       <div data-om-stagger="1" style="display:flex;flex-direction:column;gap:12px">
         <sc-for list="{{ attCards }}" as="c" hint-placeholder-count="2">
           <div style="background:var(--card);border:1px solid var(--bd);padding:14px">
@@ -977,6 +991,9 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
               </div>
             </div>
             <div style="display:flex;flex-direction:column">
+              <sc-if value="{{ !c.hasShownRecords }}" hint-placeholder-val="{{ false }}">
+              <p style="color:var(--g5);font-size:11px;text-align:center;padding:14px 0">{{ t.noRecordsInRange }}</p>
+              </sc-if>
               <sc-for list="{{ c.records }}" as="r" hint-placeholder-count="4">
                 <div style="padding:7px 0;border-top:1px solid var(--bd2)">
                   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
@@ -1024,6 +1041,17 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
         </div>
       </div>
       <p style="color:var(--g5);font-size:10.5px;line-height:1.6;margin:0 0 18px"><i class="ph ph-lightbulb"></i> {{ earnLine }}</p>
+
+      <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:18px;display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(126,226,171,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ph ph-ticket" style="font-size:21px;color:#7ee2ab"></i>
+        </div>
+        <div style="flex:1">
+          <p class="mn" style="color:var(--g5);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 3px">{{ t.creditBalance }}</p>
+          <p style="color:var(--g5);font-size:10px;margin:0">{{ t.creditBalanceHint }}</p>
+        </div>
+        <p class="dsp" data-count="{{ myCreditsVal }}" data-dec="{{ myCreditsIsDec }}" style="color:#7ee2ab;font-size:30px;margin:0;line-height:1">{{ myCreditsVal }}</p>
+      </div>
 
       <p class="mn" style="color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-t-shirt"></i> {{ t.freeTshirt }}</p>
       <div style="background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--acc);padding:13px;margin-bottom:6px;display:flex;align-items:center;gap:11px">
@@ -1533,6 +1561,7 @@ class Component extends DCLogic {
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
     installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false, appDataError: false, bdayDraft: null,
+    attRecFrom: '', attRecTo: '',
     attDate: null, attHistFrom: '', attHistTo: '', repSearch: '',
     dayFilter: '', classSheet: null, classForm: null, enrollSheet: null, enrollClassId: null, enrollSearch: '', deleteConfirmId: null,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
@@ -2217,6 +2246,7 @@ class Component extends DCLogic {
       payHint: 'After paying, show or send your receipt to the front desk so it can be recorded.',
       bank: 'Bank', accName: 'Account Name', accNo: 'Account No.', duitnow: 'DuitNow',
       monthlyFee: 'Monthly Fee', credits: 'Credits', unpaidCount: 'Unpaid',
+      creditBalance: 'Credit Balance', creditBalanceHint: 'Used for extra or replacement classes',
       outstanding: 'Outstanding', unpaid: 'Unpaid', paid: 'Paid', payHistory: 'Payment History',
       myClasses: 'My Classes', myProfile: 'My Profile', allClasses: 'All Classes',
       myAttendance: 'My Attendance', rewards: 'Rewards', profile: 'My Profile', logout: 'Log out',
@@ -2276,6 +2306,7 @@ class Component extends DCLogic {
       payHint: '付款后请向前台出示或发送收据，以便记录。',
       bank: '银行', accName: '户名', accNo: '账号', duitnow: 'DuitNow',
       monthlyFee: '月费', credits: '课时券', unpaidCount: '未付',
+      creditBalance: '课时券余额', creditBalanceHint: '用于加课或补课',
       outstanding: '未付款项', unpaid: '未付', paid: '已付', payHistory: '付款记录',
       myClasses: '我的课程', myProfile: '我的资料', allClasses: '全部课程',
       myAttendance: '我的出席', rewards: '奖励', profile: '我的资料', logout: '退出登录',
@@ -2715,6 +2746,7 @@ class Component extends DCLogic {
         { label: t.unpaidCount, n: pending.length, pre: '', c: '#ff8a78' },
       ],
       hasOutstanding: pending.length > 0,
+      myCreditsVal: myCredits, myCreditsIsDec: (myCredits % 1 !== 0) ? '1' : '0',
       outstanding: pending.map(p => ({ ...p, title: p.month + ' 2026 · ' + (cls(p.classId) || {}).name })),
       payRows: myPayments.filter(p => p.status === 'Paid').map(p => ({
         ...p, cls: (cls(p.classId) || {}).name, meta: p.date + (p.method ? ' · ' + p.method : ''),
@@ -2756,6 +2788,11 @@ class Component extends DCLogic {
       }),
 
       attSubline: t.viewOnly + ' · ' + myAttendanceRecs.filter(a => a.status === 'present').length + ' ' + t.attended,
+      hasAttRecFilter: !!(s.attRecFrom || s.attRecTo),
+      attRecFromVal: s.attRecFrom, attRecToVal: s.attRecTo,
+      onAttRecFrom: e => this.setState({ attRecFrom: e.target.value }),
+      onAttRecTo: e => this.setState({ attRecTo: e.target.value }),
+      clearAttRecFilter: () => this.setState({ attRecFrom: '', attRecTo: '' }),
       attCards: myClasses.map(c => {
         const recs = myAttendanceRecs.filter(a => a.classId === c.id);
         const n = k => recs.filter(r => r.status === k).length;
@@ -2763,10 +2800,12 @@ class Component extends DCLogic {
         if (n('absent')) pills.push({ label: n('absent') + ' ' + t.absent, bg: 'rgba(255,77,46,.18)', fg: '#ff8a78' });
         if (n('cancelled')) pills.push({ label: n('cancelled') + ' ' + t.cancelled, bg: 'rgba(255,122,41,.18)', fg: 'var(--acc2)' });
         const prog = Math.min(4, n('present'));
+        const shownRecs = recs.filter(r => (!s.attRecFrom || r.date >= s.attRecFrom) && (!s.attRecTo || r.date <= s.attRecTo));
         return {
           ...c, meta: c.day + ' · ' + c.start + ' · ' + tName(c.teacherId), pills,
           cycleLabel: prog + '/4', cyclePct: prog / 4 * 100,
-          records: recs.map(r => ({ ...this.statusPill(r.status, t), date: this.fmtDate(r.date), remark: r.remark || '' })),
+          records: shownRecs.map(r => ({ ...this.statusPill(r.status, t), date: this.fmtDate(r.date), remark: r.remark || '' })),
+          hasShownRecords: shownRecs.length > 0,
         };
       }),
       creditRows: myAttendanceRecs.filter(a => a.paidByCredit).sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(a => {
@@ -3536,8 +3575,8 @@ class Component extends DCLogic {
       q('[data-mo-qr]').forEach(el => {
         if (el.__moQr) return;
         el.__moQr = 1;
-        Mo.animate(el, { scale: [0.3, 1.08, 0.95, 1], opacity: [0, 1, 1, 1], rotate: [-8, 4, -2, 0] },
-          { duration: 0.7, ease: 'easeOut' });
+        Mo.animate(el, { x: [-90, 12, -6, 0], opacity: [0, 1, 1, 1], rotate: [-10, 4, -2, 0] },
+          { duration: 0.75, ease: 'easeOut' });
       });
     }
 
