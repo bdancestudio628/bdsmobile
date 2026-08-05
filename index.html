@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff7a29">
+<link rel="icon" href="assets/icon-192.png">
 <link rel="apple-touch-icon" href="assets/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -526,11 +527,11 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
       <div>
         <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.startLabel }}</p>
-        <input type="time" value="{{ cfStart }}" onChange="{{ onCfStart }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
+        <input type="time" data-lazyvalue="{{ cfStart }}" onChange="{{ onCfStart }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
       </div>
       <div>
         <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.endLabel }}</p>
-        <input type="time" value="{{ cfEnd }}" onChange="{{ onCfEnd }}" style="width:100%;background:#000;border:{{ cfTimeInvalid ? '1px solid #a8281a' : '1px solid #3d3a36' }};color:#fff;font-size:12.5px;padding:10px" />
+        <input type="time" data-lazyvalue="{{ cfEnd }}" onChange="{{ onCfEnd }}" style="width:100%;background:#000;border:{{ cfTimeInvalid ? '1px solid #a8281a' : '1px solid #3d3a36' }};color:#fff;font-size:12.5px;padding:10px" />
       </div>
     </div>
     <sc-if value="{{ cfTimeInvalid }}" hint-placeholder-val="{{ false }}">
@@ -539,7 +540,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
       <div>
         <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.maxStudentsLabel }}</p>
-        <input type="number" value="{{ cfMax }}" onChange="{{ onCfMax }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
+        <input type="number" data-lazyvalue="{{ cfMax }}" onChange="{{ onCfMax }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px" />
       </div>
       <div>
         <p class="mn" style="color:var(--g5);font-size:10px;margin:0 0 5px">{{ t.difficultyLabel }}</p>
@@ -1085,7 +1086,7 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <div style="background:var(--card);border:1px solid var(--bd);padding:14px;margin-bottom:12px">
         <p class="mn" style="color:var(--acc);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px"><i class="ph ph-cake"></i> {{ t.birthday }}</p>
         <label class="mn" style="display:block;color:var(--g5);font-size:9px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px">{{ t.dob }}</label>
-        <input type="date" value="{{ bdayVal }}" onChange="{{ onBday }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px;outline:none;margin-bottom:10px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
+        <input type="date" data-lazyvalue="{{ bdayVal }}" onChange="{{ onBday }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:12.5px;padding:10px;outline:none;margin-bottom:10px;font-family:'JetBrains Mono',monospace" style-focus="border-color:var(--acc)" />
         <button onClick="{{ saveBday }}" class="mn" style="width:100%;background:var(--acc);color:#000;font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:11px;border:0;cursor:pointer;transition:transform .16s">{{ t.saveBirthday }}</button>
       </div>
 
@@ -1348,11 +1349,11 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 8px">
         <div>
           <p class="mn" style="color:var(--g5);font-size:9px;margin:0 0 4px">{{ t.fromWord }}</p>
-          <input type="date" value="{{ attHistFromVal }}" onChange="{{ onAttHistFrom }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
+          <input type="date" data-lazyvalue="{{ attHistFromVal }}" onChange="{{ onAttHistFrom }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
         </div>
         <div>
           <p class="mn" style="color:var(--g5);font-size:9px;margin:0 0 4px">{{ t.toWord }}</p>
-          <input type="date" value="{{ attHistToVal }}" onChange="{{ onAttHistTo }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
+          <input type="date" data-lazyvalue="{{ attHistToVal }}" onChange="{{ onAttHistTo }}" style="width:100%;background:#000;border:1px solid #3d3a36;color:#fff;font-size:11.5px;padding:8px" />
         </div>
       </div>
       <sc-if value="{{ hasAttHistFilter }}" hint-placeholder-val="{{ false }}">
@@ -2825,8 +2826,8 @@ class Component extends DCLogic {
       ],
       payTotalCard: { label: t.totalSalaryCard, amt: 'RM' + (salary ? Math.round(salary.total) : 1845), sub: t.allMonthsWord },
       payCardsT: (salary ? [
-        salary.monthlySingleRateQty ? { label: t.salarySingleRate, qty: salary.monthlySingleRateQty, sub: 'RM' + Math.round(salary.monthlySingleRateEarn) } : null,
-        salary.monthlyMultiRateClassQty ? { label: t.salaryMultiRate, qty: salary.monthlyMultiRateClassQty, sub: 'RM' + Math.round(salary.monthlyMultiRateEarn) } : null,
+        { label: t.salarySingleRate, qty: salary.monthlySingleRateQty, sub: 'RM' + Math.round(salary.monthlySingleRateEarn) },
+        { label: t.salaryMultiRate, qty: salary.monthlyMultiRateClassQty, sub: 'RM' + Math.round(salary.monthlyMultiRateEarn) },
         { label: t.salarySingleClass, qty: salary.singleClassQty, sub: '× RM25 = RM' + Math.round(salary.singleClassEarn) },
         salary.danceShowQty ? { label: t.salaryDanceShow, qty: salary.danceShowQty, sub: 'RM' + Math.round(salary.danceShowEarn) } : null,
         salary.privateQty ? { label: t.salaryPrivate, qty: salary.privateQty, sub: 'RM' + Math.round(salary.privateEarn) } : null,
@@ -3440,6 +3441,14 @@ class Component extends DCLogic {
     q('[data-lazysrc]').forEach(el => {
       const url = el.getAttribute('data-lazysrc') || '';
       if (url && !url.includes('{{') && el.src !== url) el.src = url;
+    });
+
+    // Same fix as data-lazysrc above, but for typed <input> values (date/time/number) — those
+    // input types validate their value against the expected format immediately, so a literal
+    // "{{ expr }}" placeholder triggered a console warning before the template engine resolved it.
+    q('[data-lazyvalue]').forEach(el => {
+      const v = el.getAttribute('data-lazyvalue') || '';
+      if (!v.includes('{{') && el.value !== v && document.activeElement !== el) el.value = v;
     });
 
     const Mo = window.Motion;
