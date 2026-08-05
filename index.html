@@ -1509,7 +1509,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false,
+    installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false, bdayDraft: null,
     attDate: null, attHistFrom: '', attHistTo: '', repSearch: '',
     dayFilter: '', classSheet: null, classForm: null, enrollSheet: null, enrollClassId: null, enrollSearch: '', deleteConfirmId: null,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
@@ -2065,6 +2065,7 @@ class Component extends DCLogic {
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
       username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…', refreshed: 'Refreshed', savingNow: 'Saving…',
       loggedOutInactive: 'Signed out after 5 minutes of inactivity',
+      pwChangeUnavailable: 'Password changes aren\'t available in the app yet — please ask the front desk to reset it for you.',
       replacementDayNote: 'This class normally runs {day}s, {start}–{end}',
       previousRecordsFor: 'Previous records for', tapToJump: '(tap a date to jump)', noRecordsYet: 'No records yet',
       noRecordsInRange: 'No records in this range', clearFilterBtn: 'Clear filter', fromWord: 'From', toWord: 'To',
@@ -2136,6 +2137,7 @@ class Component extends DCLogic {
       studentLogin: '学生登录', teacherLogin: '导师登录',
       username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…', refreshed: '已刷新', savingNow: '保存中…',
       loggedOutInactive: '由于5分钟内无操作，已自动登出',
+      pwChangeUnavailable: '暂不支持在应用内修改密码 —— 请联系前台协助重设。',
       replacementDayNote: '此课程通常在每周{day}，{start}–{end}上课',
       previousRecordsFor: '以下课程的历史记录：', tapToJump: '（点击日期跳转）', noRecordsYet: '暂无记录',
       noRecordsInRange: '此范围内没有记录', clearFilterBtn: '清除筛选', fromWord: '从', toWord: '到',
@@ -2789,9 +2791,15 @@ class Component extends DCLogic {
       })),
       codeModal: s.codeModal || null, closeCode: () => this.setState({ codeModal: null }),
 
-      bdayVal: st.birthday, onBday: () => {}, saveBday: () => this.flash(t.saved),
+      bdayVal: s.bdayDraft != null ? s.bdayDraft : (st.birthday || ''),
+      onBday: e => this.setState({ bdayDraft: e.target.value }),
+      saveBday: async () => {
+        if (s.bdayDraft == null || s.bdayDraft === st.birthday) { this.flash(t.saved); return; }
+        const ok = await this.updateStudentRecord(st.id, { birthday: s.bdayDraft });
+        if (ok) { this.setState({ bdayDraft: null }); this.flash(t.saved); } else { this.flash(t.saveFailed); }
+      },
       pwFields: [{ label: t.currentPw }, { label: t.newPw }, { label: t.confirmPw }],
-      savePw: () => this.flash(t.saved),
+      savePw: () => this.flash(t.pwChangeUnavailable),
       lockedHint: t.lockedHint,
 
       // ── sticky intro nav ──
