@@ -401,6 +401,18 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 </div>
 </sc-if>
 
+<sc-if value="{{ showAppError }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:#000;z-index:250;display:flex;align-items:center;justify-content:center;padding:30px">
+  <div style="text-align:center;max-width:300px">
+    <i class="ph ph-wifi-slash" style="font-size:40px;color:var(--acc2);margin-bottom:14px;display:block"></i>
+    <p class="dsp" style="font-size:18px;text-transform:uppercase;margin:0 0 8px">{{ t.couldNotLoad }}</p>
+    <p style="color:var(--g4);font-size:12px;line-height:1.6;margin:0 0 20px">{{ t.couldNotLoadLead }}</p>
+    <button onClick="{{ refreshNow }}" class="mn" style="width:100%;background:var(--acc);color:var(--ink);border:0;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:13px;cursor:pointer;margin-bottom:10px">{{ t.tryAgain }}</button>
+    <button onClick="{{ logoutFromError }}" class="mn" style="width:100%;background:transparent;border:1px solid var(--bd);color:var(--g4);font-size:10.5px;font-weight:600;padding:12px;cursor:pointer">{{ t.backToSignIn }}</button>
+  </div>
+</div>
+</sc-if>
+
 <!-- ══════════ SAVING INDICATOR ══════════ -->
 <sc-if value="{{ cloudLoading }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;z-index:400;background:rgba(0,0,0,.02)"></div>
@@ -775,13 +787,20 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
           </sc-for>
         </div>
         <div style="display:flex;align-items:center;gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd2)">
+          <sc-if value="{{ hasRealQr }}" hint-placeholder-val="{{ false }}">
+          <div style="width:74px;height:74px;background:#f3efe6;padding:6px;flex-shrink:0">
+            <img data-lazysrc="{{ qrImageUrl }}" alt="Payment QR" style="width:100%;height:100%;object-fit:contain" />
+          </div>
+          </sc-if>
+          <sc-if value="{{ !hasRealQr }}" hint-placeholder-val="{{ true }}">
           <div style="width:74px;height:74px;background:#f3efe6;padding:6px;flex-shrink:0">
             <div style="width:100%;height:100%;background-image:linear-gradient(45deg,#1a1006 25%,transparent 25%,transparent 75%,#1a1006 75%),linear-gradient(45deg,#1a1006 25%,transparent 25%,transparent 75%,#1a1006 75%);background-size:12px 12px;background-position:0 0,6px 6px"></div>
           </div>
+          </sc-if>
           <div>
             <p class="mn" style="color:var(--acc2);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 5px"><i class="ph ph-device-mobile"></i> TNG eWallet</p>
-            <p style="color:#fff;font-size:12.5px;font-weight:600;margin:0">B Dance Studio Sdn Bhd</p>
-            <p class="mn" style="color:var(--g5);font-size:11px;margin:3px 0 0">+60 12-345 6789</p>
+            <p style="color:#fff;font-size:12.5px;font-weight:600;margin:0">{{ tngName }}</p>
+            <p class="mn" style="color:var(--g5);font-size:11px;margin:3px 0 0">{{ tngNumber }}</p>
             <p class="mn" style="color:#4a4640;font-size:9px;margin:5px 0 0;letter-spacing:.1em;text-transform:uppercase">{{ t.scanToPay }}</p>
           </div>
         </div>
@@ -1509,7 +1528,7 @@ class Component extends DCLogic {
     lang: 'en', view: 'intro', role: 'student', page: 'fees', tpage: 'today',
     loginRole: 'student', user: '', pw: '', showPw: false, loading: false,
     sessionToken: null, account: null, cloudDB: null, publicDB: null, loginError: '', cloudLoading: false, introLoading: true,
-    installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false, bdayDraft: null,
+    installPlatform: null, canNativeInstall: false, installTab: 'ios', appDataLoading: false, appDataError: false, bdayDraft: null,
     attDate: null, attHistFrom: '', attHistTo: '', repSearch: '',
     dayFilter: '', classSheet: null, classForm: null, enrollSheet: null, enrollClassId: null, enrollSearch: '', deleteConfirmId: null,
     eventSlide: 0, showAllTeachers: false, teacherModal: null, tmSlide: 0,
@@ -1652,10 +1671,10 @@ class Component extends DCLogic {
     try {
       const r = await cloudFetchWithTimeout({ method: 'GET', headers: { Authorization: 'Bearer ' + token } });
       const j = await r.json().catch(() => null);
-      if (j && j.data) {
+      if (r.ok && j && j.data) {
         const parsed = JSON.parse(j.data);
         const db = (parsed && parsed.db) || {};
-        const patch = { cloudDB: db, cloudLoading: false, appDataLoading: false };
+        const patch = { cloudDB: db, cloudLoading: false, appDataLoading: false, appDataError: false };
         const acct = this.state.account;
         if (acct && acct.role === 'teacher' && Array.isArray(db.teachers)) {
           const me = db.teachers.find(x => x.id === acct.ref);
@@ -1663,10 +1682,10 @@ class Component extends DCLogic {
         }
         this.setState(patch);
       } else {
-        this.setState({ cloudLoading: false, appDataLoading: false });
+        this.setState({ cloudLoading: false, appDataLoading: false, appDataError: true });
       }
     } catch (e) {
-      this.setState({ cloudLoading: false, appDataLoading: false });
+      this.setState({ cloudLoading: false, appDataLoading: false, appDataError: true });
     }
   }
 
@@ -2064,6 +2083,8 @@ class Component extends DCLogic {
       teacher: 'Teacher', teacherSub: 'Roster, attendance & your hours',
       studentLogin: 'Student sign in', teacherLogin: 'Teacher sign in',
       username: 'Username', password: 'Password', loggingIn: 'Signing in…', loadingStudio: 'Loading Studio…', refreshed: 'Refreshed', savingNow: 'Saving…',
+      couldNotLoad: 'Could Not Load', couldNotLoadLead: 'We couldn\'t reach the studio database. Please check your connection and try again.',
+      tryAgain: 'Try Again', backToSignIn: 'Back to Sign In',
       loggedOutInactive: 'Signed out after 5 minutes of inactivity',
       pwChangeUnavailable: 'Password changes aren\'t available in the app yet — please ask the front desk to reset it for you.',
       replacementDayNote: 'This class normally runs {day}s, {start}–{end}',
@@ -2136,6 +2157,8 @@ class Component extends DCLogic {
       teacher: '导师', teacherSub: '学员名单、点名与课时',
       studentLogin: '学生登录', teacherLogin: '导师登录',
       username: '用户名', password: '密码', loggingIn: '登录中…', loadingStudio: '加载中…', refreshed: '已刷新', savingNow: '保存中…',
+      couldNotLoad: '无法加载', couldNotLoadLead: '无法连接到舞室数据库，请检查网络连接后重试。',
+      tryAgain: '重试', backToSignIn: '返回登录',
       loggedOutInactive: '由于5分钟内无操作，已自动登出',
       pwChangeUnavailable: '暂不支持在应用内修改密码 —— 请联系前台协助重设。',
       replacementDayNote: '此课程通常在每周{day}，{start}–{end}上课',
@@ -2555,6 +2578,7 @@ class Component extends DCLogic {
     };
     const myStudentsList = allRealStudents.filter(x => Array.isArray(x.classIds) && x.classIds.some(cid => myClassIdSet2.has(cid)));
     const allAccounts = usingCloud && Array.isArray(cdb.accounts) ? cdb.accounts : [];
+    const paymentInfo = usingCloud ? (cdb.paymentInfo || null) : null;
     const paymentsAll = usingCloud && Array.isArray(cdb.payments) ? cdb.payments : [];
 
     // ── Teacher activity + salary (real, once cloud data is loaded) ──
@@ -2675,9 +2699,11 @@ class Component extends DCLogic {
       pgRewards: !isT && s.page === 'rewards', pgProfile: !isT && s.page === 'profile',
 
       bankRows: [
-        { k: t.bank, v: 'Maybank' }, { k: t.accName, v: 'B Dance Studio' },
-        { k: t.accNo, v: '5124 8899 0176' }, { k: t.duitnow, v: '+60 12-345 6789' },
+        { k: t.bank, v: (paymentInfo && paymentInfo.bankName) || '—' }, { k: t.accName, v: (paymentInfo && paymentInfo.accountName) || '—' },
+        { k: t.accNo, v: (paymentInfo && paymentInfo.accountNumber) || '—' }, { k: t.duitnow, v: (paymentInfo && paymentInfo.duitnow) || '—' },
       ],
+      tngName: (paymentInfo && paymentInfo.tngName) || 'B Dance Studio Sdn Bhd', tngNumber: (paymentInfo && paymentInfo.tngNumber) || '',
+      hasRealQr: !!(paymentInfo && paymentInfo.qrImage), qrImageUrl: (paymentInfo && paymentInfo.qrImage) || '',
       feeSubline: t.monthlyFee + ': RM' + st.fee + ' · ' + myClasses.map(c => c.name).join(', '),
       feeTiles: [
         { label: t.monthlyFee, n: st.fee, pre: 'RM', c: '#fff' },
@@ -3582,6 +3608,8 @@ class Component extends DCLogic {
       ...this.appVals(t),
       t, lang: s.lang, loading: s.loading, toast: s.toast, showIntroLoader: s.view === 'intro' && s.introLoading,
       showAppLoader: s.view === 'app' && s.appDataLoading,
+      showAppError: s.view === 'app' && !s.appDataLoading && s.appDataError,
+      logoutFromError: () => this.logoutCloud(),
       cloudLoading: s.cloudLoading,
       showInstallHint,
       refreshNow: () => this.refreshNow(),
