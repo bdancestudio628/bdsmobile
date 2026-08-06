@@ -2,8 +2,27 @@
 <html>
 <head>
 <meta charset="utf-8">
+<script>
+(function () {
+  try {
+    var qs = new URLSearchParams(location.search);
+    if (qs.has('mobile') || qs.has('preview')) { console.log('[redirect] skipped: override param present'); return; }
+    var ua = navigator.userAgent || '';
+    var isIPad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var isIPhone = /iPhone|iPod/.test(ua) && !window.MSStream;
+    var isAndroidPhone = /Android/.test(ua) && /Mobile/.test(ua);
+    var isPhone = (isIPhone || isAndroidPhone) && !isIPad;
+    console.log('[redirect]', { ua: ua, platform: navigator.platform, maxTouchPoints: navigator.maxTouchPoints, isIPad: isIPad, isIPhone: isIPhone, isAndroidPhone: isAndroidPhone, isPhone: isPhone });
+    if (!isPhone) {
+      console.log('[redirect] redirecting to desktop site now');
+      location.replace('https://www.bdancestudio.com.my/');
+    } else {
+      console.log('[redirect] staying on mobile site — detected as phone');
+    }
+  } catch (e) { console.error('[redirect] threw an error:', e); }
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<link rel="canonical" href="https://www.bdancestudio.com.my/"/> 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff7a29">
 <link rel="icon" href="assets/icon-192.png">
