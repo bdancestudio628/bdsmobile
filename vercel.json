@@ -1,5 +1,17 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/((?!api/).*)",
+      "missing": [
+        { "type": "header", "key": "user-agent", "value": ".*(iPhone|iPod|Android.*Mobile|BlackBerry|IEMobile|Opera Mini|Windows Phone|Mobile Safari).*" },
+        { "type": "query", "key": "mobile" },
+        { "type": "query", "key": "preview" }
+      ],
+      "destination": "https://www.bdancestudio.com.my",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
