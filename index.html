@@ -15,6 +15,32 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="B Dance Studio">
 <script src="./support.js"></script>
+<script>
+// Everything on this page depends on support.js loading, then fetching React/ReactDOM (and
+// sometimes Babel) from unpkg.com, before the real UI ever renders — support.js's own boot chain
+// has no timeout and no visible failure state, so if any of those loads stalls or errors, the raw
+// template just sits on screen forever with no explanation. This runs independently of support.js
+// (so it still works even if support.js itself never loads at all) and gives it 15s — generous for
+// ~260KB of same-version CDN scripts even on a slow connection — before assuming something's wrong
+// and offering a real retry instead of a silent, permanent blank/broken screen. Home Screen launches
+// hit this far more than Safari tabs because they always cold-start this whole chain from scratch;
+// a Safari tab is usually just resuming a session that already booted fine once.
+setTimeout(function () {
+  if (window.__dcContentKeyed) return; // booted fine — nothing to do
+  var el = document.createElement('div');
+  el.style.cssText = 'position:fixed;inset:0;background:#0a0a0a;color:#fff;z-index:999999;display:flex;align-items:center;justify-content:center;padding:30px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;text-align:center';
+  el.innerHTML =
+    '<div style="max-width:300px">' +
+      '<p style="font-size:16px;margin:0 0 10px;font-weight:600">Couldn\u2019t load the app</p>' +
+      '<p style="font-size:13px;color:#999;margin:0 0 20px;line-height:1.5">Check your connection and try again.</p>' +
+      '<button id="dc-boot-retry" style="width:100%;background:#ff7a29;color:#000;border:0;font-size:13px;font-weight:700;padding:13px;border-radius:8px;cursor:pointer">Try Again</button>' +
+    '</div>';
+  document.body.appendChild(el);
+  document.getElementById('dc-boot-retry').addEventListener('click', function () {
+    location.reload();
+  });
+}, 15000);
+</script>
 </head>
 <body>
 <x-dc>
@@ -42,9 +68,17 @@ i.ph{display:inline-block;vertical-align:-.11em;font-style:normal}
 @keyframes spinl{to{transform:rotate(360deg)}}
 @keyframes loadbar{0%{left:-40%}100%{left:100%}}
 @media print{
+  /* Without this, the page's own dark background survives printing (visibility:hidden hides
+     elements but not whatever's behind them), while the receipt card's white background — which
+     lives on its parent, not on .print-receipt-area itself — gets hidden along with everything
+     else. Net result: receipt text renders against a black page instead of white. Forcing both the
+     page and the receipt area to a real white background (plus print-color-adjust, since browsers
+     skip background colors when printing by default) fixes it. The desktop site already does the
+     same thing for its own printed receipt. */
+  html,body{background:#fff!important}
   body *{visibility:hidden}
   .print-receipt-area,.print-receipt-area *{visibility:visible}
-  .print-receipt-area{position:absolute;top:0;left:0;width:100%}
+  .print-receipt-area{position:absolute;top:0;left:0;width:100%;background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .no-print{display:none!important}
 }
 @keyframes bounce3{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
